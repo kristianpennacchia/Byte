@@ -140,6 +140,7 @@
 		C18242A22318007A00595E76 /* Thumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18242A12318007A00595E76 /* Thumbnail.swift */; };
 		C18242A3231800F000595E76 /* Thumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18242A12318007A00595E76 /* Thumbnail.swift */; };
 		C18242A4231800F100595E76 /* Thumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18242A12318007A00595E76 /* Thumbnail.swift */; };
+		C184B9CC276AECEC00578F40 /* SwimplyPlayIndicator in Frameworks */ = {isa = PBXBuildFile; productRef = C184B9CB276AECEC00578F40 /* SwimplyPlayIndicator */; };
 		C185E18D2375AE3C008DD09C /* SpoilerFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C185E18C2375AE3C008DD09C /* SpoilerFilter.swift */; };
 		C185E18E2375AE3C008DD09C /* SpoilerFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C185E18C2375AE3C008DD09C /* SpoilerFilter.swift */; };
 		C185E18F2375AE3C008DD09C /* SpoilerFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C185E18C2375AE3C008DD09C /* SpoilerFilter.swift */; };
@@ -198,7 +199,6 @@
 		C1CEB908231E85A2007C3812 /* OnFirstAppear.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CEB907231E85A2007C3812 /* OnFirstAppear.swift */; };
 		C1CEB909231E85A2007C3812 /* OnFirstAppear.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CEB907231E85A2007C3812 /* OnFirstAppear.swift */; };
 		C1CEB90A231E85A2007C3812 /* OnFirstAppear.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CEB907231E85A2007C3812 /* OnFirstAppear.swift */; };
-		C1CFCD51269D9415007E52CF /* SwimplyPlayIndicator in Frameworks */ = {isa = PBXBuildFile; productRef = C1CFCD50269D9415007E52CF /* SwimplyPlayIndicator */; };
 		C1D2F9C62322801000657A67 /* Pagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2F9C52322801000657A67 /* Pagination.swift */; };
 		C1D2F9C72322801000657A67 /* Pagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2F9C52322801000657A67 /* Pagination.swift */; };
 		C1D2F9C82322801000657A67 /* Pagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2F9C52322801000657A67 /* Pagination.swift */; };
@@ -367,7 +367,6 @@
 		C1C85AAC2336523F00E8AB19 /* RootViewControllerKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewControllerKey.swift; sourceTree = "<group>"; };
 		C1C85AB0233654A600E8AB19 /* PresenterViewControllerKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenterViewControllerKey.swift; sourceTree = "<group>"; };
 		C1CEB907231E85A2007C3812 /* OnFirstAppear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnFirstAppear.swift; sourceTree = "<group>"; };
-		C1CFCD54269D984C007E52CF /* SwimplyPlayIndicator */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SwimplyPlayIndicator; path = ../SwimplyPlayIndicator; sourceTree = "<group>"; };
 		C1D2F9C52322801000657A67 /* Pagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pagination.swift; sourceTree = "<group>"; };
 		C1D32D7E232E695600BE3A4C /* Strings+Twitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Strings+Twitch.swift"; sourceTree = "<group>"; };
 		C1D5CA2C231E908300663FD8 /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
@@ -440,7 +439,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C1CFCD51269D9415007E52CF /* SwimplyPlayIndicator in Frameworks */,
+				C184B9CC276AECEC00578F40 /* SwimplyPlayIndicator in Frameworks */,
 				C149639D2344D2F3004395A9 /* KingfisherSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -658,7 +657,6 @@
 		C1CFFFFA231FD14A0011B991 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C1CFCD54269D984C007E52CF /* SwimplyPlayIndicator */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -909,7 +907,7 @@
 			name = "Byte tvOS";
 			packageProductDependencies = (
 				C149639C2344D2F3004395A9 /* KingfisherSwiftUI */,
-				C1CFCD50269D9415007E52CF /* SwimplyPlayIndicator */,
+				C184B9CB276AECEC00578F40 /* SwimplyPlayIndicator */,
 			);
 			productName = Twitch;
 			productReference = C1FB01A82317D1B000130981 /* Byte.app */;
@@ -1002,7 +1000,7 @@
 			mainGroup = C1FB019F2317D1B000130981;
 			packageReferences = (
 				C149639B2344D2F3004395A9 /* XCRemoteSwiftPackageReference "Kingfisher" */,
-				C1CFCD4F269D9415007E52CF /* XCRemoteSwiftPackageReference "SwimplyPlayIndicator" */,
+				C184B9CA276AECEC00578F40 /* XCRemoteSwiftPackageReference "SwimplyPlayIndicator" */,
 			);
 			productRefGroup = C1FB01A92317D1B000130981 /* Products */;
 			projectDirPath = "";
@@ -2012,12 +2010,12 @@
 				minimumVersion = 5.8.1;
 			};
 		};
-		C1CFCD4F269D9415007E52CF /* XCRemoteSwiftPackageReference "SwimplyPlayIndicator" */ = {
+		C184B9CA276AECEC00578F40 /* XCRemoteSwiftPackageReference "SwimplyPlayIndicator" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/obrhoff/SwimplyPlayIndicator";
+			repositoryURL = "https://github.com/kristianpennacchia/SwimplyPlayIndicator";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.0;
+				branch = master;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -2033,9 +2031,9 @@
 			package = C149639B2344D2F3004395A9 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = KingfisherSwiftUI;
 		};
-		C1CFCD50269D9415007E52CF /* SwimplyPlayIndicator */ = {
+		C184B9CB276AECEC00578F40 /* SwimplyPlayIndicator */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C1CFCD4F269D9415007E52CF /* XCRemoteSwiftPackageReference "SwimplyPlayIndicator" */;
+			package = C184B9CA276AECEC00578F40 /* XCRemoteSwiftPackageReference "SwimplyPlayIndicator" */;
 			productName = SwimplyPlayIndicator;
 		};
 /* End XCSwiftPackageProductDependency section */
