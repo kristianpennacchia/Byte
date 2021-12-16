@@ -20,7 +20,7 @@ struct Thumbnail: View {
     let videoStream: VideoStream
     
     var body: some View {
-        let options: KingfisherOptionsInfo = [.cacheMemoryOnly, .memoryCacheExpiration(.seconds(300))]
+        let options: KingfisherOptionsInfo = [.cacheMemoryOnly, .memoryCacheExpiration(.seconds(300)), .memoryCacheAccessExtendingExpiration(.none)]
         let url: URL?
         let duration: String
         switch videoStream {
