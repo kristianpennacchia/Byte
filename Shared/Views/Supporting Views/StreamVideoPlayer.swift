@@ -31,6 +31,7 @@ struct StreamVideoPlayer: View {
     @StateObject private var playerViewModel = PlayerViewModel()
 
     private var onPlayToEndTime: (() -> Void)?
+    private var onPlayerFocused: ((AVPlayer) -> Void)?
 
     let videoMode: LiveVideoFetcher.VideoMode
     let muteNotFocused: Bool
@@ -88,6 +89,8 @@ struct StreamVideoPlayer: View {
                         playerViewModel.player.isMuted = false
                         indicatorState = .stop
                     }
+                    
+                    onPlayerFocused?(playerViewModel.player)
                 }
                 .onPlayPauseCommand {
                     guard allowSeeking else { return }
@@ -208,6 +211,12 @@ extension StreamVideoPlayer {
     func onPlayToEndTime(perform: @escaping () -> Void) -> Self {
         var copy = self
         copy.onPlayToEndTime = perform
+        return copy
+    }
+    
+    func onPlayerFocused(perform: @escaping (AVPlayer) -> Void) -> Self {
+        var copy = self
+        copy.onPlayerFocused = perform
         return copy
     }
 }
