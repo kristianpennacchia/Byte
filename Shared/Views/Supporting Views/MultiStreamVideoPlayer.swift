@@ -26,10 +26,15 @@ struct MultiStreamVideoPlayer: View {
     @State var streams: Set<Stream>
     @State var audioOnlyStreams = [Stream]()
     @State var flippedStreams = [Stream]()
+    @State var focusedPlayer: AVPlayer?
     @Binding var isPresented: Bool
 
     var body: some View {
-        Group {
+        ZStack {
+            if streams.count > 1 {
+                PlayerLayer(player: focusedPlayer, videoGravity: .resizeAspectFill)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
             GeometryReader { reader in
                 LazyVGrid(columns: makeColumns(streamCount: streams.count, reader: reader), alignment: .center, spacing: 0) {
                     ForEach(Array(streams), id: \.id) { stream in
@@ -43,6 +48,9 @@ struct MultiStreamVideoPlayer: View {
                         .onPlayToEndTime {
                             remove(stream: stream)
                         }
+                        .onPlayerFocused { player in
+                            focusedPlayer = player
+                        }
                         .equatable()
                         .aspectRatio(contentMode: .fit)
                         .onSelect {
@@ -53,6 +61,7 @@ struct MultiStreamVideoPlayer: View {
                 }
                 .frame(maxHeight: reader.size.height)
             }
+            .background(.regularMaterial)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.black)
