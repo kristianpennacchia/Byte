@@ -1,0 +1,97 @@
+//
+//  VideoList.swift
+//  Byte
+//
+//  Created by Kristian Pennacchia on 13/8/21.
+//  Copyright © 2021 Kristian Pennacchia. All rights reserved.
+//
+
+import SwiftUI
+
+struct VideoList: View {
+    private class VideoViewModel: ObservableObject {
+        @Published var video: Video?
+    }
+
+    @EnvironmentObject private var api: API
+    @EnvironmentObject private var spoilerFilter: SpoilerFilter
+
+    @ObservedObject var store: VideoStore
+
+    @StateObject private var videoViewModel = VideoViewModel()
+
+    @State private var isRefreshing = false
+    @State private var showVideoPlayer = false
+
+    var body: some View {
+        VStack {
+            ScrollView {
+                if store.items.isEmpty == false {
+                    Refresh(isAnimating: $isRefreshing, action: refresh)
+                }
+
+                let columns = Array(repeating: GridItem(.flexible()), count: 4)
+                LazyVGrid(columns: columns) {
+                    ForEach(store.items) { video in
+                        VideoView(video: video)
+                            .navigationBarTitle(self.store.fetchType.navBarTitle)
+                            .onSelect {
+                                videoViewModel.video = video
+                                showVideoPlayer = true
+                            }
+                    }
+                }
+            }
+            .onAppear {
+                if store.isStale {
+                    refresh()
+                }
+            }
+            .onReceive(AppState()) { state in
+                if store.isStale, state == .willEnterForeground {
+                    refresh()
+                }
+            }
+        }
+        .fullScreenCover(
+            isPresented: $showVideoPlayer,
+            onDismiss: {
+                videoViewModel.video = nil
+
+                if store.isStale {
+                    refresh()
+                }
+            },
+            content: {
+                StreamVideoPlayer(videoMode: .vod(videoViewModel.video!), muteNotFocused: false, isAudioOnly: false, isFlipped: false, isPresented: $showVideoPlayer)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.black)
+                    .edgesIgnoringSafeArea(.all)
+            }
+        )
+    }
+}
+
+private extension VideoList {
+    func refresh() {
+        isRefreshing = true
+        store.fetch {
+            self.isRefreshing = false
+        }
+    }
+}
+
+private extension VideoStore.Fetch {
+    var navBarTitle: String {
+        switch self {
+        case .user(let userID):
+            return userID
+        }
+    }
+}
+
+struct VideoList_Previews: PreviewProvider {
+    static var previews: some View {
+        VideoList(store: VideoStore(api: .shared, fetch: .user(userID: App.previewUsername)))
+    }
+}
