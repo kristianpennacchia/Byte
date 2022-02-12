@@ -40,7 +40,7 @@ struct MultiStreamVideoPlayer: View {
                     ForEach(Array(streams), id: \.id) { stream in
                         StreamVideoPlayer(
                             videoMode: .live(stream),
-                            muteNotFocused: streams.count > 1,
+                            muteNotFocused: shouldMuteWhenNotInFocus(stream: stream),
                             isAudioOnly: audioOnlyStreams.contains(stream),
                             isFlipped: flippedStreams.contains(stream),
                             isPresented: $isPresented
@@ -149,6 +149,14 @@ private extension MultiStreamVideoPlayer {
             flippedStreams.remove(at: index)
         } else {
             flippedStreams.append(stream)
+        }
+    }
+
+    func shouldMuteWhenNotInFocus(stream: Stream) -> Bool {
+        if showMenu || showStreamPicker {
+            return streamViewModel.selectedStream != stream
+        } else {
+            return streams.count > 1
         }
     }
 }
