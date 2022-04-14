@@ -158,7 +158,8 @@ struct StreamVideoPlayer: View {
                     )
                 }
             if isAudioOnly {
-                Color.black
+                Color.clear
+                    .background(.regularMaterial)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             SwimplyPlayIndicator(state: $indicatorState, color: .brand.purple.opacity(0.5), style: .legacy)
