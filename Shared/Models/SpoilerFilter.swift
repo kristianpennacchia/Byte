@@ -7,25 +7,48 @@
 //
 
 import Foundation
+import SwiftUI
 import Combine
 
 final class SpoilerFilter: ObservableObject {
+    @AppStorage("spoilerFilterGameIDs") private var spoilerFilterGameIDs: String?
+
     private let didChange = PassthroughSubject<Output, Failure>()
 
-    private var gameIDs = [String]() {
-        didSet {
+    private var gameIDs: [String] {
+        get {
+            return spoilerFilterGameIDs?.components(separatedBy: ",") ?? []
+        }
+        set {
+            spoilerFilterGameIDs = newValue.joined(separator: ",")
             didChange.send(self)
         }
-    }
-
-    init(gameIDs: [String]) {
-        self.gameIDs = gameIDs
     }
 }
 
 extension SpoilerFilter {
     func isSpoiler(gameID: String) -> Bool {
         gameIDs.contains(gameID)
+    }
+
+    func add(gameID: String) {
+        if isSpoiler(gameID: gameID) == false {
+            gameIDs.append(gameID)
+        }
+    }
+
+    func remove(gameID: String) {
+        guard let index = gameIDs.firstIndex(of: gameID) else { return }
+
+        gameIDs.remove(at: index)
+    }
+
+    func toggle(gameID: String) {
+        if isSpoiler(gameID: gameID) {
+            remove(gameID: gameID)
+        } else {
+            add(gameID: gameID)
+        }
     }
 }
 

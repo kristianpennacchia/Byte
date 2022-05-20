@@ -14,6 +14,7 @@ struct GameList: View {
     }
 
     @EnvironmentObject private var api: API
+    @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @ObservedObject var store: GameStore
 
@@ -37,6 +38,12 @@ struct GameList: View {
                             .buttonWrap {
                                 gameViewModel.game = game
                                 showGame = true
+                            }
+                            .contextMenu {
+                                Button(spoilerFilter.isSpoiler(gameID: game.id) ? "Remove Game From Spoiler Filter" : "Add Game To Spoiler Filter") {
+                                    spoilerFilter.toggle(gameID: game.id)
+                                }
+                                Button("Cancel") {}
                             }
                     }
                 }

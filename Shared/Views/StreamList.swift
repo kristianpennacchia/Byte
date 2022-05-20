@@ -56,6 +56,12 @@ struct StreamList: View {
                                     selectedStreams.insert(stream)
                                 }
                             }
+                            .contextMenu {
+                                Button(spoilerFilter.isSpoiler(gameID: stream.gameId) ? "Remove Game From Spoiler Filter" : "Add Game To Spoiler Filter") {
+                                    spoilerFilter.toggle(gameID: stream.gameId)
+                                }
+                                Button("Cancel") {}
+                            }
                     }
                     .padding([.leading, .trailing], 14)
                 }

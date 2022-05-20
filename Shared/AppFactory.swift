@@ -13,6 +13,6 @@ enum AppFactory {
         return ContentView()
             .environmentObject(SessionStore(api: .shared))
             .environmentObject(API.shared)
-            .environmentObject(SpoilerFilter(gameIDs: []))
+            .environmentObject(SpoilerFilter())
     }
 }
