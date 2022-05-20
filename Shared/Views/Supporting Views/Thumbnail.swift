@@ -56,7 +56,7 @@ struct Thumbnail: View {
                 .foregroundColor(.white)
                 .background(Color.accentColor)
                 .cornerRadius(8)
-                .padding([.leading, .bottom])
+                .padding([.leading, .bottom], 8)
 
         }
     }

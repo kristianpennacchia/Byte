@@ -22,25 +22,23 @@ struct VideoView: View {
     @State private var isFocused = false
 
     let video: Video
+    let hasFocusEffect: Bool
 
     var body: some View {
         return VStack(alignment: .leading, spacing: 8) {
             ZStack(alignment: .bottomTrailing) {
                 Thumbnail(videoStream: .vod(video))
                     .frame(minWidth: 0, maxWidth: .infinity)
+                    .cornerRadius(hasFocusEffect ? 0 : 8)
             }
-            .thirdDimensionEffect(isExtended: isFocused)
+            .thirdDimensionEffect(isExtended: hasFocusEffect ? isFocused : false)
 
             HStack(alignment: .top) {
-                if isFocused {
+                if isFocused, hasFocusEffect {
                     Spacer()
                         .frame(width: 10)
                 }
-                VStack(alignment: .leading) {
-                    Text(video.title)
-                        .font(.caption)
-                        .bold()
-                        .foregroundColor(isFocused ? .brand.purple : .white)
+                VStack(alignment: .center) {
                     HStack(alignment: .center, spacing: 4) {
                         Text(Self.dateFormatter.string(from: video.createdAt))
                             .font(.caption)
@@ -52,25 +50,29 @@ struct VideoView: View {
                             .frame(height: 18)
                             .foregroundColor(.brand.live)
                     }
-                    Text(video.description)
+                    Text(video.title)
                         .font(.caption)
                         .foregroundColor(isFocused ? .brand.purple : .white)
                         .lineLimit(2)
                         .frame(height: 70, alignment: .top)
                 }
-                if isFocused {
+                if isFocused, hasFocusEffect {
                     Spacer()
                         .frame(width: 10)
                 }
             }
             .background(
                 Group {
-                    if isFocused {
-                        RoundedRectangle(cornerRadius: 10)
-                            .foregroundColor(.white)
+                    if hasFocusEffect {
+                        if isFocused {
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(.white)
+                        } else {
+                            RoundedRectangle(cornerRadius: 0)
+                                .foregroundColor(.clear)
+                        }
                     } else {
-                        RoundedRectangle(cornerRadius: 0)
-                            .foregroundColor(.clear)
+                        EmptyView()
                     }
                 }
             )
@@ -78,13 +80,13 @@ struct VideoView: View {
         .focusable(true) {
             self.isFocused = $0
         }
-        .padding(.top, 6)
-        .padding(.trailing, 6)
+        .padding(.top, hasFocusEffect ? 6 : 0)
+        .padding(.trailing, hasFocusEffect ? 6 : 0)
     }
 }
 
 struct VideoView_Previews: PreviewProvider {
     static var previews: some View {
-        VideoView(video: .preview)
+        VideoView(video: .preview, hasFocusEffect: true)
     }
 }

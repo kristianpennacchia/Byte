@@ -24,22 +24,24 @@ struct VideoList: View {
     @State private var showVideoPlayer = false
 
     var body: some View {
-        VStack {
+        ZStack {
+            Color.brand.purpleDarkDark.ignoresSafeArea()
             ScrollView {
                 if store.items.isEmpty == false {
                     Refresh(isAnimating: $isRefreshing, action: refresh)
+                        .padding(.bottom, 8)
                 }
 
                 let columns = Array(repeating: GridItem(.flexible()), count: 4)
                 LazyVGrid(columns: columns) {
                     ForEach(store.items) { video in
-                        VideoView(video: video)
-                            .navigationBarTitle(self.store.fetchType.navBarTitle)
-                            .onSelect {
+                        VideoView(video: video, hasFocusEffect: false)
+                            .buttonWrap {
                                 videoViewModel.video = video
                                 showVideoPlayer = true
                             }
                     }
+                    .padding([.leading, .trailing], 14)
                 }
             }
             .onAppear {
@@ -52,6 +54,8 @@ struct VideoList: View {
                     refresh()
                 }
             }
+            .padding([.leading, .trailing], 14)
+            .edgesIgnoringSafeArea([.leading, .trailing])
         }
         .fullScreenCover(
             isPresented: $showVideoPlayer,
@@ -69,6 +73,7 @@ struct VideoList: View {
                     .edgesIgnoringSafeArea(.all)
             }
         )
+        .navigationBarTitle(self.store.fetchType.navBarTitle)
     }
 }
 

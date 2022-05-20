@@ -26,8 +26,10 @@ private struct ButtonWrap<Content: View>: View {
     }
 
     var body: some View {
-        Button("", action: action)
-            .buttonStyle(PassthroughButtonStyle(content: content))
+        Button(action: action) {
+            content
+                .ignoresSafeArea()
+        }
     }
 }
 

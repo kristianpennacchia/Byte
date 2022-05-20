@@ -9,29 +9,38 @@
 import SwiftUI
 
 struct GameList: View {
+    private class GameViewModel: ObservableObject {
+        @Published var game: Game?
+    }
+
     @EnvironmentObject private var api: API
 
     @ObservedObject var store: GameStore
 
+    @StateObject private var gameViewModel = GameViewModel()
+
     @State private var isRefreshing = false
+    @State private var showGame = false
 
     var body: some View {
         VStack {
             ScrollView {
                 if store.items.isEmpty == false {
                     Refresh(isAnimating: $isRefreshing, action: refresh)
+                        .padding(.bottom, 8)
                 }
 
                 let columns = Array(repeating: GridItem(.flexible()), count: 6)
                 LazyVGrid(columns: columns) {
                     ForEach(store.items) { game in
-                        GameView(game: game)
-                            .push {
-                                StreamList(store: StreamStore(api: self.api, fetch: .game(game)))
-                                    .environmentObject(self.api)
+                        GameView(game: game, hasFocusEffect: false)
+                            .buttonWrap {
+                                gameViewModel.game = game
+                                showGame = true
                             }
                     }
                 }
+                .padding([.leading, .trailing], 14)
             }
             .onAppear {
                 if self.store.isStale {
@@ -43,7 +52,23 @@ struct GameList: View {
                     self.refresh()
                 }
             }
+            .padding([.leading, .trailing], 14)
+            .edgesIgnoringSafeArea([.leading, .trailing])
         }
+        .fullScreenCover(
+            isPresented: $showGame,
+            onDismiss: {
+                gameViewModel.game = nil
+
+                if store.isStale {
+                    refresh()
+                }
+            },
+            content: {
+                StreamList(store: StreamStore(api: self.api, fetch: .game(gameViewModel.game!)))
+                    .environmentObject(self.api)
+            }
+        )
     }
 }
 
