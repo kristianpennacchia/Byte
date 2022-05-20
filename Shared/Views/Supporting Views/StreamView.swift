@@ -23,6 +23,7 @@ struct StreamView: View {
 
     let stream: Stream
     let isSelected: Bool
+    let hasFocusEffect: Bool
 
     var body: some View {
         if game?.id != stream.gameId {
@@ -37,67 +38,84 @@ struct StreamView: View {
         }
 
         return VStack(alignment: .leading, spacing: 8) {
-            ZStack(alignment: .bottomTrailing) {
-                Thumbnail(videoStream: .stream(stream))
-                    .frame(minWidth: 0, maxWidth: .infinity)
-                Group {
-                    if self.game != nil {
-                        CoverArt(game: self.game!, artSize: CovertArtSize.small)
-                    } else {
-                        CoverArt.Placeholder(artSize: CovertArtSize.small)
+            ZStack {
+                ZStack(alignment: .bottomTrailing) {
+                    Thumbnail(videoStream: .stream(stream))
+                        .frame(minWidth: 0, maxWidth: .infinity)
+                        .cornerRadius(hasFocusEffect ? 0 : 8)
+                    Group {
+                        if self.game != nil {
+                            CoverArt(game: self.game!, artSize: CovertArtSize.small)
+                        } else {
+                            CoverArt.Placeholder(artSize: CovertArtSize.small)
+                        }
                     }
+                    .border(Color.black)
                 }
-                .border(Color.black)
 
                 if isSelected {
-                    Image(systemName: "checkmark.circle.fill")
-                        .colorMultiply(.brand.purple)
-                        .position(x: 20, y: 20)
+                    ZStack {
+                        Circle()
+                            .foregroundColor(Color.brand.purple)
+                            .padding(4)
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundColor(.white)
+                    }
+                    .frame(width: 44, height: 44, alignment: .center)
+                    .position(x: 24, y: 24)
                 }
             }
-            .thirdDimensionEffect(isExtended: isFocused)
+            .thirdDimensionEffect(isExtended: hasFocusEffect ? isFocused : false)
 
             HStack(alignment: .top) {
-                if isFocused {
+                if isFocused, hasFocusEffect {
                     Spacer()
                         .frame(width: 10)
                 }
-                VStack(alignment: .leading) {
-                    HStack(alignment: .center, spacing: 4) {
+                VStack(alignment: .center) {
+                    HStack(alignment: .top) {
                         Text(stream.userName)
                             .font(.caption)
                             .bold()
                             .foregroundColor(isFocused ? .brand.purple : .white)
-                        Spacer()
-                        Text(Self.viewCountFormatter.string(from: NSNumber(integerLiteral: stream.viewerCount)) ?? "")
-                            .font(.caption)
-                            .bold()
-                            .foregroundColor(.brand.live)
-                        Image(systemName: "person.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: 18)
-                            .foregroundColor(.brand.live)
+                            .lineLimit(1)
+                        Spacer(minLength: 4)
+                        HStack(alignment: .center, spacing: 4) {
+                            Text(Self.viewCountFormatter.string(from: NSNumber(integerLiteral: stream.viewerCount)) ?? "")
+                                .font(.caption)
+                                .bold()
+                                .foregroundColor(.brand.live)
+                            Image(systemName: "person.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(height: 18)
+                                .foregroundColor(.brand.live)
+                        }
                     }
                     Text(stream.title)
                         .font(.caption)
                         .foregroundColor(isFocused ? .brand.purple : .white)
                         .lineLimit(2)
+                        .multilineTextAlignment(.center)
                         .frame(height: 70, alignment: .top)
                 }
-                if isFocused {
+                if isFocused, hasFocusEffect {
                     Spacer()
                         .frame(width: 10)
                 }
             }
             .background(
                 Group {
-                    if isFocused {
-                        RoundedRectangle(cornerRadius: 10)
-                            .foregroundColor(.white)
+                    if hasFocusEffect {
+                        if isFocused {
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(.white)
+                        } else {
+                            RoundedRectangle(cornerRadius: 0)
+                                .foregroundColor(.clear)
+                        }
                     } else {
-                        RoundedRectangle(cornerRadius: 0)
-                            .foregroundColor(.clear)
+                        EmptyView()
                     }
                 }
             )
@@ -105,13 +123,14 @@ struct StreamView: View {
         .focusable(true) {
             self.isFocused = $0
         }
-        .padding(.top, 6)
-        .padding(.trailing, 6)
+        .ignoresSafeArea()
+        .padding(.top, hasFocusEffect ? 6 : 0)
+        .padding(.trailing, hasFocusEffect ? 6 : 0)
     }
 }
 
 struct StreamView_Previews: PreviewProvider {
     static var previews: some View {
-        StreamView(stream: .preview, isSelected: false)
+        StreamView(stream: .preview, isSelected: false, hasFocusEffect: true)
     }
 }

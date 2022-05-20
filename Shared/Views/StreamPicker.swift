@@ -29,8 +29,8 @@ struct StreamPicker: View {
                     let columns = Array(repeating: GridItem(.flexible()), count: 4)
                     LazyVGrid(columns: columns) {
                         ForEach(store.items) { stream in
-                            StreamView(stream: stream, isSelected: false)
-                                .onSelect {
+                            StreamView(stream: stream, isSelected: false, hasFocusEffect: false)
+                                .buttonWrap {
                                     onSelectedStream(stream)
                                 }
                         }

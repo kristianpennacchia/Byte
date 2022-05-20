@@ -9,11 +9,18 @@
 import SwiftUI
 
 struct ChannelList: View {
+    private class ChannelViewModel: ObservableObject {
+        @Published var channel: Channel?
+    }
+
     @EnvironmentObject private var api: API
 
     @ObservedObject var store: ChannelStore
 
+    @StateObject private var channelViewModel = ChannelViewModel()
+
     @State private var isRefreshing = false
+    @State private var showChannel = false
 
     var body: some View {
         VStack {
@@ -25,10 +32,10 @@ struct ChannelList: View {
                 let columns = Array(repeating: GridItem(.flexible()), count: 6)
                 LazyVGrid(columns: columns) {
                     ForEach(store.items) { channel in
-                        ChannelView(channel: channel)
-                            .push {
-                                VideoList(store: VideoStore(api: self.api, fetch: .user(userID: channel.id)))
-                                    .environmentObject(self.api)
+                        ChannelView(channel: channel, hasFocusEffect: false)
+                            .buttonWrap {
+                                channelViewModel.channel = channel
+                                showChannel = true
                             }
                     }
                 }
@@ -44,6 +51,20 @@ struct ChannelList: View {
                 }
             }
         }
+        .fullScreenCover(
+            isPresented: $showChannel,
+            onDismiss: {
+                channelViewModel.channel = nil
+
+                if store.isStale {
+                    refresh()
+                }
+            },
+            content: {
+                VideoList(store: VideoStore(api: self.api, fetch: .user(userID: channelViewModel.channel!.id)))
+                    .environmentObject(self.api)
+            }
+        )
     }
 }
 

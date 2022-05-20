@@ -12,14 +12,18 @@ struct GameView: View {
     @State private var isFocused = false
 
     let game: Game
+    let hasFocusEffect: Bool
 
     var body: some View {
         VStack(alignment: .center) {
             CoverArt(game: game, artSize: CovertArtSize.medium)
-                .thirdDimensionEffect(isExtended: isFocused)
+                .cornerRadius(hasFocusEffect ? 0 : 8)
+                .thirdDimensionEffect(isExtended: hasFocusEffect ? isFocused : false)
             Spacer()
                 .frame(height: 16)
             Text(game.name)
+                .font(.caption)
+                .foregroundColor(.white)
                 .lineLimit(0)
                 .multilineTextAlignment(.center)
         }
@@ -30,6 +34,6 @@ struct GameView: View {
 
 struct GameView_Previews: PreviewProvider {
     static var previews: some View {
-        GameView(game: .preview)
+        GameView(game: .preview, hasFocusEffect: true)
     }
 }

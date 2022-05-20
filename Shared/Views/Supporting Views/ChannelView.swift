@@ -12,23 +12,24 @@ struct ChannelView: View {
     @State private var isFocused = false
 
     let channel: Channel
+    let hasFocusEffect: Bool
 
     var body: some View {
-        HStack(alignment: .center, spacing: 16) {
+        VStack(alignment: .center, spacing: 8) {
             Avatar(channel: channel)
-                .thirdDimensionEffect(isExtended: isFocused)
-            VStack(alignment: .leading) {
+                .thirdDimensionEffect(isExtended: hasFocusEffect ? isFocused : false)
+            VStack(alignment: .center) {
                 Text(channel.displayName)
             }
         }
         .focusable(true) { self.isFocused = $0 }
-        .padding(.top, 6)
-        .padding(.trailing, 6)
+        .padding(.top, hasFocusEffect ? 6 : 0)
+        .padding(.trailing, hasFocusEffect ? 6 : 0)
     }
 }
 
 struct ChannelView_Previews: PreviewProvider {
     static var previews: some View {
-        ChannelView(channel: .preview)
+        ChannelView(channel: .preview, hasFocusEffect: true)
     }
 }

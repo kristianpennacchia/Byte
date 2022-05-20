@@ -25,18 +25,20 @@ struct StreamList: View {
     @State private var showVideoPlayer = false
 
     var body: some View {
-        VStack {
+        ZStack {
+            Color.brand.purpleDarkDark.ignoresSafeArea()
             ScrollView {
                 if store.items.isEmpty == false {
                     Refresh(isAnimating: $isRefreshing, action: refresh)
+                        .padding(.bottom, 8)
                 }
 
                 let columns = Array(repeating: GridItem(.flexible()), count: 4)
                 LazyVGrid(columns: columns) {
                     ForEach(store.items) { stream in
-                        StreamView(stream: stream, isSelected: selectedStreams.contains(stream))
+                        StreamView(stream: stream, isSelected: selectedStreams.contains(stream), hasFocusEffect: false)
                             .navigationBarTitle(self.store.fetchType.navBarTitle)
-                            .onSelect {
+                            .buttonWrap {
                                 if selectedStreams.contains(stream) == false {
                                     selectedStreams.insert(stream)
                                 }
@@ -55,6 +57,7 @@ struct StreamList: View {
                                 }
                             }
                     }
+                    .padding([.leading, .trailing], 14)
                 }
             }
             .onAppear {
@@ -67,6 +70,8 @@ struct StreamList: View {
                     refresh()
                 }
             }
+            .padding([.leading, .trailing], 14)
+            .edgesIgnoringSafeArea([.leading, .trailing])
         }
         .fullScreenCover(
             isPresented: $showVideoPlayer,
