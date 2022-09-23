@@ -97,8 +97,6 @@
 		C13F8848233B6B32008649F6 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13F8847233B6B32008649F6 /* Push.swift */; };
 		C13F8849233B6B32008649F6 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13F8847233B6B32008649F6 /* Push.swift */; };
 		C13F884A233B6B32008649F6 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13F8847233B6B32008649F6 /* Push.swift */; };
-		C149639D2344D2F3004395A9 /* KingfisherSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C149639C2344D2F3004395A9 /* KingfisherSwiftUI */; };
-		C149639F2344D302004395A9 /* KingfisherSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = C149639E2344D302004395A9 /* KingfisherSwiftUI */; };
 		C14BCD4E2317FC8900F33A48 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14BCD4D2317FC8900F33A48 /* Stream.swift */; };
 		C14BCD4F2317FC8900F33A48 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14BCD4D2317FC8900F33A48 /* Stream.swift */; };
 		C14BCD502317FC8900F33A48 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14BCD4D2317FC8900F33A48 /* Stream.swift */; };
@@ -151,6 +149,7 @@
 		C187790423195C3F008CA61E /* CovertArtSize.iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C187790123195C3F008CA61E /* CovertArtSize.iOS.swift */; };
 		C187790623195C80008CA61E /* CoverArtSize.tvOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C187790523195C80008CA61E /* CoverArtSize.tvOS.swift */; };
 		C187790723195C80008CA61E /* CoverArtSize.tvOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C187790523195C80008CA61E /* CoverArtSize.tvOS.swift */; };
+		C191FE9128DE0A6F00AED1AE /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = C191FE9028DE0A6F00AED1AE /* Kingfisher */; };
 		C1997028233B803D00FFC27A /* Refresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1997027233B803D00FFC27A /* Refresh.swift */; };
 		C1997029233B803D00FFC27A /* Refresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1997027233B803D00FFC27A /* Refresh.swift */; };
 		C199702A233B803D00FFC27A /* Refresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1997027233B803D00FFC27A /* Refresh.swift */; };
@@ -406,7 +405,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C149639F2344D302004395A9 /* KingfisherSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -443,8 +441,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C191FE9128DE0A6F00AED1AE /* Kingfisher in Frameworks */,
 				C184B9CC276AECEC00578F40 /* SwimplyPlayIndicator in Frameworks */,
-				C149639D2344D2F3004395A9 /* KingfisherSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -819,7 +817,6 @@
 			);
 			name = "Byte iOS";
 			packageProductDependencies = (
-				C149639E2344D302004395A9 /* KingfisherSwiftUI */,
 			);
 			productName = "Twitch iOS";
 			productReference = C1020D612317E8E200FBFE16 /* Byte.app */;
@@ -911,8 +908,8 @@
 			);
 			name = "Byte tvOS";
 			packageProductDependencies = (
-				C149639C2344D2F3004395A9 /* KingfisherSwiftUI */,
 				C184B9CB276AECEC00578F40 /* SwimplyPlayIndicator */,
+				C191FE9028DE0A6F00AED1AE /* Kingfisher */,
 			);
 			productName = Twitch;
 			productReference = C1FB01A82317D1B000130981 /* Byte.app */;
@@ -1004,8 +1001,8 @@
 			);
 			mainGroup = C1FB019F2317D1B000130981;
 			packageReferences = (
-				C149639B2344D2F3004395A9 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				C184B9CA276AECEC00578F40 /* XCRemoteSwiftPackageReference "SwimplyPlayIndicator" */,
+				C191FE8F28DE0A6F00AED1AE /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = C1FB01A92317D1B000130981 /* Products */;
 			projectDirPath = "";
@@ -2024,14 +2021,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		C149639B2344D2F3004395A9 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.8.1;
-			};
-		};
 		C184B9CA276AECEC00578F40 /* XCRemoteSwiftPackageReference "SwimplyPlayIndicator" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kristianpennacchia/SwimplyPlayIndicator";
@@ -2040,23 +2029,26 @@
 				kind = branch;
 			};
 		};
+		C191FE8F28DE0A6F00AED1AE /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C149639C2344D2F3004395A9 /* KingfisherSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C149639B2344D2F3004395A9 /* XCRemoteSwiftPackageReference "Kingfisher" */;
-			productName = KingfisherSwiftUI;
-		};
-		C149639E2344D302004395A9 /* KingfisherSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C149639B2344D2F3004395A9 /* XCRemoteSwiftPackageReference "Kingfisher" */;
-			productName = KingfisherSwiftUI;
-		};
 		C184B9CB276AECEC00578F40 /* SwimplyPlayIndicator */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C184B9CA276AECEC00578F40 /* XCRemoteSwiftPackageReference "SwimplyPlayIndicator" */;
 			productName = SwimplyPlayIndicator;
+		};
+		C191FE9028DE0A6F00AED1AE /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C191FE8F28DE0A6F00AED1AE /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

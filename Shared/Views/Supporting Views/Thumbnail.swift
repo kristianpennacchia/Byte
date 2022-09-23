@@ -7,8 +7,7 @@
 //
 
 import SwiftUI
-import KingfisherSwiftUI
-import struct Kingfisher.KingfisherOptionsInfo
+import Kingfisher
 
 struct Thumbnail: View {
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
@@ -20,7 +19,6 @@ struct Thumbnail: View {
     let videoStream: VideoStream
     
     var body: some View {
-        let options: KingfisherOptionsInfo = [.cacheMemoryOnly, .memoryCacheExpiration(.seconds(300)), .memoryCacheAccessExtendingExpiration(.none)]
         let url: URL?
         let duration: String
         switch videoStream {
@@ -35,7 +33,10 @@ struct Thumbnail: View {
         return ZStack(alignment: .bottomLeading) {
             switch videoStream {
             case .stream(let stream):
-                KFImage(spoilerFilter.isSpoiler(gameID: stream.gameId) ? nil : url, options: options)
+                KFImage(spoilerFilter.isSpoiler(gameID: stream.gameId) ? nil : url)
+                    .cacheMemoryOnly()
+                    .memoryCacheExpiration(.seconds(300))
+                    .memoryCacheAccessExtending(.none)
                     .placeholder {
                         Placeholder()
                     }
@@ -43,7 +44,10 @@ struct Thumbnail: View {
                     .aspectRatio(1.5, contentMode: .fill)
             case .vod(_):
                 // We don't care about spoilers for VODs.
-                KFImage(url, options: options)
+                KFImage(url)
+                    .cacheMemoryOnly()
+                    .memoryCacheExpiration(.seconds(300))
+                    .memoryCacheAccessExtending(.none)
                     .placeholder {
                         Placeholder()
                     }
