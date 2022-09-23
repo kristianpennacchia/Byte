@@ -28,7 +28,7 @@ This comes from the Twitch network response data and does not change. It is `kim
 
 **Your App (Byte) Client ID and Secret**
 
-1. Go to www.dev.twitch.tv.
+1. Go to https://dev.twitch.tv.
 2. Log in with your Twitch account.
 3. Go to 'Console'.
 4. Go to 'Applications'.
@@ -40,7 +40,7 @@ This comes from the Twitch network response data and does not change. It is `kim
 
 **Your Twitch account OAuth token for your registered application (Byte)**
 
-1. Login to www.twitch.tv.
+1. Login to https://twitch.tv.
 2. Go to https://twitchtokengenerator.com.
 3. Paste in your Client Secret and Client ID from the previous step.
 4. Enable the `user:read:follows` permission.
