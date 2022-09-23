@@ -13,7 +13,6 @@ enum App {
         struct ClientID: Decodable {
             let twitch: String
             let byte: String
-            let streamLinkGUI: String
         }
 
         struct Secret: Decodable {
@@ -22,8 +21,6 @@ enum App {
 
         struct OAuthToken: Decodable {
             let byteUserMe: String
-            let websiteUserMe: String
-            let streamLinkGUIUserMe: String
         }
 
         let previewUsername: String
@@ -43,11 +40,11 @@ enum App {
 
         API.setup(
             authentication: Authentication(
-                clientID: secretKeys.clientID.streamLinkGUI,  // Fixme: This should be the Byte apps client ID but it's not working for some reason.
+                clientID: secretKeys.clientID.byte,
                 privateClientID: secretKeys.clientID.twitch,
                 secret: secretKeys.secret.byte
             ),
-            accessToken: secretKeys.oAuthToken.streamLinkGUIUserMe
+            accessToken: secretKeys.oAuthToken.byteUserMe
         )
     }
 }
