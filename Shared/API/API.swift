@@ -118,6 +118,8 @@ extension API {
                       let accessToken = json["access_token"] as? String,
                       let refreshToken = json["refresh_token"] as? String
                 else {
+                    // Refreshing user access token failed, which likely means the refresh token is no longer valid.
+                    self.refreshToken = nil
                     completion(.failure(APIError.refreshToken))
                     return
                 }
