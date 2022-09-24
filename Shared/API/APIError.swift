@@ -10,14 +10,17 @@ import Foundation
 
 enum APIError: LocalizedError {
     case unknown
+    case refreshToken
     case invalidData(Any.Type)
 
     var errorDescription: String? {
         switch self {
         case .unknown:
             return "An unknown API error occured."
+        case .refreshToken:
+            return "Unable to refresh access token."
         case .invalidData(let type):
-            return "Invalid data retrived for '\(type)'."
+            return "Invalid data retrieved for '\(type)'."
         }
     }
 }

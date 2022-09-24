@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 final class API: ObservableObject {
     typealias Completion<T> = (_ result: Result<DataItem<T>, Error>) -> Void where T: Decodable
@@ -14,19 +15,27 @@ final class API: ObservableObject {
 
     static private(set) var shared: API!
 
+    @EnvironmentObject private var sessionStore: SessionStore
+
     let session: URLSession
     let authentication: Authentication
     let decoder = JSONDecoder()
 
     var accessToken: String?
-
-    static func setup(authentication: Authentication, accessToken: String? = nil) {
-        shared = API(authentication: authentication, accessToken: accessToken)
+    var refreshToken: String? {
+        didSet {
+            UserDefaults.standard.set(refreshToken, forKey: "refreshToken")
+        }
     }
 
-    private init(authentication: Authentication, accessToken: String? = nil) {
+    static func setup(authentication: Authentication, accessToken: String? = nil, refreshToken: String? = nil) {
+        shared = API(authentication: authentication, accessToken: accessToken, refreshToken: refreshToken)
+    }
+
+    private init(authentication: Authentication, accessToken: String? = nil, refreshToken: String? = nil) {
         self.authentication = authentication
         self.accessToken = accessToken
+        self.refreshToken = refreshToken
 
         let config = URLSessionConfiguration.default
         config.httpAdditionalHeaders = [
@@ -87,6 +96,49 @@ extension API {
 //            executeRaw(base: .auth, endpoint: "authorize", query: query, completion: completion)
         }
     }
+
+    func refreshAccessToken(completion: @escaping Completion<[Channel]>) {
+        guard let refreshToken = refreshToken else {
+            completion(.failure(APIError.refreshToken))
+            return
+        }
+
+        let query = [
+            "client_id": authentication.clientID,
+            "client_secret": authentication.secret,
+            "grant_type": "refresh_token",
+            "refresh_token": refreshToken.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+        ]
+
+        executeRaw(base: .auth, endpoint: "token", query: query) { result in
+            switch result {
+            case .success(let data):
+                guard let jsonData = try? JSONSerialization.jsonObject(with: data),
+                      let json = jsonData as? [String:  Any?],
+                      let accessToken = json["access_token"] as? String,
+                      let refreshToken = json["refresh_token"] as? String
+                else {
+                    completion(.failure(APIError.refreshToken))
+                    return
+                }
+
+                self.accessToken = accessToken
+                self.refreshToken = refreshToken
+                self.authenticate { result in
+                    if case .success(let users) = result {
+                        self.sessionStore.user = users.data.first
+                    }
+
+                    completion(result)
+                }
+            case .failure(let error):
+                // Refreshing user access token failed, which likely means the refresh token is no longer valid.
+                self.refreshToken = nil
+
+                completion(.failure(error))
+            }
+        }
+    }
 }
 
 extension API {
@@ -118,8 +170,30 @@ extension API {
                         print("Raw data from decoding failure = \(rawData)")
                     }
 
-                    DispatchQueue.main.async {
-                        completion(.failure(LocalizedDecodingError(decodingError: de)))
+                    do {
+                        let error = try self.decoder.decode(TwitchError.self, from: data)
+
+                        if error.status == 401 {
+                            // Authentication failure. The access token has become invalid, try to refresh it.
+                            self.refreshAccessToken { result in
+                                switch result {
+                                case .success(_):
+                                    self.execute(method: method, base: base, endpoint: endpoint, query: query, page: page, decoding: decoding, completion: completion)
+                                case .failure(let error):
+                                    DispatchQueue.main.async {
+                                        completion(.failure(error))
+                                    }
+                                }
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                completion(.failure(LocalizedDecodingError(decodingError: de)))
+                            }
+                        }
+                    } catch {
+                        DispatchQueue.main.async {
+                            completion(.failure(LocalizedDecodingError(decodingError: de)))
+                        }
                     }
                 } catch {
                     DispatchQueue.main.async {

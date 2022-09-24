@@ -20,7 +20,8 @@ enum App {
         }
 
         struct OAuthToken: Decodable {
-            let byteUserMe: String
+            let byteUserAccessToken: String
+            let byteUserRefreshToken: String?
         }
 
         let previewUsername: String
@@ -38,13 +39,18 @@ enum App {
 
         previewUsername = secretKeys.previewUsername
 
+        if UserDefaults.standard.string(forKey: "refreshToken") == nil {
+            UserDefaults.standard.set(secretKeys.oAuthToken.byteUserRefreshToken, forKey: "refreshToken")
+        }
+
         API.setup(
             authentication: Authentication(
                 clientID: secretKeys.clientID.byte,
                 privateClientID: secretKeys.clientID.twitch,
                 secret: secretKeys.secret.byte
             ),
-            accessToken: secretKeys.oAuthToken.byteUserMe
+            accessToken: secretKeys.oAuthToken.byteUserAccessToken,
+            refreshToken: UserDefaults.standard.string(forKey: "refreshToken")
         )
     }
 }
