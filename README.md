@@ -16,7 +16,7 @@ In order for this project to run and work, it requires you to create a `Secrets.
     },
     "oAuthToken": {
         "byteUserAccessToken": "KEY_HERE",
-        "byteUserRefreshToken": "KEY_HERE (optional, can be `null`)",
+        "byteUserRefreshToken": "KEY_HERE",
     },
 }
 ```
@@ -44,7 +44,7 @@ This comes from the Twitch network response data and does not change. It is `kim
 1. Login to https://twitch.tv.
 2. Go to https://twitchtokengenerator.com.
 3. Paste in your Client Secret and Client ID from the previous step.
-4. Enable the `user:read:follows` permission and optionally the `chat:read` permission (I believe this permission extends the lifetime of the access token).
+4. Enable the `user:read:follows` permission.
 5. Click the green 'Generate Token!' button.
 6. Follow the prompts.
 7. Once you have been redirected back to https://twitchtokengenerator.com find the newly generated "ACCESS TOKEN" and "REFRESH TOKEN" and copy them. These are your OAuth tokens.

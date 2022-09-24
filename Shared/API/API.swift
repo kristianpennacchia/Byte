@@ -8,6 +8,8 @@
 
 import Foundation
 import SwiftUI
+import Combine
+import KeychainAccess
 
 final class API: ObservableObject {
     typealias Completion<T> = (_ result: Result<DataItem<T>, Error>) -> Void where T: Decodable
@@ -15,16 +17,21 @@ final class API: ObservableObject {
 
     static private(set) var shared: API!
 
-    @EnvironmentObject private var sessionStore: SessionStore
+    private let didChange = PassthroughSubject<Output, Failure>()
+    private let keychain = Keychain(service: "auth")
 
     let session: URLSession
     let authentication: Authentication
     let decoder = JSONDecoder()
 
-    var accessToken: String?
+    var accessToken: String? {
+        didSet {
+            keychain[KeychainKey.accessToken] = accessToken
+        }
+    }
     var refreshToken: String? {
         didSet {
-            UserDefaults.standard.set(refreshToken, forKey: "refreshToken")
+            keychain[KeychainKey.refreshToken] = refreshToken
         }
     }
 
@@ -110,7 +117,7 @@ extension API {
             "refresh_token": refreshToken.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
         ]
 
-        executeRaw(base: .auth, endpoint: "token", query: query) { result in
+        executeRaw(method: .post, base: .auth, endpoint: "token", query: query) { result in
             switch result {
             case .success(let data):
                 guard let jsonData = try? JSONSerialization.jsonObject(with: data),
@@ -127,8 +134,8 @@ extension API {
                 self.accessToken = accessToken
                 self.refreshToken = refreshToken
                 self.authenticate { result in
-                    if case .success(let users) = result {
-                        self.sessionStore.user = users.data.first
+                    if case .success(let users) = result, let user = users.data.first {
+                        self.didChange.send(user)
                     }
 
                     completion(result)
@@ -166,10 +173,10 @@ extension API {
                         completion(.success(result))
                     }
                 } catch let de as DecodingError {
-                    print("URL from decoding failure = \(request.url?.absoluteString ?? "N/A"), query = \(query)")
+                    Swift.print("URL from decoding failure = \(request.url?.absoluteString ?? "N/A"), query = \(query)")
 
                     if let rawData = String(data: data, encoding: .utf8) {
-                        print("Raw data from decoding failure = \(rawData)")
+                        Swift.print("Raw data from decoding failure = \(rawData)")
                     }
 
                     do {
@@ -263,5 +270,14 @@ extension API {
         }
         task.resume()
         return task
+    }
+}
+
+extension API: Publisher {
+    typealias Output = Channel
+    typealias Failure = Never
+
+    func receive<S>(subscriber: S) where S : Subscriber, Failure == S.Failure, Output == S.Input {
+        didChange.receive(subscriber: subscriber)
     }
 }

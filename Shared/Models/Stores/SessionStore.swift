@@ -12,10 +12,17 @@ import Combine
 final class SessionStore: ObservableObject {
     private let didChange = PassthroughSubject<Output, Failure>()
 
+    private var apiSinkCancellable: AnyCancellable?
+
     let api: API
 
     init(api: API) {
         self.api = api
+
+        // Listen for auth user changes.
+        apiSinkCancellable = self.api.sink { user in
+            self.user = user
+        }
     }
 
     var user: Channel? {

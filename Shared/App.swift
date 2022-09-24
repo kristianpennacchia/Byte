@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import KeychainAccess
 
 enum App {
     private struct SecretKeys: Decodable {
@@ -39,8 +40,14 @@ enum App {
 
         previewUsername = secretKeys.previewUsername
 
-        if UserDefaults.standard.string(forKey: "refreshToken") == nil {
-            UserDefaults.standard.set(secretKeys.oAuthToken.byteUserRefreshToken, forKey: "refreshToken")
+        let keychain = Keychain(service: "auth")
+
+        if keychain[KeychainKey.accessToken] == nil {
+            keychain[KeychainKey.accessToken] = secretKeys.oAuthToken.byteUserAccessToken
+        }
+
+        if keychain[KeychainKey.refreshToken] == nil {
+            keychain[KeychainKey.refreshToken] = secretKeys.oAuthToken.byteUserRefreshToken
         }
 
         API.setup(
@@ -49,8 +56,8 @@ enum App {
                 privateClientID: secretKeys.clientID.twitch,
                 secret: secretKeys.secret.byte
             ),
-            accessToken: secretKeys.oAuthToken.byteUserAccessToken,
-            refreshToken: UserDefaults.standard.string(forKey: "refreshToken")
+            accessToken: keychain[KeychainKey.accessToken],
+            refreshToken: keychain[KeychainKey.refreshToken]
         )
     }
 }

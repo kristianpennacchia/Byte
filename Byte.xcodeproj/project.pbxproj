@@ -132,6 +132,10 @@
 		C17766F126C66DEA0085E848 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17766F026C66DEA0085E848 /* Functions.swift */; };
 		C17766F226C66DEA0085E848 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17766F026C66DEA0085E848 /* Functions.swift */; };
 		C17766F326C66DEA0085E848 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17766F026C66DEA0085E848 /* Functions.swift */; };
+		C180244F28DEC5F900E8AB42 /* KeychainKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C180244E28DEC5F900E8AB42 /* KeychainKey.swift */; };
+		C180245028DEC5F900E8AB42 /* KeychainKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C180244E28DEC5F900E8AB42 /* KeychainKey.swift */; };
+		C180245128DEC5F900E8AB42 /* KeychainKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C180244E28DEC5F900E8AB42 /* KeychainKey.swift */; };
+		C180245428DEC8BF00E8AB42 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = C180245328DEC8BF00E8AB42 /* KeychainAccess */; };
 		C182429E2317FF4900595E76 /* ChannelList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C182429D2317FF4900595E76 /* ChannelList.swift */; };
 		C182429F2318001600595E76 /* ChannelList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C182429D2317FF4900595E76 /* ChannelList.swift */; };
 		C18242A02318001700595E76 /* ChannelList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C182429D2317FF4900595E76 /* ChannelList.swift */; };
@@ -348,6 +352,7 @@
 		C17766E826C65A610085E848 /* VideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
 		C17766EC26C65EA80085E848 /* VideoList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoList.swift; sourceTree = "<group>"; };
 		C17766F026C66DEA0085E848 /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
+		C180244E28DEC5F900E8AB42 /* KeychainKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainKey.swift; sourceTree = "<group>"; };
 		C182429D2317FF4900595E76 /* ChannelList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelList.swift; sourceTree = "<group>"; };
 		C18242A12318007A00595E76 /* Thumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Thumbnail.swift; sourceTree = "<group>"; };
 		C185E18C2375AE3C008DD09C /* SpoilerFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpoilerFilter.swift; sourceTree = "<group>"; };
@@ -448,6 +453,7 @@
 			files = (
 				C191FE9128DE0A6F00AED1AE /* Kingfisher in Frameworks */,
 				C184B9CC276AECEC00578F40 /* SwimplyPlayIndicator in Frameworks */,
+				C180245428DEC8BF00E8AB42 /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -767,6 +773,7 @@
 				C11B670E23226C7C004576A6 /* DataItem.swift */,
 				C19FE9AD246E5A7D004EB60C /* Favourite.swift */,
 				C1605F712317E31E00F98BEE /* Game.swift */,
+				C180244E28DEC5F900E8AB42 /* KeychainKey.swift */,
 				C114187D231934E90004C813 /* LogoSize.swift */,
 				C129B70C232B88C500FDDA99 /* M3U8.swift */,
 				C129B710232B8F5900FDDA99 /* M3U8Meta.swift */,
@@ -917,6 +924,7 @@
 			packageProductDependencies = (
 				C184B9CB276AECEC00578F40 /* SwimplyPlayIndicator */,
 				C191FE9028DE0A6F00AED1AE /* Kingfisher */,
+				C180245328DEC8BF00E8AB42 /* KeychainAccess */,
 			);
 			productName = Twitch;
 			productReference = C1FB01A82317D1B000130981 /* Byte.app */;
@@ -1010,6 +1018,7 @@
 			packageReferences = (
 				C184B9CA276AECEC00578F40 /* XCRemoteSwiftPackageReference "SwimplyPlayIndicator" */,
 				C191FE8F28DE0A6F00AED1AE /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				C180245228DEC8BF00E8AB42 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			productRefGroup = C1FB01A92317D1B000130981 /* Products */;
 			projectDirPath = "";
@@ -1147,6 +1156,7 @@
 				C1D5CA32231E931400663FD8 /* AppFactory.swift in Sources */,
 				C185E18E2375AE3C008DD09C /* SpoilerFilter.swift in Sources */,
 				C114188A231936C90004C813 /* AvatarSize.iOS.swift in Sources */,
+				C180245028DEC5F900E8AB42 /* KeychainKey.swift in Sources */,
 				C19FE9AF246E5A7D004EB60C /* Favourite.swift in Sources */,
 				C193E33628DE7C020064639A /* TwitchError.swift in Sources */,
 				C1BC16C42394EB0B008234EE /* ButtonWrap.swift in Sources */,
@@ -1258,6 +1268,7 @@
 				C114187C2319345E0004C813 /* WatermarkedContainer.swift in Sources */,
 				C17766E726C658E80085E848 /* VideoStore.swift in Sources */,
 				C1AE331A231E89FD00FE0F99 /* API.swift in Sources */,
+				C180245128DEC5F900E8AB42 /* KeychainKey.swift in Sources */,
 				C1729BC423268887005D0A99 /* Array+Twitch.swift in Sources */,
 				C1A75363249B8ED1005FB190 /* ActivityIndicator.swift in Sources */,
 				C114188E231937920004C813 /* AvatarSize.tvOS.swift in Sources */,
@@ -1300,6 +1311,7 @@
 				C1FB01DC2317D8A900130981 /* Avatar.swift in Sources */,
 				C1FB01AC2317D1B000130981 /* AppDelegate.swift in Sources */,
 				C17766F126C66DEA0085E848 /* Functions.swift in Sources */,
+				C180244F28DEC5F900E8AB42 /* KeychainKey.swift in Sources */,
 				C1CEB908231E85A2007C3812 /* OnFirstAppear.swift in Sources */,
 				C17766ED26C65EA80085E848 /* VideoList.swift in Sources */,
 				C18778FE23195C23008CA61E /* CovertArtSize.swift in Sources */,
@@ -2031,6 +2043,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C180245228DEC8BF00E8AB42 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
 		C184B9CA276AECEC00578F40 /* XCRemoteSwiftPackageReference "SwimplyPlayIndicator" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kristianpennacchia/SwimplyPlayIndicator";
@@ -2050,6 +2070,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C180245328DEC8BF00E8AB42 /* KeychainAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C180245228DEC8BF00E8AB42 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
+		};
 		C184B9CB276AECEC00578F40 /* SwimplyPlayIndicator */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C184B9CA276AECEC00578F40 /* XCRemoteSwiftPackageReference "SwimplyPlayIndicator" */;
