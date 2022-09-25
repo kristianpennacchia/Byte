@@ -28,14 +28,15 @@ struct StreamList: View {
         ZStack {
             Color.brand.purpleDarkDark.ignoresSafeArea()
             ScrollView {
-                if store.items.isEmpty == false {
+                if store.uniquedItems.isEmpty == false {
                     Refresh(isAnimating: $isRefreshing, action: refresh)
                         .padding(.bottom, 8)
                 }
 
                 let columns = Array(repeating: GridItem(.flexible()), count: 4)
                 LazyVGrid(columns: columns) {
-                    ForEach(store.items) { stream in
+                    ForEach(store.uniquedItems) { uniqueItem in
+                        let stream = uniqueItem.stream
                         StreamView(stream: stream, isSelected: selectedStreams.contains(stream), hasFocusEffect: false)
                             .navigationBarTitle(self.store.fetchType.navBarTitle)
                             .buttonWrap {

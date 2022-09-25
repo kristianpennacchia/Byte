@@ -14,6 +14,18 @@ final class StreamStore: FetchingObject {
         case top, followed(userID: String), game(Game)
     }
 
+    struct UniqueStream: Identifiable, Hashable {
+        let stream: Stream
+
+        // Force this instance to never be the same, so that the stream view can be updated to show
+        // changes in static data.
+        // E.g. Duration is determined by the unchanging `startedAt` property.
+        // E.g. Thumbnail URL never changes, but the image itself does.
+        // Because of this, the views displaying the stream will be showing outdated data even if none
+        // of the properties on the Stream model have changed.
+        let id = UUID()
+    }
+
     private(set) var lastFetched: Date?
 
     let api: API
@@ -30,6 +42,7 @@ final class StreamStore: FetchingObject {
         }
     }
     @Published private(set) var items = [Stream]()
+    @Published private(set) var uniquedItems = [UniqueStream]()
 
     init(api: API, fetch: Fetch) {
         self.api = api
@@ -119,5 +132,7 @@ private extension StreamStore {
         } else {
             items = originalItems.filter { $0.title.contains(filter) }
         }
+
+        uniquedItems = items.map(UniqueStream.init)
     }
 }
