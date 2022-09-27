@@ -18,24 +18,30 @@ private struct PassthroughButtonStyle<Content: View>: ButtonStyle {
 
 private struct ButtonWrap<Content: View>: View {
     let action: () -> Void
+    let longPress: (() -> Void)?
     let content: Content
 
-    init(action: @escaping () -> Void, @ViewBuilder builder: () -> Content) {
+    init(action: @escaping () -> Void, longPress: (() -> Void)? = nil, @ViewBuilder builder: () -> Content) {
         self.action = action
+        self.longPress = longPress
         self.content = builder()
     }
 
     var body: some View {
-        Button(action: action) {
+        Button(action: {}) {
             content
                 .ignoresSafeArea()
         }
+        .simultaneousGesture(TapGesture().onEnded(action))
+        .simultaneousGesture(LongPressGesture().onEnded { _ in
+            longPress?()
+        })
     }
 }
 
 extension View {
-    func buttonWrap(action: @escaping () -> Void) -> some View {
-        ButtonWrap(action: action) {
+    func buttonWrap(action: @escaping () -> Void, longPress: (() -> Void)? = nil) -> some View {
+        ButtonWrap(action: action, longPress: longPress) {
             self
         }
     }
