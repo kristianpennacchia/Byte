@@ -11,6 +11,7 @@ import SwiftUI
 struct StreamList: View {
     private class StreamViewModel: ObservableObject {
         @Published var streams = Set<Stream>()
+        @Published var stream: Stream?
     }
 
     @EnvironmentObject private var api: API
@@ -22,6 +23,7 @@ struct StreamList: View {
 
     @State private var isRefreshing = false
     @State private var selectedStreams = Set<Stream>()
+    @State private var showSpoilerMenu = false
     @State private var showVideoPlayer = false
 
     var body: some View {
@@ -38,14 +40,18 @@ struct StreamList: View {
                     ForEach(store.uniquedItems) { uniqueItem in
                         let stream = uniqueItem.stream
                         StreamView(stream: stream, isSelected: selectedStreams.contains(stream), hasFocusEffect: false)
-                            .navigationBarTitle(self.store.fetchType.navBarTitle)
+                            .navigationBarTitle(store.fetchType.navBarTitle)
                             .buttonWrap {
                                 if selectedStreams.contains(stream) == false {
                                     selectedStreams.insert(stream)
                                 }
 
                                 streamViewModel.streams = selectedStreams
+                                streamViewModel.stream = stream
                                 showVideoPlayer = true
+                            } longPress: {
+                                streamViewModel.stream = stream
+                                showSpoilerMenu = true
                             }
                             .onPlayPauseCommand {
                                 // Multi-select streams.
@@ -56,12 +62,6 @@ struct StreamList: View {
                                     // Add
                                     selectedStreams.insert(stream)
                                 }
-                            }
-                            .contextMenu {
-                                Button(spoilerFilter.isSpoiler(gameID: stream.gameId) ? "Remove Game From Spoiler Filter" : "Add Game To Spoiler Filter") {
-                                    spoilerFilter.toggle(gameID: stream.gameId)
-                                }
-                                Button("Cancel") {}
                             }
                     }
                     .padding([.leading, .trailing], 14)
@@ -79,6 +79,14 @@ struct StreamList: View {
             }
             .padding([.leading, .trailing], 14)
             .edgesIgnoringSafeArea([.leading, .trailing])
+        }
+        .actionSheet(isPresented: $showSpoilerMenu) {
+            return ActionSheet(title: Text("Spoiler Filter"), message: nil, buttons: [
+                .default(Text(spoilerFilter.isSpoiler(gameID: streamViewModel.stream!.gameId) ? "Show Game Thumbnail" : "Hide Game Thumbnail")) {
+                    spoilerFilter.toggle(gameID: streamViewModel.stream!.gameId)
+                },
+                .cancel()
+            ])
         }
         .fullScreenCover(
             isPresented: $showVideoPlayer,

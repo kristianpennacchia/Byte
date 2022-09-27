@@ -21,6 +21,7 @@ struct GameList: View {
     @StateObject private var gameViewModel = GameViewModel()
 
     @State private var isRefreshing = false
+    @State private var showSpoilerMenu = false
     @State private var showGame = false
 
     var body: some View {
@@ -38,12 +39,9 @@ struct GameList: View {
                             .buttonWrap {
                                 gameViewModel.game = game
                                 showGame = true
-                            }
-                            .contextMenu {
-                                Button(spoilerFilter.isSpoiler(gameID: game.id) ? "Remove Game From Spoiler Filter" : "Add Game To Spoiler Filter") {
-                                    spoilerFilter.toggle(gameID: game.id)
-                                }
-                                Button("Cancel") {}
+                            } longPress: {
+                                gameViewModel.game = game
+                                showSpoilerMenu = true
                             }
                     }
                 }
@@ -61,6 +59,14 @@ struct GameList: View {
             }
             .padding([.leading, .trailing], 14)
             .edgesIgnoringSafeArea([.leading, .trailing])
+        }
+        .actionSheet(isPresented: $showSpoilerMenu) {
+            return ActionSheet(title: Text("Spoiler Filter"), message: nil, buttons: [
+                .default(Text(spoilerFilter.isSpoiler(gameID: gameViewModel.game!.id) ? "Show Game Thumbnail" : "Hide Game Thumbnail")) {
+                    spoilerFilter.toggle(gameID: gameViewModel.game!.id)
+                },
+                .cancel()
+            ])
         }
         .fullScreenCover(
             isPresented: $showGame,
