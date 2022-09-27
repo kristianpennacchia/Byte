@@ -53,7 +53,7 @@ struct MultiStreamVideoPlayer: View {
                         }
                         .equatable()
                         .aspectRatio(contentMode: .fit)
-                        .onSelect {
+                        .onTapGesture {
                             streamViewModel.selectedStream = stream
                             showMenu = true
                         }

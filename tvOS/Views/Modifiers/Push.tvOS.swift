@@ -15,7 +15,7 @@ struct Push<Destination: View>: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .onSelect {
+            .onTapGesture {
                 self.shouldPresent.toggle()
             }
         .sheet(isPresented: $shouldPresent) {

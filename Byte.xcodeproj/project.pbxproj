@@ -91,9 +91,6 @@
 		C133D58223227626005015C8 /* LocalizedDecodingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C133D58123227626005015C8 /* LocalizedDecodingError.swift */; };
 		C133D58323227626005015C8 /* LocalizedDecodingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C133D58123227626005015C8 /* LocalizedDecodingError.swift */; };
 		C133D58423227626005015C8 /* LocalizedDecodingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C133D58123227626005015C8 /* LocalizedDecodingError.swift */; };
-		C13F8844233B6B0B008649F6 /* OnSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13F8843233B6B0B008649F6 /* OnSelect.swift */; };
-		C13F8845233B6B0B008649F6 /* OnSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13F8843233B6B0B008649F6 /* OnSelect.swift */; };
-		C13F8846233B6B0B008649F6 /* OnSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13F8843233B6B0B008649F6 /* OnSelect.swift */; };
 		C13F8848233B6B32008649F6 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13F8847233B6B32008649F6 /* Push.swift */; };
 		C13F8849233B6B32008649F6 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13F8847233B6B32008649F6 /* Push.swift */; };
 		C13F884A233B6B32008649F6 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = C13F8847233B6B32008649F6 /* Push.swift */; };
@@ -334,7 +331,6 @@
 		C129B710232B8F5900FDDA99 /* M3U8Meta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = M3U8Meta.swift; sourceTree = "<group>"; };
 		C133D57D23227617005015C8 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		C133D58123227626005015C8 /* LocalizedDecodingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedDecodingError.swift; sourceTree = "<group>"; };
-		C13F8843233B6B0B008649F6 /* OnSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSelect.swift; sourceTree = "<group>"; };
 		C13F8847233B6B32008649F6 /* Push.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
 		C14BCD4D2317FC8900F33A48 /* Stream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
 		C1557C4C23449BB7002387BE /* ThirdDimensionEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdDimensionEffect.swift; sourceTree = "<group>"; };
@@ -662,7 +658,6 @@
 			children = (
 				C1BC16C22394EB0B008234EE /* ButtonWrap.swift */,
 				C1CEB907231E85A2007C3812 /* OnFirstAppear.swift */,
-				C13F8843233B6B0B008649F6 /* OnSelect.swift */,
 				C13F8847233B6B32008649F6 /* Push.swift */,
 				C1557C4C23449BB7002387BE /* ThirdDimensionEffect.swift */,
 			);
@@ -1186,7 +1181,6 @@
 				C17627EC26A336A100D4BB11 /* VisualEffectView.swift in Sources */,
 				C1020D972317E9AE00FBFE16 /* Channel.swift in Sources */,
 				C1A75362249B8ED1005FB190 /* ActivityIndicator.swift in Sources */,
-				C13F8845233B6B0B008649F6 /* OnSelect.swift in Sources */,
 				C1020D662317E8E200FBFE16 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1230,7 +1224,6 @@
 				C10FECC126949C9300D48F8D /* StreamVideoPlayer.swift in Sources */,
 				C1E9428F231E70E6006B7A71 /* StreamStore.swift in Sources */,
 				C185E18F2375AE3C008DD09C /* SpoilerFilter.swift in Sources */,
-				C13F8846233B6B0B008649F6 /* OnSelect.swift in Sources */,
 				C1E67AB82333A4910024B25C /* ViewControllerHolder.swift in Sources */,
 				C1020DC72317EB0800FBFE16 /* StreamList.swift in Sources */,
 				C1020DCA2317EB0800FBFE16 /* GameList.swift in Sources */,
@@ -1301,7 +1294,6 @@
 			files = (
 				C1B5AC6A232E299F001A502F /* ChannelView.swift in Sources */,
 				C129B70D232B88C500FDDA99 /* M3U8.swift in Sources */,
-				C13F8844233B6B0B008649F6 /* OnSelect.swift in Sources */,
 				C14BCD4E2317FC8900F33A48 /* Stream.swift in Sources */,
 				C1D2F9C62322801000657A67 /* Pagination.swift in Sources */,
 				C1FB01AE2317D1B000130981 /* ContentView.swift in Sources */,
