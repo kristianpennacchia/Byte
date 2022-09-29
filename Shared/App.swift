@@ -10,25 +10,30 @@ import Foundation
 import KeychainAccess
 
 enum App {
-    private struct SecretKeys: Decodable {
-        struct ClientID: Decodable {
-            let twitch: String
-            let byte: String
+    private struct ServiceSecrets: Decodable {
+        struct SecretKeys: Decodable {
+            struct ClientID: Decodable {
+                let byte: String
+            }
+
+            struct Secret: Decodable {
+                let byte: String
+            }
+
+            struct OAuthToken: Decodable {
+                let byteUserAccessToken: String
+                let byteUserRefreshToken: String?
+            }
+
+            let previewUsername: String
+            let clientID: ClientID
+            let secret: Secret
+            let oAuthToken: OAuthToken
         }
 
-        struct Secret: Decodable {
-            let byte: String
-        }
-
-        struct OAuthToken: Decodable {
-            let byteUserAccessToken: String
-            let byteUserRefreshToken: String?
-        }
-
-        let previewUsername: String
-        let clientID: ClientID
-        let secret: Secret
-        let oAuthToken: OAuthToken
+        let twitch: SecretKeys
+        let twitchClientID: String
+        let youtube: SecretKeys?
     }
 
     private(set) static var previewUsername: String!
@@ -36,25 +41,25 @@ enum App {
     static func setup() {
         let jsonData = try! Data(contentsOf: Bundle.main.url(forResource: "Secrets", withExtension: "json")!)
         let decoder = JSONDecoder()
-        let secretKeys = try! decoder.decode(SecretKeys.self, from: jsonData)
+        let serviceSecrets = try! decoder.decode(ServiceSecrets.self, from: jsonData)
 
-        previewUsername = secretKeys.previewUsername
+        previewUsername = serviceSecrets.twitch.previewUsername
 
-        let keychain = Keychain(service: "auth")
+        let keychain = Keychain(service: "twitch")
 
         if keychain[KeychainKey.accessToken] == nil {
-            keychain[KeychainKey.accessToken] = secretKeys.oAuthToken.byteUserAccessToken
+            keychain[KeychainKey.accessToken] = serviceSecrets.twitch.oAuthToken.byteUserAccessToken
         }
 
         if keychain[KeychainKey.refreshToken] == nil {
-            keychain[KeychainKey.refreshToken] = secretKeys.oAuthToken.byteUserRefreshToken
+            keychain[KeychainKey.refreshToken] = serviceSecrets.twitch.oAuthToken.byteUserRefreshToken
         }
 
         TwitchAPI.setup(
             authentication: Authentication(
-                clientID: secretKeys.clientID.byte,
-                privateClientID: secretKeys.clientID.twitch,
-                secret: secretKeys.secret.byte
+                clientID: serviceSecrets.twitch.clientID.byte,
+                privateClientID: serviceSecrets.twitchClientID,
+                secret: serviceSecrets.twitch.secret.byte
             ),
             accessToken: keychain[KeychainKey.accessToken],
             refreshToken: keychain[KeychainKey.refreshToken]
