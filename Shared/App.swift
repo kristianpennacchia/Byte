@@ -11,29 +11,8 @@ import KeychainAccess
 
 enum App {
     private struct ServiceSecrets: Decodable {
-        struct SecretKeys: Decodable {
-            struct ClientID: Decodable {
-                let byte: String
-            }
-
-            struct Secret: Decodable {
-                let byte: String
-            }
-
-            struct OAuthToken: Decodable {
-                let byteUserAccessToken: String
-                let byteUserRefreshToken: String?
-            }
-
-            let previewUsername: String
-            let clientID: ClientID
-            let secret: Secret
-            let oAuthToken: OAuthToken
-        }
-
-        let twitch: SecretKeys
-        let twitchClientID: String
-        let youtube: SecretKeys?
+        let twitch: TwitchSecrets
+        let youtube: YoutubeSecrets?
     }
 
     private(set) static var previewUsername: String!
@@ -58,7 +37,7 @@ enum App {
         TwitchAPI.setup(
             authentication: Authentication(
                 clientID: serviceSecrets.twitch.clientID.byte,
-                privateClientID: serviceSecrets.twitchClientID,
+                privateClientID: serviceSecrets.twitch.clientID.twitch,
                 secret: serviceSecrets.twitch.secret.byte
             ),
             accessToken: keychain[KeychainKey.accessToken],
