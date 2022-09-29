@@ -57,10 +57,10 @@ struct ContentView: View {
         .accentColor(Color.brand.purple)
         .onFirstAppear {
             isSigningIn = true
-            sessionStore.signIn()
+            sessionStore.signInTwitch()
         }
         .onReceive(sessionStore) { store in
-            user = store.user
+            user = store.twitchUser
         }
         .edgesIgnoringSafeArea(.bottom)
     }

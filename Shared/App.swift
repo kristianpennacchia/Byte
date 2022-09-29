@@ -24,14 +24,14 @@ enum App {
 
         previewUsername = serviceSecrets.twitch.previewUsername
 
-        let keychain = Keychain(service: "twitch")
+        let twitchKeychain = Keychain(service: "twitch")
 
-        if keychain[KeychainKey.accessToken] == nil {
-            keychain[KeychainKey.accessToken] = serviceSecrets.twitch.oAuthToken.byteUserAccessToken
+        if twitchKeychain[KeychainKey.accessToken] == nil {
+            twitchKeychain[KeychainKey.accessToken] = serviceSecrets.twitch.oAuthToken.byteUserAccessToken
         }
 
-        if keychain[KeychainKey.refreshToken] == nil {
-            keychain[KeychainKey.refreshToken] = serviceSecrets.twitch.oAuthToken.byteUserRefreshToken
+        if twitchKeychain[KeychainKey.refreshToken] == nil {
+            twitchKeychain[KeychainKey.refreshToken] = serviceSecrets.twitch.oAuthToken.byteUserRefreshToken
         }
 
         TwitchAPI.setup(
@@ -40,8 +40,15 @@ enum App {
                 privateClientID: serviceSecrets.twitch.clientID.twitch,
                 secret: serviceSecrets.twitch.secret.byte
             ),
-            accessToken: keychain[KeychainKey.accessToken],
-            refreshToken: keychain[KeychainKey.refreshToken]
+            accessToken: twitchKeychain[KeychainKey.accessToken]!,
+            refreshToken: twitchKeychain[KeychainKey.refreshToken]
         )
+
+        if let youtubeSecrets = serviceSecrets.youtube {
+            YoutubeAPI.setup(authentication: .init(
+                clientID: youtubeSecrets.clientID.byte,
+                secret: youtubeSecrets.secret.byte
+            ))
+        }
     }
 }

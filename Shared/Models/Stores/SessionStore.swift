@@ -15,35 +15,56 @@ final class SessionStore: ObservableObject {
     private var apiSinkCancellable: AnyCancellable?
 
     let twitchAPI: TwitchAPI
+    let youtubeAPI: YoutubeAPI?
 
-    init(twitchAPI: TwitchAPI) {
+    init(twitchAPI: TwitchAPI, youtubeAPI: YoutubeAPI?) {
         self.twitchAPI = twitchAPI
+        self.youtubeAPI = youtubeAPI
 
         // Listen for auth user changes.
         apiSinkCancellable = self.twitchAPI.sink { user in
-            self.user = user
+            self.twitchUser = user
         }
     }
 
-    var user: Channel? {
+    var twitchUser: Channel? {
         didSet {
             didChange.send(self)
         }
     }
+    var youtubeUser: Void?
 
-    func signIn() {
+    func signInTwitch() {
         twitchAPI.authenticate { [weak self] result in
             switch result {
             case .success(let data):
-                self?.user = data.data.first
+                self?.twitchUser = data.data.first
             case .failure(let error):
                 Swift.print("Failed sign-in. \(error)")
             }
         }
     }
 
+    func signInYoutube(oAuthHandler: @escaping (YoutubeOAuth) -> Void) {
+        youtubeAPI?.authenticate(oAuthHandler: { result in
+            switch result {
+            case .success(let data):
+                oAuthHandler(data)
+            case .failure(let error):
+                Swift.print("Failed to begin Youtube sign-in. \(error.localizedDescription)")
+            }
+        }, completion: { result in
+            switch result {
+            case .success(let data):
+                #warning("TODO: The user is signed-in... Now what?")
+            case .failure(let error):
+                Swift.print("Failed to complete Youtube sign-in. \(error.localizedDescription)")
+            }
+        })
+    }
+
     func signOut() {
-        user = nil
+        twitchUser = nil
     }
 }
 
