@@ -249,6 +249,9 @@
 		C1FB01DA2317D87400130981 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB01D92317D87400130981 /* Channel.swift */; };
 		C1FB01DC2317D8A900130981 /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB01DB2317D8A900130981 /* Avatar.swift */; };
 		C1FB01DE2317D8E100130981 /* StreamList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB01DD2317D8E100130981 /* StreamList.swift */; };
+		C1FEBCF228E4768600903D16 /* OAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FEBCF128E4768600903D16 /* OAuthView.swift */; };
+		C1FEBCF328E4768600903D16 /* OAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FEBCF128E4768600903D16 /* OAuthView.swift */; };
+		C1FEBCF428E4768600903D16 /* OAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FEBCF128E4768600903D16 /* OAuthView.swift */; };
 		C1FEBCF628E4780C00903D16 /* QRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FEBCF528E4780C00903D16 /* QRCode.swift */; };
 		C1FEBCF728E4780C00903D16 /* QRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FEBCF528E4780C00903D16 /* QRCode.swift */; };
 		C1FEBCF828E4780C00903D16 /* QRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FEBCF528E4780C00903D16 /* QRCode.swift */; };
@@ -407,6 +410,7 @@
 		C1FB01D92317D87400130981 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		C1FB01DB2317D8A900130981 /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
 		C1FB01DD2317D8E100130981 /* StreamList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamList.swift; sourceTree = "<group>"; };
+		C1FEBCF128E4768600903D16 /* OAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthView.swift; sourceTree = "<group>"; };
 		C1FEBCF528E4780C00903D16 /* QRCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -793,6 +797,7 @@
 				C182429D2317FF4900595E76 /* ChannelList.swift */,
 				C1FB01AD2317D1B000130981 /* ContentView.swift */,
 				C1605F732317E57E00F98BEE /* GameList.swift */,
+				C1FEBCF128E4768600903D16 /* OAuthView.swift */,
 				C109CFB6231D1EDE00C35AD8 /* SignInView.swift */,
 				C1FB01DD2317D8E100130981 /* StreamList.swift */,
 				C1C79E752696EC1B00E653E7 /* StreamPicker.swift */,
@@ -1159,6 +1164,7 @@
 				C114188A231936C90004C813 /* AvatarSize.iOS.swift in Sources */,
 				C180245028DEC5F900E8AB42 /* KeychainKey.swift in Sources */,
 				C19FE9AF246E5A7D004EB60C /* Favourite.swift in Sources */,
+				C1FEBCF328E4768600903D16 /* OAuthView.swift in Sources */,
 				C193E33628DE7C020064639A /* TwitchError.swift in Sources */,
 				C1BC16C42394EB0B008234EE /* ButtonWrap.swift in Sources */,
 				C129B70E232B88C500FDDA99 /* M3U8.swift in Sources */,
@@ -1228,6 +1234,7 @@
 				C11418822319358E0004C813 /* SizeProvider.swift in Sources */,
 				C18242A22318007A00595E76 /* Thumbnail.swift in Sources */,
 				C15DD8562329235B00EC8EFB /* Video.swift in Sources */,
+				C1FEBCF428E4768600903D16 /* OAuthView.swift in Sources */,
 				C10FECC126949C9300D48F8D /* StreamVideoPlayer.swift in Sources */,
 				C1E9428F231E70E6006B7A71 /* StreamStore.swift in Sources */,
 				C185E18F2375AE3C008DD09C /* SpoilerFilter.swift in Sources */,
@@ -1370,6 +1377,7 @@
 				C1B5AC66232E2874001A502F /* StreamView.swift in Sources */,
 				C1AE3318231E89FD00FE0F99 /* API.swift in Sources */,
 				C17766E526C658E80085E848 /* VideoStore.swift in Sources */,
+				C1FEBCF228E4768600903D16 /* OAuthView.swift in Sources */,
 				C1E67ABA2333A5F30024B25C /* PlayerViewController.swift in Sources */,
 				C1278A34231911D900400D35 /* WatermarkedContainer.tvOS.swift in Sources */,
 				C1D5CA2D231E908300663FD8 /* Authentication.swift in Sources */,
