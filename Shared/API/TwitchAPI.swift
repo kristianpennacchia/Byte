@@ -41,11 +41,11 @@ final class TwitchAPI: ObservableObject {
         }
     }
 
-    static func setup(authentication: Authentication, accessToken: String? = nil, refreshToken: String? = nil) {
+    static func setup(authentication: Authentication, accessToken: String, refreshToken: String? = nil) {
         shared = TwitchAPI(authentication: authentication, accessToken: accessToken, refreshToken: refreshToken)
     }
 
-    private init(authentication: Authentication, accessToken: String? = nil, refreshToken: String? = nil) {
+    private init(authentication: Authentication, accessToken: String, refreshToken: String? = nil) {
         self.authentication = authentication
         self.accessToken = accessToken
         self.refreshToken = refreshToken
