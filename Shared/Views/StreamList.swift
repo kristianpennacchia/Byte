@@ -14,6 +14,7 @@ struct StreamList: View {
         @Published var stream: Stream?
     }
 
+    @EnvironmentObject private var sessionStore: SessionStore
     @EnvironmentObject private var api: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
@@ -32,20 +33,26 @@ struct StreamList: View {
             Color.brand.purpleDarkDark.ignoresSafeArea()
             ScrollView {
                 HStack(alignment: .center, spacing: 16) {
-                    Spacer()
-                    Button("Youtube") {
-                        showYoutubeAuthScreen = true
+                    if sessionStore.youtubeAPI != nil, sessionStore.youtubeUser == nil {
+                        Spacer()
+                        Button("Youtube") {
+                            showYoutubeAuthScreen = true
+                        }
+                        .foregroundColor(.white)
+                        .tint(.red)
+                        Spacer()
+                        if store.uniquedItems.isEmpty == false {
+                            Refresh(isAnimating: $isRefreshing, action: refresh)
+                        }
+                        Spacer()
+                        Spacer()
+                        Spacer()
+                        Spacer()
+                    } else {
+                        if store.uniquedItems.isEmpty == false {
+                            Refresh(isAnimating: $isRefreshing, action: refresh)
+                        }
                     }
-                    .foregroundColor(.white)
-                    .tint(.red)
-                    Spacer()
-                    if store.uniquedItems.isEmpty == false {
-                        Refresh(isAnimating: $isRefreshing, action: refresh)
-                    }
-                    Spacer()
-                    Spacer()
-                    Spacer()
-                    Spacer()
                 }
                 .padding(.bottom, 8)
 
