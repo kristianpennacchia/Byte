@@ -14,13 +14,13 @@ final class SessionStore: ObservableObject {
 
     private var apiSinkCancellable: AnyCancellable?
 
-    let api: API
+    let twitchAPI: TwitchAPI
 
-    init(api: API) {
-        self.api = api
+    init(twitchAPI: TwitchAPI) {
+        self.twitchAPI = twitchAPI
 
         // Listen for auth user changes.
-        apiSinkCancellable = self.api.sink { user in
+        apiSinkCancellable = self.twitchAPI.sink { user in
             self.user = user
         }
     }
@@ -32,7 +32,7 @@ final class SessionStore: ObservableObject {
     }
 
     func signIn() {
-        api.authenticate { [weak self] result in
+        twitchAPI.authenticate { [weak self] result in
             switch result {
             case .success(let data):
                 self?.user = data.data.first

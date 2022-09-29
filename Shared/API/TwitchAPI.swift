@@ -11,14 +11,14 @@ import SwiftUI
 import Combine
 import KeychainAccess
 
-final class API: ObservableObject {
+final class TwitchAPI: ObservableObject {
     typealias Completion<T> = (_ result: Result<DataItem<T>, Error>) -> Void where T: Decodable
     typealias CompletionRaw = (_ result: Result<Data, Error>) -> Void
 
-    static private(set) var shared: API!
+    static private(set) var shared: TwitchAPI!
 
     private let didChange = PassthroughSubject<Output, Failure>()
-    private let keychain = Keychain(service: "auth")
+    private let keychain = Keychain(service: "twitch")
 
     let session: URLSession
     let authentication: Authentication
@@ -36,7 +36,7 @@ final class API: ObservableObject {
     }
 
     static func setup(authentication: Authentication, accessToken: String? = nil, refreshToken: String? = nil) {
-        shared = API(authentication: authentication, accessToken: accessToken, refreshToken: refreshToken)
+        shared = TwitchAPI(authentication: authentication, accessToken: accessToken, refreshToken: refreshToken)
     }
 
     private init(authentication: Authentication, accessToken: String? = nil, refreshToken: String? = nil) {
@@ -56,7 +56,7 @@ final class API: ObservableObject {
     }
 }
 
-extension API {
+extension TwitchAPI {
     enum Method: String {
         case get, post, put, patch, delete
     }
@@ -83,14 +83,14 @@ extension API {
     }
 }
 
-extension API {
+extension TwitchAPI {
 
     // - MARK: Authentication
 
     func authenticate(completion: @escaping Completion<[Channel]>) {
         if accessToken != nil {
             // We should be able to get the user info assuming the accessToken is still valid
-            API.shared.execute(endpoint: "users", decoding: [Channel].self, completion: completion)
+            TwitchAPI.shared.execute(endpoint: "users", decoding: [Channel].self, completion: completion)
         } else {
             /// - Todo: Authenticate
 //            let query = [
@@ -150,7 +150,7 @@ extension API {
     }
 }
 
-extension API {
+extension TwitchAPI {
     @discardableResult
     func execute<T>(method: Method = .get, base: Base = .helix, endpoint: String, query: [String: Any?] = [:], page: Pagination? = nil, decoding: T.Type, completion: @escaping Completion<T>) -> URLSessionTask {
         var components = URLComponents(url: base.url.appendingPathComponent(endpoint), resolvingAgainstBaseURL: true)!
@@ -273,7 +273,7 @@ extension API {
     }
 }
 
-extension API: Publisher {
+extension TwitchAPI: Publisher {
     typealias Output = Channel
     typealias Failure = Never
 

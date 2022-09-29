@@ -57,7 +57,7 @@ extension Stream {
     }
 
     @discardableResult
-    func game(api: API, completion: @escaping (Result<Game, Error>) -> Void) -> URLSessionTask? {
+    func game(api: TwitchAPI, completion: @escaping (Result<Game, Error>) -> Void) -> URLSessionTask? {
         api.execute(endpoint: "games", query: ["id": gameId], decoding: [Game].self) { result in
             switch result {
             case .success(let data):

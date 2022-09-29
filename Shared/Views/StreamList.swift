@@ -14,7 +14,7 @@ struct StreamList: View {
         @Published var stream: Stream?
     }
 
-    @EnvironmentObject private var api: API
+    @EnvironmentObject private var api: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @ObservedObject var store: StreamStore

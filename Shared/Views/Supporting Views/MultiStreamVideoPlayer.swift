@@ -14,7 +14,7 @@ struct MultiStreamVideoPlayer: View {
         @Published var selectedStream: Stream?
     }
 
-    @EnvironmentObject private var api: API
+    @EnvironmentObject private var api: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @StateObject private var streamViewModel = StreamViewModel()

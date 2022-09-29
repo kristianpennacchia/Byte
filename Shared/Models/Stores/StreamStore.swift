@@ -28,7 +28,7 @@ final class StreamStore: FetchingObject {
 
     private(set) var lastFetched: Date?
 
-    let api: API
+    let api: TwitchAPI
     let fetchType: Fetch
     var filter = "" {
         didSet {
@@ -44,7 +44,7 @@ final class StreamStore: FetchingObject {
     @Published private(set) var items = [Stream]()
     @Published private(set) var uniquedItems = [UniqueStream]()
 
-    init(api: API, fetch: Fetch) {
+    init(api: TwitchAPI, fetch: Fetch) {
         self.api = api
         self.fetchType = fetch
     }

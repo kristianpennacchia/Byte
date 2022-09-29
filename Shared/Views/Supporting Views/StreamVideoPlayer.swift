@@ -17,7 +17,7 @@ struct StreamVideoPlayer: View {
         var isConfigured: Bool { player.currentItem != nil }
     }
 
-    @EnvironmentObject private var api: API
+    @EnvironmentObject private var api: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @State private var showErrorAlert = false

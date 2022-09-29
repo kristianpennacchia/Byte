@@ -15,7 +15,7 @@ final class ChannelStore: FetchingObject {
 
     private(set) var lastFetched: Date?
 
-    let api: API
+    let api: TwitchAPI
     let fetchType: Fetch
     var filter = "" {
         didSet {
@@ -31,7 +31,7 @@ final class ChannelStore: FetchingObject {
     }
     @Published private(set) var items = [Channel]()
 
-    init(api: API, fetch: Fetch) {
+    init(api: TwitchAPI, fetch: Fetch) {
         self.api = api
         self.fetchType = fetch
     }

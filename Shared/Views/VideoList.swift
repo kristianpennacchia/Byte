@@ -13,7 +13,7 @@ struct VideoList: View {
         @Published var video: Video?
     }
 
-    @EnvironmentObject private var api: API
+    @EnvironmentObject private var api: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @ObservedObject var store: VideoStore

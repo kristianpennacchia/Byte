@@ -13,7 +13,7 @@ struct ChannelList: View {
         @Published var channel: Channel?
     }
 
-    @EnvironmentObject private var api: API
+    @EnvironmentObject private var api: TwitchAPI
 
     @ObservedObject var store: ChannelStore
 

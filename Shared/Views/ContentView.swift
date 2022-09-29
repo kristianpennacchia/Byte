@@ -10,23 +10,23 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var sessionStore: SessionStore
-    @EnvironmentObject private var api: API
+    @EnvironmentObject private var api: TwitchAPI
 
     // When this value changes, the entire view is reloaded
     @State private var user: Channel?
     @State private var isSigningIn = false
 
     init() {
-        #if !os(tvOS)
+#if !os(tvOS)
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor(named: "Brand")!]
-        #endif
+#endif
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor(named: "Brand")!]
     }
 
     var body: some View {
         ZStack {
             Color.brand.purpleDarkDark.ignoresSafeArea()
-            if self.user == nil {
+            if user == nil {
                 VStack {
                     Spacer()
                     SignInView(isSigningIn: $isSigningIn)
@@ -34,19 +34,19 @@ struct ContentView: View {
                 }
             } else {
                 TabView {
-                    StreamList(store: StreamStore(api: self.api, fetch: .followed(userID: self.user!.id)))
+                    StreamList(store: StreamStore(api: api, fetch: .followed(userID: user!.id)))
                         .tabItem {
                             Text("Followed Streams")
                         }
-                    StreamList(store: StreamStore(api: self.api, fetch: .top))
+                    StreamList(store: StreamStore(api: api, fetch: .top))
                         .tabItem {
                             Text("Streams")
                         }
-                    GameList(store: GameStore(api: self.api, fetch: .top))
+                    GameList(store: GameStore(api: api, fetch: .top))
                         .tabItem {
                             Text("Games")
                         }
-                    ChannelList(store: ChannelStore(api: self.api, fetch: .followed(userID: self.user!.id)))
+                    ChannelList(store: ChannelStore(api: api, fetch: .followed(userID: user!.id)))
                         .tabItem {
                             Text("Followed Channels")
                         }
@@ -56,11 +56,11 @@ struct ContentView: View {
         }
         .accentColor(Color.brand.purple)
         .onFirstAppear {
-            self.isSigningIn = true
-            self.sessionStore.signIn()
+            isSigningIn = true
+            sessionStore.signIn()
         }
         .onReceive(sessionStore) { store in
-            self.user = store.user
+            user = store.user
         }
         .edgesIgnoringSafeArea(.bottom)
     }

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct StreamPicker: View {
-    @EnvironmentObject private var api: API
+    @EnvironmentObject private var api: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @ObservedObject var store: StreamStore
@@ -75,6 +75,6 @@ private extension StreamPicker {
 //struct StreamPicker_Previews: PreviewProvider {
 //    static var previews: some View {
 //        var selectedStream: Binding<Stream>
-//        StreamPicker(store: StreamStore(api: .shared, fetch: .followed(userID: app.previewUsername)), selectedStream: Binding<Stream>())
+//        StreamPicker(store: StreamStore(twitchAPI: .shared, fetch: .followed(userID: app.previewUsername)), selectedStream: Binding<Stream>())
 //    }
 //}

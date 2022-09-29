@@ -50,7 +50,7 @@ enum App {
             keychain[KeychainKey.refreshToken] = secretKeys.oAuthToken.byteUserRefreshToken
         }
 
-        API.setup(
+        TwitchAPI.setup(
             authentication: Authentication(
                 clientID: secretKeys.clientID.byte,
                 privateClientID: secretKeys.clientID.twitch,

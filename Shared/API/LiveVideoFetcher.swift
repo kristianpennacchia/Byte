@@ -69,11 +69,11 @@ class LiveVideoFetcher: NSObject {
         return URLSession(configuration: .default, delegate: self, delegateQueue: .main)
     }()
 
-    let api: API
+    let api: TwitchAPI
     let clientID: String
     let videoMode: VideoMode
 
-    init(api: API, videoMode: VideoMode) {
+    init(api: TwitchAPI, videoMode: VideoMode) {
         self.api = api
         self.clientID = api.authentication.privateClientID
         self.videoMode = videoMode
@@ -101,7 +101,7 @@ extension LiveVideoFetcher {
         case .vod(let video):
             getVideo(.vod(vodID: video.id), completion: completion)
 
-//            api.execute(endpoint: "videos", query: ["id": video], decoding: [Video].self) { [weak self] result in
+//            twitchAPI.execute(endpoint: "videos", query: ["id": video], decoding: [Video].self) { [weak self] result in
 //                guard let self = self else { return }
 //
 //                switch result {
