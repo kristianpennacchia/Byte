@@ -249,6 +249,9 @@
 		C1FB01DA2317D87400130981 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB01D92317D87400130981 /* Channel.swift */; };
 		C1FB01DC2317D8A900130981 /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB01DB2317D8A900130981 /* Avatar.swift */; };
 		C1FB01DE2317D8E100130981 /* StreamList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB01DD2317D8E100130981 /* StreamList.swift */; };
+		C1FEBCF628E4780C00903D16 /* QRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FEBCF528E4780C00903D16 /* QRCode.swift */; };
+		C1FEBCF728E4780C00903D16 /* QRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FEBCF528E4780C00903D16 /* QRCode.swift */; };
+		C1FEBCF828E4780C00903D16 /* QRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FEBCF528E4780C00903D16 /* QRCode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -404,6 +407,7 @@
 		C1FB01D92317D87400130981 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		C1FB01DB2317D8A900130981 /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
 		C1FB01DD2317D8E100130981 /* StreamList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamList.swift; sourceTree = "<group>"; };
+		C1FEBCF528E4780C00903D16 /* QRCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -613,6 +617,7 @@
 				C10FECC226949CE600D48F8D /* MultiStreamVideoPlayer.swift */,
 				C1EF0BA4276B19F000E311C8 /* PlayerLayer.swift */,
 				C1E67AB92333A5F30024B25C /* PlayerViewController.swift */,
+				C1FEBCF528E4780C00903D16 /* QRCode.swift */,
 				C1997027233B803D00FFC27A /* Refresh.swift */,
 				C10FECBE26949C9300D48F8D /* StreamVideoPlayer.swift */,
 				C1B5AC65232E2874001A502F /* StreamView.swift */,
@@ -1128,6 +1133,7 @@
 				C1B5AC6F232E29EF001A502F /* GameView.swift in Sources */,
 				C17766F226C66DEA0085E848 /* Functions.swift in Sources */,
 				C1C103EB232DCD8000267736 /* OnSelect.iOS.swift in Sources */,
+				C1FEBCF728E4780C00903D16 /* QRCode.swift in Sources */,
 				C17766EE26C65EA80085E848 /* VideoList.swift in Sources */,
 				C1278A2D23190E7300400D35 /* LogoSize.iOS.swift in Sources */,
 				C1141887231936A60004C813 /* AvatarSize.swift in Sources */,
@@ -1211,6 +1217,7 @@
 				C129B713232B8F5900FDDA99 /* M3U8Meta.swift in Sources */,
 				C114188B231936C90004C813 /* AvatarSize.iOS.swift in Sources */,
 				C1278A2923190BE600400D35 /* Logo.swift in Sources */,
+				C1FEBCF828E4780C00903D16 /* QRCode.swift in Sources */,
 				C17766EB26C65A610085E848 /* VideoView.swift in Sources */,
 				C187790023195C23008CA61E /* CovertArtSize.swift in Sources */,
 				C1020DC62317EB0800FBFE16 /* Avatar.swift in Sources */,
@@ -1300,6 +1307,7 @@
 				C1D5CA31231E931400663FD8 /* AppFactory.swift in Sources */,
 				C1FB01DA2317D87400130981 /* Channel.swift in Sources */,
 				C11B670F23226C7C004576A6 /* DataItem.swift in Sources */,
+				C1FEBCF628E4780C00903D16 /* QRCode.swift in Sources */,
 				C1FB01DC2317D8A900130981 /* Avatar.swift in Sources */,
 				C1FB01AC2317D1B000130981 /* AppDelegate.swift in Sources */,
 				C17766F126C66DEA0085E848 /* Functions.swift in Sources */,
