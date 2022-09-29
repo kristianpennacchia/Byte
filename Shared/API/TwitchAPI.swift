@@ -1,5 +1,5 @@
 //
-//  API.swift
+//  TwitchAPI.swift
 //  Byte
 //
 //  Created by Kristian Pennacchia on 3/9/19.
