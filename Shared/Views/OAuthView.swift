@@ -9,42 +9,81 @@
 import SwiftUI
 
 struct OAuthView: View {
+    private class ViewModel: ObservableObject {
+        @Published var isRetrievingOAuth = false
+    }
+
+    @EnvironmentObject private var sessionStore: SessionStore
+
+    @StateObject private var viewModel = ViewModel()
+
+    @State private var oAuth: YoutubeOAuth?
+    @State private var heartbeatChanged = false
+
+    private let heartbeatTimer = Timer.publish(every: 0.6, on: .main, in: .common).autoconnect()
+
     var body: some View {
-        ZStack {
-            Color.brand.youtube.ignoresSafeArea()
-            HStack(alignment: .top) {
-                Spacer()
-                VStack {
-                    QRCode(value: "www.apple.com")
-                        .frame(width: 400, height: 400)
-                    Text("Can't scan the QRCode? Go to")
-                        .font(.body)
-                        .multilineTextAlignment(.center)
-                        .padding(.top, 16)
-                    Text("www.apple.com")
-                        .font(.body)
-                        .bold()
-                        .multilineTextAlignment(.center)
-                    Text("on your phone.")
-                        .font(.body)
-                        .multilineTextAlignment(.center)
+        if oAuth == nil, viewModel.isRetrievingOAuth == false {
+            viewModel.isRetrievingOAuth = true
+            sessionStore.signInYoutube { oAuth in
+                self.oAuth = oAuth
+                viewModel.isRetrievingOAuth = false
+            }
+        }
+
+        return ZStack {
+            Color.black.ignoresSafeArea()
+            if let oAuth {
+                HStack(alignment: .top) {
+                    Spacer()
+                    VStack {
+                        QRCode(value: oAuth.userCode)
+                            .frame(width: 400, height: 400)
+                        Text("Can't scan the QRCode? Go to")
+                            .font(.body)
+                            .multilineTextAlignment(.center)
+                            .padding(.top, 16)
+                        Text(oAuth.verificationUrl)
+                            .font(.body)
+                            .bold()
+                            .multilineTextAlignment(.center)
+                        Text("on your phone.")
+                            .font(.body)
+                            .multilineTextAlignment(.center)
+                    }
+                    Spacer()
+                    VStack {
+                        Text("Youtube")
+                            .font(.largeTitle)
+                            .padding(.top, 32)
+                        Text("Sign in to Youtube by scanning the QRCode with your phones camera.")
+                            .font(.body)
+                            .multilineTextAlignment(.center)
+                            .frame(width: 500)
+                            .padding(.top)
+                        Text(oAuth.userCode)
+                            .font(.system(size: 100))
+                            .monospacedDigit()
+                            .padding(.top)
+                    }
+                    Spacer()
                 }
-                Spacer()
-                VStack {
-                    Text("Youtube")
-                        .font(.largeTitle)
-                        .padding(.top, 32)
-                    Text("Sign in to Youtube by scanning the QRCode with your phone.")
-                        .font(.body)
-                        .multilineTextAlignment(.center)
-                        .frame(width: 500)
-                        .padding(.top)
-                    Text("0A1B2C")
+            } else {
+                ZStack {
+                    Circle()
+                        .frame(width: 200, height: 200)
+                        .foregroundColor(heartbeatChanged ? .white.opacity(0.8) : .brand.youtube)
+                        .animation(.spring(response: 0.3, dampingFraction: 0.3, blendDuration: 0.3))
+                    Image(systemName: "heart.fill")
+                        .foregroundColor(heartbeatChanged ? .brand.youtube : .white)
                         .font(.system(size: 100))
-                        .monospacedDigit()
-                        .padding(.top)
+                        .scaleEffect(heartbeatChanged ? 1.0 : 0.5)
+                        .animation(.spring(response: 0.3, dampingFraction: 0.3, blendDuration: 0.3))
                 }
-                Spacer()
+                .animation(.default)
+                .onReceive(heartbeatTimer) { _ in
+                    heartbeatChanged.toggle()
+                }
             }
         }
     }
