@@ -214,9 +214,6 @@
 		C1D32D7F232E695600BE3A4C /* Strings+Twitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D32D7E232E695600BE3A4C /* Strings+Twitch.swift */; };
 		C1D32D80232E695600BE3A4C /* Strings+Twitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D32D7E232E695600BE3A4C /* Strings+Twitch.swift */; };
 		C1D32D81232E695600BE3A4C /* Strings+Twitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D32D7E232E695600BE3A4C /* Strings+Twitch.swift */; };
-		C1D5CA2D231E908300663FD8 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D5CA2C231E908300663FD8 /* Authentication.swift */; };
-		C1D5CA2E231E908300663FD8 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D5CA2C231E908300663FD8 /* Authentication.swift */; };
-		C1D5CA2F231E908300663FD8 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D5CA2C231E908300663FD8 /* Authentication.swift */; };
 		C1D5CA31231E931400663FD8 /* AppFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D5CA30231E931400663FD8 /* AppFactory.swift */; };
 		C1D5CA32231E931400663FD8 /* AppFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D5CA30231E931400663FD8 /* AppFactory.swift */; };
 		C1D5CA33231E931400663FD8 /* AppFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D5CA30231E931400663FD8 /* AppFactory.swift */; };
@@ -391,7 +388,6 @@
 		C1CEB907231E85A2007C3812 /* OnFirstAppear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnFirstAppear.swift; sourceTree = "<group>"; };
 		C1D2F9C52322801000657A67 /* Pagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pagination.swift; sourceTree = "<group>"; };
 		C1D32D7E232E695600BE3A4C /* Strings+Twitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Strings+Twitch.swift"; sourceTree = "<group>"; };
-		C1D5CA2C231E908300663FD8 /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		C1D5CA30231E931400663FD8 /* AppFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFactory.swift; sourceTree = "<group>"; };
 		C1E67AB52333A4910024B25C /* ViewControllerHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerHolder.swift; sourceTree = "<group>"; };
 		C1E67AB92333A5F30024B25C /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
@@ -607,11 +603,10 @@
 		C1AE3316231E89F100FE0F99 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				C1AE3317231E89FD00FE0F99 /* TwitchAPI.swift */,
 				C133D57D23227617005015C8 /* APIError.swift */,
-				C1D5CA2C231E908300663FD8 /* Authentication.swift */,
 				C1F6C4DA232A776A006EA1D5 /* LiveVideoFetcher.swift */,
 				C133D58123227626005015C8 /* LocalizedDecodingError.swift */,
+				C1AE3317231E89FD00FE0F99 /* TwitchAPI.swift */,
 				C193E33428DE7C020064639A /* TwitchError.swift */,
 			);
 			path = API;
@@ -1190,7 +1185,6 @@
 				C109CFB8231D1EDE00C35AD8 /* SignInView.swift in Sources */,
 				C1020D922317E9AE00FBFE16 /* StreamList.swift in Sources */,
 				C1EF0BA6276B19F000E311C8 /* PlayerLayer.swift in Sources */,
-				C1D5CA2E231E908300663FD8 /* Authentication.swift in Sources */,
 				C14BCD4F2317FC8900F33A48 /* Stream.swift in Sources */,
 				C1020D642317E8E200FBFE16 /* AppDelegate.swift in Sources */,
 				C1E94286231E70CE006B7A71 /* ChannelStore.swift in Sources */,
@@ -1271,7 +1265,6 @@
 				C1E94283231E70B6006B7A71 /* FetchingObject.swift in Sources */,
 				C17766EF26C65EA80085E848 /* VideoList.swift in Sources */,
 				C182429E2317FF4900595E76 /* ChannelList.swift in Sources */,
-				C1D5CA2F231E908300663FD8 /* Authentication.swift in Sources */,
 				C11B671123226C7C004576A6 /* DataItem.swift in Sources */,
 				C1E94287231E70CE006B7A71 /* ChannelStore.swift in Sources */,
 				C19FE9B0246E5A7D004EB60C /* Favourite.swift in Sources */,
@@ -1396,7 +1389,6 @@
 				C1FEBCF228E4768600903D16 /* OAuthView.swift in Sources */,
 				C1E67ABA2333A5F30024B25C /* PlayerViewController.swift in Sources */,
 				C1278A34231911D900400D35 /* WatermarkedContainer.tvOS.swift in Sources */,
-				C1D5CA2D231E908300663FD8 /* Authentication.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

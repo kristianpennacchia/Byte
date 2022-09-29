@@ -35,7 +35,7 @@ enum App {
         }
 
         TwitchAPI.setup(
-            authentication: Authentication(
+            authentication: .init(
                 clientID: serviceSecrets.twitch.clientID.byte,
                 privateClientID: serviceSecrets.twitch.clientID.twitch,
                 secret: serviceSecrets.twitch.secret.byte

@@ -12,6 +12,12 @@ import Combine
 import KeychainAccess
 
 final class TwitchAPI: ObservableObject {
+    struct Authentication {
+        let clientID: String
+        let privateClientID: String
+        let secret: String
+    }
+
     typealias Completion<T> = (_ result: Result<DataItem<T>, Error>) -> Void where T: Decodable
     typealias CompletionRaw = (_ result: Result<Data, Error>) -> Void
 
