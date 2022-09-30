@@ -99,23 +99,24 @@ extension YoutubeAPI {
                 "scope": "https://www.googleapis.com/auth/youtube.readonly",
             ]
 
-            execute(method: .post, base: .auth, endpoint: "device/code", query: query, decoding: YoutubeOAuth.self) { result in
-                switch result {
-                case .success(let data):
+            Task {
+                do {
+                    let data = try await execute(method: .post, base: .auth, endpoint: "device/code", query: query, decoding: YoutubeOAuth.self)
+
                     oAuthHandler(.success(data))
 
                     #warning("TODO: Continuously poll 'https://oauth2.googleapis.com/token' every `data.interval` seconds until we get a success or failure response.")
-                case .failure(let error):
+                } catch {
                     Swift.print("Failed getting Youtube OAuth response. \(error.localizedDescription)")
+                    oAuthHandler(.failure(error))
                 }
             }
         }
     }
 
-    func refreshAccessToken(completion: @escaping Completion<[Channel]>) {
+    func refreshAccessToken() async throws -> Void {
         guard let refreshToken = refreshToken else {
-            completion(.failure(APIError.refreshToken))
-            return
+            throw APIError.refreshToken
         }
 
         let query = [
@@ -160,8 +161,7 @@ extension YoutubeAPI {
 }
 
 extension YoutubeAPI {
-    @discardableResult
-    func execute<T>(method: Method = .get, base: Base, endpoint: String, query: [String: Any?] = [:], page: Pagination? = nil, decoding: T.Type, completion: @escaping Completion<T>) -> URLSessionTask {
+    func execute<T>(method: Method = .get, base: Base, endpoint: String, query: [String: Any?] = [:], page: Pagination? = nil, decoding: T.Type) async throws -> T where T: Decodable {
         var components = URLComponents(url: base.url.appendingPathComponent(endpoint), resolvingAgainstBaseURL: true)!
         components.query = query.queryParameters()
 
@@ -173,59 +173,35 @@ extension YoutubeAPI {
             request.setValue(authorization, forHTTPHeaderField: "Authorization")
         }
 
-        let task = session.dataTask(with: request) { data, response, error in
-            if let data = data {
-                do {
-                    let result = try self.decoder.decode(T.self, from: data)
+        let data = try await session.data(for: request).0
 
-                    DispatchQueue.main.async {
-                        completion(.success(result))
-                    }
-                } catch let de as DecodingError {
-                    Swift.print("URL from decoding failure = \(request.url?.absoluteString ?? "N/A"), query = \(query)")
+        do {
+            return try decoder.decode(T.self, from: data)
+        } catch let de as DecodingError {
+            Swift.print("URL from decoding failure = \(request.url?.absoluteString ?? "N/A"), query = \(query)")
 
-                    if let rawData = String(data: data, encoding: .utf8) {
-                        Swift.print("Raw data from decoding failure = \(rawData)")
-                    }
-
-                    do {
-                        let error = try self.decoder.decode(YoutubeError.self, from: data)
-
-                        if error.errorCode == "TODO: The code which tells you the access token has expired." {
-                            // Authentication failure. The access token has become invalid, try to refresh it.
-                            self.refreshAccessToken { result in
-                                switch result {
-                                case .success(_):
-                                    self.execute(method: method, base: base, endpoint: endpoint, query: query, page: page, decoding: decoding, completion: completion)
-                                case .failure(let error):
-                                    DispatchQueue.main.async {
-                                        completion(.failure(error))
-                                    }
-                                }
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                                completion(.failure(LocalizedDecodingError(decodingError: de)))
-                            }
-                        }
-                    } catch {
-                        DispatchQueue.main.async {
-                            completion(.failure(LocalizedDecodingError(decodingError: de)))
-                        }
-                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        completion(.failure(error))
-                    }
-                }
-            } else {
-                DispatchQueue.main.async {
-                    completion(.failure(error ?? APIError.unknown))
-                }
+            if let rawData = String(data: data, encoding: .utf8) {
+                Swift.print("Raw data from decoding failure = \(rawData)")
             }
+
+            do {
+                let error = try self.decoder.decode(YoutubeError.self, from: data)
+
+                if error.errorCode == "TODO: The code which tells you the access token has expired." {
+                    // Authentication failure. The access token has become invalid, try to refresh it.
+                    try await refreshAccessToken()
+
+                    // Access token refreshed, retry this method.
+                    return try await execute(method: method, base: base, endpoint: endpoint, query: query, page: page, decoding: decoding)
+                } else {
+                    throw LocalizedDecodingError(decodingError: de)
+                }
+            } catch {
+                throw LocalizedDecodingError(decodingError: de)
+            }
+        } catch {
+            throw error
         }
-        task.resume()
-        return task
     }
 
 //    func executeFetchAll<T>(method: Method = .get, base: Base, endpoint: String, query: [String: Any?] = [:], decoding: [T].Type, completion: @escaping Completion<[T]>) where T: Decodable {
@@ -255,8 +231,7 @@ extension YoutubeAPI {
 //        fetch(page: nil)
 //    }
 
-    @discardableResult
-    func executeRaw(method: Method = .get, base: Base, endpoint: String, query: [String: Any?] = [:], completion: @escaping CompletionRaw) -> URLSessionTask {
+    func executeRaw(method: Method = .get, base: Base, endpoint: String, query: [String: Any?] = [:]) async throws -> Data {
         var components = URLComponents(url: base.url.appendingPathComponent(endpoint), resolvingAgainstBaseURL: true)!
         components.query = query.queryParameters()
 
@@ -268,17 +243,7 @@ extension YoutubeAPI {
             request.setValue(authorization, forHTTPHeaderField: "Authorization")
         }
 
-        let task = session.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async {
-                if let data = data {
-                    completion(.success(data))
-                } else {
-                    completion(.failure(error ?? APIError.unknown))
-                }
-            }
-        }
-        task.resume()
-        return task
+        return try await session.data(for: request).0
     }
 }
 
