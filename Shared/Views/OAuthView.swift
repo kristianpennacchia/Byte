@@ -37,7 +37,7 @@ struct OAuthView: View {
                 HStack(alignment: .top) {
                     Spacer()
                     VStack {
-                        QRCode(value: oAuth.userCode)
+                        QRCode(value: oAuth.verificationUrl)
                             .frame(width: 400, height: 400)
                         Text("Can't scan the QRCode? Go to")
                             .font(.body)
