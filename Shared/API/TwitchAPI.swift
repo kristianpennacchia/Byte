@@ -96,7 +96,7 @@ extension TwitchAPI {
     func authenticate(completion: @escaping Completion<[Channel]>) {
         if accessToken != nil {
             // We should be able to get the user info assuming the accessToken is still valid
-            TwitchAPI.shared.execute(endpoint: "users", decoding: [Channel].self, completion: completion)
+            execute(endpoint: "users", decoding: [Channel].self, completion: completion)
         } else {
             /// - Todo: Authenticate
 //            let query = [
