@@ -178,6 +178,9 @@
 		C19FE9AE246E5A7D004EB60C /* Favourite.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19FE9AD246E5A7D004EB60C /* Favourite.swift */; };
 		C19FE9AF246E5A7D004EB60C /* Favourite.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19FE9AD246E5A7D004EB60C /* Favourite.swift */; };
 		C19FE9B0246E5A7D004EB60C /* Favourite.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19FE9AD246E5A7D004EB60C /* Favourite.swift */; };
+		C1A647C428E7230800699B5B /* Task+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A647C328E7230800699B5B /* Task+Extensions.swift */; };
+		C1A647C528E7230800699B5B /* Task+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A647C328E7230800699B5B /* Task+Extensions.swift */; };
+		C1A647C628E7230800699B5B /* Task+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A647C328E7230800699B5B /* Task+Extensions.swift */; };
 		C1A75361249B8ED1005FB190 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A75360249B8ED1005FB190 /* ActivityIndicator.swift */; };
 		C1A75362249B8ED1005FB190 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A75360249B8ED1005FB190 /* ActivityIndicator.swift */; };
 		C1A75363249B8ED1005FB190 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A75360249B8ED1005FB190 /* ActivityIndicator.swift */; };
@@ -383,6 +386,7 @@
 		C1997027233B803D00FFC27A /* Refresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Refresh.swift; sourceTree = "<group>"; };
 		C19D480B2321426900A53AB3 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		C19FE9AD246E5A7D004EB60C /* Favourite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favourite.swift; sourceTree = "<group>"; };
+		C1A647C328E7230800699B5B /* Task+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+Extensions.swift"; sourceTree = "<group>"; };
 		C1A75360249B8ED1005FB190 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		C1AE3317231E89FD00FE0F99 /* TwitchAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitchAPI.swift; sourceTree = "<group>"; };
 		C1B5AC65232E2874001A502F /* StreamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamView.swift; sourceTree = "<group>"; };
@@ -608,6 +612,7 @@
 				C1605F6D2317DE6300F98BEE /* Color+Extensions.swift */,
 				C1729BC52326889D005D0A99 /* Dictionary+Extensions.swift */,
 				C1D32D7E232E695600BE3A4C /* Strings+Extensions.swift */,
+				C1A647C328E7230800699B5B /* Task+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1137,6 +1142,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1A647C528E7230800699B5B /* Task+Extensions.swift in Sources */,
 				C109CFB4231D1D0600C35AD8 /* SessionStore.swift in Sources */,
 				C1E9428E231E70E6006B7A71 /* StreamStore.swift in Sources */,
 				C187790323195C3F008CA61E /* CovertArtSize.iOS.swift in Sources */,
@@ -1317,6 +1323,7 @@
 				C1C79E782696EC1B00E653E7 /* StreamPicker.swift in Sources */,
 				C1E67ABC2333A5F30024B25C /* PlayerViewController.swift in Sources */,
 				C1020DCD2317EB0800FBFE16 /* Game.swift in Sources */,
+				C1A647C628E7230800699B5B /* Task+Extensions.swift in Sources */,
 				C14BCD502317FC8900F33A48 /* Stream.swift in Sources */,
 				C1C85AAF2336523F00E8AB19 /* RootViewControllerKey.swift in Sources */,
 			);
@@ -1396,6 +1403,7 @@
 				C1278A2F23190F1700400D35 /* LogoSize.tvOS.swift in Sources */,
 				C17627EB26A336A100D4BB11 /* VisualEffectView.swift in Sources */,
 				C1C79E762696EC1B00E653E7 /* StreamPicker.swift in Sources */,
+				C1A647C428E7230800699B5B /* Task+Extensions.swift in Sources */,
 				C1E94281231E70B6006B7A71 /* FetchingObject.swift in Sources */,
 				C10FECBF26949C9300D48F8D /* StreamVideoPlayer.swift in Sources */,
 				C1605F742317E57E00F98BEE /* GameList.swift in Sources */,
