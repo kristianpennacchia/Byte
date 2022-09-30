@@ -126,7 +126,7 @@ extension YoutubeAPI {
                         do {
                             let userAuth = try await execute(method: .post, base: .auth, endpoint: "token", query: pollQuery, decoding: YoutubeUserAuth.self)
                             accessToken = userAuth.accessToken
-                            refreshToken = userAuth.refreshToken
+                            refreshToken = userAuth.refreshToken ?? refreshToken
 
                             #warning("TODO: Get user data.")
                             DispatchQueue.main.async {
@@ -159,34 +159,23 @@ extension YoutubeAPI {
     }
 
     func refreshAccessToken() async throws -> Void {
-//        guard let refreshToken = refreshToken else {
-//            throw APIError.refreshToken
-//        }
-//
-//        let query = [
-//            "client_id": authentication.clientID,
-//            "client_secret": authentication.secret,
-//            "grant_type": "refresh_token",
-//            "refresh_token": refreshToken.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-//        ]
+        guard let refreshToken = refreshToken else {
+            throw APIError.refreshToken
+        }
 
-        #warning("TODO: Execute request to refresh the expired access token.")
-//        executeRaw(method: .post, base: .auth, endpoint: "token", query: query) { result in
-//            switch result {
-//            case .success(let data):
-//                guard let jsonData = try? JSONSerialization.jsonObject(with: data),
-//                      let json = jsonData as? [String:  Any?],
-//                      let accessToken = json["access_token"] as? String,
-//                      let refreshToken = json["refresh_token"] as? String
-//                else {
-//                    // Refreshing user access token failed, which likely means the refresh token is no longer valid.
-//                    self.refreshToken = nil
-//                    completion(.failure(APIError.refreshToken))
-//                    return
-//                }
-//
-//                self.accessToken = accessToken
-//                self.refreshToken = refreshToken
+        let query = [
+            "client_id": authentication.clientID,
+            "client_secret": authentication.secret,
+            "grant_type": "refresh_token",
+            "refresh_token": refreshToken.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+        ]
+
+        do {
+            let userAuth = try await execute(method: .post, base: .auth, endpoint: "token", query: query, decoding: YoutubeUserAuth.self)
+            accessToken = userAuth.accessToken
+            self.refreshToken = userAuth.refreshToken ?? refreshToken
+
+            #warning("TODO: Get user data.")
 //                self.authenticate { result in
 //                    if case .success(let users) = result, let user = users.data.first {
 //                        self.didChange.send(user)
@@ -194,13 +183,11 @@ extension YoutubeAPI {
 //
 //                    completion(result)
 //                }
-//            case .failure(let error):
-//                // Refreshing user access token failed, which likely means the refresh token is no longer valid.
-//                self.refreshToken = nil
-//
-//                completion(.failure(error))
-//            }
-//        }
+        } catch {
+            // Refreshing user access token failed, which likely means the refresh token is no longer valid.
+            self.refreshToken = nil
+            throw error
+        }
     }
 }
 

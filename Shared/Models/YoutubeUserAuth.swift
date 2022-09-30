@@ -13,5 +13,5 @@ struct YoutubeUserAuth: Decodable {
     let expiresIn: UInt
     let scope: String
     let tokenType: String
-    let refreshToken: String
+    let refreshToken: String?
 }
