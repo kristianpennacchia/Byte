@@ -11,13 +11,17 @@ import SwiftUI
 struct OAuthView: View {
     private class ViewModel: ObservableObject {
         @Published var isRetrievingOAuth = false
+        @Published var authError: Error?
     }
 
     @EnvironmentObject private var sessionStore: SessionStore
 
+    @Environment(\.dismiss) var dismiss
+
     @StateObject private var viewModel = ViewModel()
 
     @State private var oAuth: YoutubeOAuth?
+    @State private var showAuthError = false
     @State private var heartbeatChanged = false
 
     private let heartbeatTimer = Timer.publish(every: 0.6, on: .main, in: .common).autoconnect()
@@ -25,9 +29,21 @@ struct OAuthView: View {
     var body: some View {
         if oAuth == nil, viewModel.isRetrievingOAuth == false {
             viewModel.isRetrievingOAuth = true
-            sessionStore.signInYoutube { oAuth in
-                self.oAuth = oAuth
-                viewModel.isRetrievingOAuth = false
+            sessionStore.signInYoutube { result in
+                switch result {
+                case .success(let data):
+                    oAuth = data
+                    viewModel.isRetrievingOAuth = false
+                case .failure(_):
+                    dismiss()
+                }
+            } completion: { error in
+                if let error = error {
+                    showAuthError = true
+                    viewModel.authError = error
+                } else {
+                    dismiss()
+                }
             }
         }
 
@@ -85,6 +101,9 @@ struct OAuthView: View {
                     heartbeatChanged.toggle()
                 }
             }
+        }
+        .alert(isPresented: $showAuthError) {
+            Alert(title: Text("Unable To Sign In"), message: Text(viewModel.authError?.localizedDescription ?? ""))
         }
     }
 }

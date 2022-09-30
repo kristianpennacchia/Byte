@@ -9,5 +9,7 @@
 import Foundation
 
 struct YoutubeError: LocalizedError, Decodable {
-    let errorCode: String
+    let error: String?
+    let errorDescription: String?
+    let errorCode: String?
 }

@@ -12,7 +12,7 @@ import Combine
 final class SessionStore: ObservableObject {
     private let didChange = PassthroughSubject<Output, Failure>()
 
-    private var apiSinkCancellable: AnyCancellable?
+    private var twitchAPISinkCancellable: AnyCancellable?
 
     let twitchAPI: TwitchAPI
     let youtubeAPI: YoutubeAPI?
@@ -22,7 +22,7 @@ final class SessionStore: ObservableObject {
         self.youtubeAPI = youtubeAPI
 
         // Listen for auth user changes.
-        apiSinkCancellable = self.twitchAPI.sink { user in
+        twitchAPISinkCancellable = self.twitchAPI.sink { user in
             self.twitchUser = user
         }
     }
@@ -32,7 +32,11 @@ final class SessionStore: ObservableObject {
             didChange.send(self)
         }
     }
-    var youtubeUser: Void?
+    var youtubeUser: Data? {
+        didSet {
+            didChange.send(self)
+        }
+    }
 
     func signInTwitch() {
         twitchAPI.authenticate { [weak self] result in
@@ -45,20 +49,22 @@ final class SessionStore: ObservableObject {
         }
     }
 
-    func signInYoutube(oAuthHandler: @escaping (YoutubeOAuth) -> Void) {
+    func signInYoutube(oAuthHandler: @escaping (Result<YoutubeOAuth, Error>) -> Void, completion: @escaping (_ error: Error?) -> Void) {
         youtubeAPI?.authenticate(oAuthHandler: { result in
-            switch result {
-            case .success(let data):
-                oAuthHandler(data)
-            case .failure(let error):
-                Swift.print("Failed to begin Youtube sign-in. \(error.localizedDescription)")
+            if case .failure(let error) = result {
+                Swift.print("Failed to begin Youtube OAuth flow. \(error.localizedDescription)")
             }
+
+            oAuthHandler(result)
         }, completion: { result in
             switch result {
             case .success(let data):
-                #warning("TODO: The user is signed-in... Now what?")
+                // The user is signed-in.
+                self.youtubeUser = data
+                completion(nil)
             case .failure(let error):
                 Swift.print("Failed to complete Youtube sign-in. \(error.localizedDescription)")
+                completion(error)
             }
         })
     }

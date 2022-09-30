@@ -9,9 +9,15 @@
 import Foundation
 
 struct YoutubeOAuth: Decodable {
+    private let requestedAt = Date()
+
     let deviceCode: String
     let userCode: String
     let verificationUrl: String
     let expiresIn: UInt
     let interval: UInt
+
+    var isExpired: Bool {
+        return Date() > requestedAt.addingTimeInterval(TimeInterval(expiresIn))
+    }
 }

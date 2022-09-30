@@ -89,7 +89,7 @@ extension YoutubeAPI {
     // - MARK: Authentication
 
     func authenticate(oAuthHandler: @escaping Completion<YoutubeOAuth>, completion: @escaping CompletionRaw) {
-        if accessToken != nil {
+        if false, accessToken != nil {
             // We should be able to get the user info assuming the accessToken is still valid.
             #warning("TODO: Get the authenticated user data.")
 //            YoutubeAPI.shared.execute(base: .auth, endpoint: "users", decoding: [Channel].self, completion: completion)
@@ -105,26 +105,70 @@ extension YoutubeAPI {
 
                     oAuthHandler(.success(data))
 
-                    #warning("TODO: Continuously poll 'https://oauth2.googleapis.com/token' every `data.interval` seconds until we get a success or failure response.")
+                    Swift.print("Polling for user to complete OAuth.")
+
+                    // Continuously poll 'https://oauth2.googleapis.com/token' every `data.interval` seconds until we get a success or failure response.
+                    let pollQuery = [
+                        "client_id": authentication.clientID,
+                        "client_secret": authentication.secret,
+                        "device_code": data.deviceCode,
+                        "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
+                    ]
+
+                    repeat {
+                        guard data.isExpired == false else {
+                            oAuthHandler(.failure(APIError.unknown))
+                            break
+                        }
+
+                        try! await Task.sleep(seconds: TimeInterval(data.interval))
+
+                        do {
+                            let userAuth = try await execute(method: .post, base: .auth, endpoint: "token", query: pollQuery, decoding: YoutubeUserAuth.self)
+                            accessToken = userAuth.accessToken
+                            refreshToken = userAuth.refreshToken
+
+                            #warning("TODO: Get user data.")
+                            DispatchQueue.main.async {
+                                completion(.success(.empty))
+                            }
+                        } catch let error as YoutubeError {
+                            if error.error == "access_denied" {
+                                Swift.print("Failed getting Youtube OAuth response. \(error.localizedDescription)")
+                                DispatchQueue.main.async {
+                                    completion(.failure(error))
+                                }
+                                break
+                            }
+                        } catch {
+                            Swift.print("Failed getting Youtube OAuth response. \(error.localizedDescription)")
+                            DispatchQueue.main.async {
+                                completion(.failure(error))
+                            }
+                            break
+                        }
+                    } while true
                 } catch {
                     Swift.print("Failed getting Youtube OAuth response. \(error.localizedDescription)")
-                    oAuthHandler(.failure(error))
+                    DispatchQueue.main.async {
+                        oAuthHandler(.failure(error))
+                    }
                 }
             }
         }
     }
 
     func refreshAccessToken() async throws -> Void {
-        guard let refreshToken = refreshToken else {
-            throw APIError.refreshToken
-        }
-
-        let query = [
-            "client_id": authentication.clientID,
-            "client_secret": authentication.secret,
-            "grant_type": "refresh_token",
-            "refresh_token": refreshToken.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-        ]
+//        guard let refreshToken = refreshToken else {
+//            throw APIError.refreshToken
+//        }
+//
+//        let query = [
+//            "client_id": authentication.clientID,
+//            "client_secret": authentication.secret,
+//            "grant_type": "refresh_token",
+//            "refresh_token": refreshToken.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+//        ]
 
         #warning("TODO: Execute request to refresh the expired access token.")
 //        executeRaw(method: .post, base: .auth, endpoint: "token", query: query) { result in
@@ -176,7 +220,11 @@ extension YoutubeAPI {
         let data = try await session.data(for: request).0
 
         do {
-            return try decoder.decode(T.self, from: data)
+            if let rawData = String(data: data, encoding: .utf8), rawData.contains("\"error\":") {
+                throw try decoder.decode(YoutubeError.self, from: data)
+            } else {
+                return try decoder.decode(T.self, from: data)
+            }
         } catch let de as DecodingError {
             Swift.print("URL from decoding failure = \(request.url?.absoluteString ?? "N/A"), query = \(query)")
 
@@ -194,7 +242,7 @@ extension YoutubeAPI {
                     // Access token refreshed, retry this method.
                     return try await execute(method: method, base: base, endpoint: endpoint, query: query, page: page, decoding: decoding)
                 } else {
-                    throw LocalizedDecodingError(decodingError: de)
+                    throw error
                 }
             } catch {
                 throw LocalizedDecodingError(decodingError: de)
