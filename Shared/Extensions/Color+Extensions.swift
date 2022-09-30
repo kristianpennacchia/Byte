@@ -1,5 +1,5 @@
 //
-//  Color+Twitch.swift
+//  Color+Extensions.swift
 //  Byte
 //
 //  Created by Kristian Pennacchia on 29/8/19.
