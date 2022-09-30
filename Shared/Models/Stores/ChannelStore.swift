@@ -37,7 +37,7 @@ final class ChannelStore: FetchingObject {
     }
 
     func fetch(completion: @escaping () -> Void) {
-        let continueFetch = { [weak self] (result: Result<DataItem<[Channel]>, Error>) in
+        let continueFetch = { [weak self] (result: Result<TwitchDataItem<[Channel]>, Error>) in
             guard let self = self else { return }
 
             self.lastFetched = Date()
@@ -89,7 +89,7 @@ final class ChannelStore: FetchingObject {
                             }
                         }
                     group.notify(queue: .main) {
-                        continueFetch(.success(DataItem<[Channel]>(data: followedChannels, pagination: nil)))
+                        continueFetch(.success(TwitchDataItem<[Channel]>(data: followedChannels, pagination: nil)))
                     }
                 case .failure(let error):
                     print("Fetching all user follows failed. \(error.localizedDescription)")

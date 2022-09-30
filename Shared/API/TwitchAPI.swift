@@ -18,7 +18,7 @@ final class TwitchAPI: ObservableObject {
         let secret: String
     }
 
-    typealias Completion<T> = (_ result: Result<DataItem<T>, Error>) -> Void where T: Decodable
+    typealias Completion<T> = (_ result: Result<TwitchDataItem<T>, Error>) -> Void where T: Decodable
     typealias CompletionRaw = (_ result: Result<Data, Error>) -> Void
 
     static private(set) var shared: TwitchAPI!
@@ -173,7 +173,7 @@ extension TwitchAPI {
         let task = session.dataTask(with: request) { data, response, error in
             if let data = data {
                 do {
-                    let result = try self.decoder.decode(DataItem<T>.self, from: data)
+                    let result = try self.decoder.decode(TwitchDataItem<T>.self, from: data)
 
                     DispatchQueue.main.async {
                         completion(.success(result))
@@ -239,7 +239,7 @@ extension TwitchAPI {
 
                     if data.pagination == nil || data.pagination!.isValid == false || data.data.isEmpty {
                         // All data has been downloaded
-                        completion(.success(DataItem<[T]>(data: allItems, pagination: data.pagination)))
+                        completion(.success(TwitchDataItem<[T]>(data: allItems, pagination: data.pagination)))
                     } else {
                         fetch(page: data.pagination)
                     }

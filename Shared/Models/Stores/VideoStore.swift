@@ -37,7 +37,7 @@ final class VideoStore: FetchingObject {
     }
 
     func fetch(completion: @escaping () -> Void) {
-        let continueFetch = { [weak self] (result: Result<DataItem<[Video]>, Error>) in
+        let continueFetch = { [weak self] (result: Result<TwitchDataItem<[Video]>, Error>) in
             guard let self = self else { return }
 
             self.lastFetched = Date()
