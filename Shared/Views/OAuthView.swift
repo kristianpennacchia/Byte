@@ -10,13 +10,12 @@ import SwiftUI
 
 struct OAuthView: View {
     private class ViewModel: ObservableObject {
-        @Published var isRetrievingOAuth = false
         @Published var authError: Error?
     }
 
     @EnvironmentObject private var sessionStore: SessionStore
 
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
 
     @StateObject private var viewModel = ViewModel()
 
@@ -27,27 +26,7 @@ struct OAuthView: View {
     private let heartbeatTimer = Timer.publish(every: 0.6, on: .main, in: .common).autoconnect()
 
     var body: some View {
-        if oAuth == nil, viewModel.isRetrievingOAuth == false {
-            viewModel.isRetrievingOAuth = true
-            sessionStore.signInYoutube { result in
-                switch result {
-                case .success(let data):
-                    oAuth = data
-                    viewModel.isRetrievingOAuth = false
-                case .failure(_):
-                    dismiss()
-                }
-            } completion: { error in
-                if let error = error {
-                    showAuthError = true
-                    viewModel.authError = error
-                } else {
-                    dismiss()
-                }
-            }
-        }
-
-        return ZStack {
+        ZStack {
             Color.black.ignoresSafeArea()
             if let oAuth {
                 HStack(alignment: .top) {
@@ -102,8 +81,29 @@ struct OAuthView: View {
                 }
             }
         }
-        .alert(isPresented: $showAuthError) {
-            Alert(title: Text("Unable To Sign In"), message: Text(viewModel.authError?.localizedDescription ?? ""))
+        .onAppear {
+            sessionStore.signInYoutube { result in
+                switch result {
+                case .success(let data):
+                    oAuth = data
+                case .failure(_):
+                    dismiss()
+                }
+            } completion: { error in
+                if let error = error {
+                    viewModel.authError = error
+                    showAuthError = true
+                } else {
+                    dismiss()
+                }
+            }
+        }
+        .alert("Unable To Sign In", isPresented: $showAuthError) {
+            Button("OK", role: .cancel) {
+                dismiss()
+            }
+        } message: {
+            Text(viewModel.authError?.localizedDescription ?? "")
         }
     }
 }
