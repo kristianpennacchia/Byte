@@ -258,6 +258,7 @@ extension YoutubeAPI {
         }
     }
 
+    #warning("TODO: Implement fetching all pages for a request that supports pagination.")
 //    func executeFetchAll<T>(method: Method = .get, base: Base, endpoint: String, query: [String: Any?] = [:], decoding: [T].Type, completion: @escaping Completion<[T]>) where T: Decodable {
 //        var allItems = [T]()
 //
