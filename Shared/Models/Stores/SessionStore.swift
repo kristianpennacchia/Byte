@@ -13,6 +13,7 @@ final class SessionStore: ObservableObject {
     private let didChange = PassthroughSubject<Output, Failure>()
 
     private var twitchAPISinkCancellable: AnyCancellable?
+    private var youtubeAPISinkCancellable: AnyCancellable?
 
     let twitchAPI: TwitchAPI
     let youtubeAPI: YoutubeAPI?
@@ -24,6 +25,9 @@ final class SessionStore: ObservableObject {
         // Listen for auth user changes.
         twitchAPISinkCancellable = self.twitchAPI.sink { user in
             self.twitchUser = user
+        }
+        youtubeAPISinkCancellable = self.youtubeAPI?.sink { user in
+            self.youtubeUser = user
         }
     }
 
