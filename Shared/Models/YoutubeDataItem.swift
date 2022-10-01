@@ -16,7 +16,7 @@ struct YoutubeDataItem<T: Decodable>: Decodable {
 
     let kind: String
     let etag: String
-    let nextPageToken: String
+    let nextPageToken: String?
     let prevPageToken: String?
     let pageInfo: PageInfo
     let items: [T]
