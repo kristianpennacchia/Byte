@@ -190,14 +190,9 @@ extension YoutubeAPI {
             accessToken = userAuth.accessToken
             self.refreshToken = userAuth.refreshToken ?? refreshToken
 
-            #warning("TODO: Get user data.")
-//                self.authenticate { result in
-//                    if case .success(let users) = result, let user = users.data.first {
-//                        self.didChange.send(user)
-//                    }
-//
-//                    completion(result)
-//                }
+            // Get user data.
+            let person = try await getAuthenticatedPerson()
+            didChange.send(person)
         } catch {
             // Refreshing user access token failed, which likely means the refresh token is no longer valid.
             self.refreshToken = nil
@@ -307,7 +302,7 @@ extension YoutubeAPI {
 }
 
 extension YoutubeAPI: Publisher {
-    typealias Output = Channel
+    typealias Output = YoutubePerson
     typealias Failure = Never
 
     func receive<S>(subscriber: S) where S : Subscriber, Failure == S.Failure, Output == S.Input {
