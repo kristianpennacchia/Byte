@@ -126,6 +126,9 @@
 		C1605F722317E31E00F98BEE /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F712317E31E00F98BEE /* Game.swift */; };
 		C1605F742317E57E00F98BEE /* GameList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F732317E57E00F98BEE /* GameList.swift */; };
 		C1605F762317E5E100F98BEE /* CoverArt.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F752317E5E100F98BEE /* CoverArt.swift */; };
+		C16A7E0128E7FE0600509FFF /* HeartbeatActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16A7E0028E7FE0600509FFF /* HeartbeatActivityIndicator.swift */; };
+		C16A7E0228E7FE0600509FFF /* HeartbeatActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16A7E0028E7FE0600509FFF /* HeartbeatActivityIndicator.swift */; };
+		C16A7E0328E7FE0600509FFF /* HeartbeatActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16A7E0028E7FE0600509FFF /* HeartbeatActivityIndicator.swift */; };
 		C1729BC223268887005D0A99 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1729BC123268887005D0A99 /* Array+Extensions.swift */; };
 		C1729BC323268887005D0A99 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1729BC123268887005D0A99 /* Array+Extensions.swift */; };
 		C1729BC423268887005D0A99 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1729BC123268887005D0A99 /* Array+Extensions.swift */; };
@@ -373,6 +376,7 @@
 		C1605F712317E31E00F98BEE /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		C1605F732317E57E00F98BEE /* GameList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameList.swift; sourceTree = "<group>"; };
 		C1605F752317E5E100F98BEE /* CoverArt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverArt.swift; sourceTree = "<group>"; };
+		C16A7E0028E7FE0600509FFF /* HeartbeatActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatActivityIndicator.swift; sourceTree = "<group>"; };
 		C1729BC123268887005D0A99 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		C1729BC52326889D005D0A99 /* Dictionary+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+Extensions.swift"; sourceTree = "<group>"; };
 		C17627EA26A336A100D4BB11 /* VisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
@@ -647,6 +651,7 @@
 				C1B5AC69232E299F001A502F /* ChannelView.swift */,
 				C1605F752317E5E100F98BEE /* CoverArt.swift */,
 				C1B5AC6D232E29EF001A502F /* GameView.swift */,
+				C16A7E0028E7FE0600509FFF /* HeartbeatActivityIndicator.swift */,
 				C1278A2623190BE600400D35 /* Logo.swift */,
 				C10FECC226949CE600D48F8D /* MultiStreamVideoPlayer.swift */,
 				C1EF0BA4276B19F000E311C8 /* PlayerLayer.swift */,
@@ -1177,6 +1182,7 @@
 				C1278A392319124000400D35 /* WatermarkedContainer.iOS.swift in Sources */,
 				C1B5AC6F232E29EF001A502F /* GameView.swift in Sources */,
 				C17766F226C66DEA0085E848 /* Functions.swift in Sources */,
+				C16A7E0228E7FE0600509FFF /* HeartbeatActivityIndicator.swift in Sources */,
 				C1C103EB232DCD8000267736 /* OnSelect.iOS.swift in Sources */,
 				C1FEBCF728E4780C00903D16 /* QRCode.swift in Sources */,
 				C17766EE26C65EA80085E848 /* VideoList.swift in Sources */,
@@ -1283,6 +1289,7 @@
 				C1E9428F231E70E6006B7A71 /* StreamStore.swift in Sources */,
 				C185E18F2375AE3C008DD09C /* SpoilerFilter.swift in Sources */,
 				C1E67AB82333A4910024B25C /* ViewControllerHolder.swift in Sources */,
+				C16A7E0328E7FE0600509FFF /* HeartbeatActivityIndicator.swift in Sources */,
 				C1020DC72317EB0800FBFE16 /* StreamList.swift in Sources */,
 				C1020DCA2317EB0800FBFE16 /* GameList.swift in Sources */,
 				C109CFB9231D1EDE00C35AD8 /* SignInView.swift in Sources */,
@@ -1436,6 +1443,7 @@
 				C17766E526C658E80085E848 /* VideoStore.swift in Sources */,
 				C1FEBCF228E4768600903D16 /* OAuthView.swift in Sources */,
 				C1E67ABA2333A5F30024B25C /* PlayerViewController.swift in Sources */,
+				C16A7E0128E7FE0600509FFF /* HeartbeatActivityIndicator.swift in Sources */,
 				C1278A34231911D900400D35 /* WatermarkedContainer.tvOS.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
