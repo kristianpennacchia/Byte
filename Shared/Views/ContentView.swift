@@ -10,7 +10,8 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var sessionStore: SessionStore
-    @EnvironmentObject private var api: TwitchAPI
+    @EnvironmentObject private var twitchAPI: TwitchAPI
+    @EnvironmentObject private var youtubeAPI: YoutubeAPI
 
     // When this value changes, the entire view is reloaded
     @State private var user: Channel?
@@ -34,19 +35,19 @@ struct ContentView: View {
                 }
             } else {
                 TabView {
-                    StreamList(store: StreamStore(api: api, fetch: .followed(userID: user!.id)))
+                    StreamList(store: StreamStore(twitchAPI: twitchAPI, youtubeAPI: youtubeAPI, fetch: .followed(userID: user!.id)))
                         .tabItem {
                             Text("Followed Streams")
                         }
-                    StreamList(store: StreamStore(api: api, fetch: .top))
+                    StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .top))
                         .tabItem {
                             Text("Streams")
                         }
-                    GameList(store: GameStore(api: api, fetch: .top))
+                    GameList(store: GameStore(twitchAPI: twitchAPI, fetch: .top))
                         .tabItem {
                             Text("Games")
                         }
-                    ChannelList(store: ChannelStore(api: api, fetch: .followed(userID: user!.id)))
+                    ChannelList(store: ChannelStore(twitchAPI: twitchAPI, fetch: .followed(userID: user!.id)))
                         .tabItem {
                             Text("Followed Channels")
                         }

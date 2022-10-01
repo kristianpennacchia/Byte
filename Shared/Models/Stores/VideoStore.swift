@@ -16,7 +16,7 @@ final class VideoStore: FetchingObject {
 
     private(set) var lastFetched: Date?
 
-    let api: TwitchAPI
+    let twitchAPI: TwitchAPI
     let fetchType: Fetch
     var filter = "" {
         didSet {
@@ -31,8 +31,8 @@ final class VideoStore: FetchingObject {
     }
     @Published private(set) var items = [Video]()
 
-    init(api: TwitchAPI, fetch: Fetch) {
-        self.api = api
+    init(twitchAPI: TwitchAPI, fetch: Fetch) {
+        self.twitchAPI = twitchAPI
         self.fetchType = fetch
     }
 
@@ -59,7 +59,7 @@ final class VideoStore: FetchingObject {
                 "user_id": userID,
             ]
 
-            api.execute(endpoint: "videos", query: query, decoding: [Video].self, completion: continueFetch)
+            twitchAPI.execute(endpoint: "videos", query: query, decoding: [Video].self, completion: continueFetch)
         }
     }
 }

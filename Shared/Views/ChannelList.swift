@@ -61,7 +61,7 @@ struct ChannelList: View {
                 }
             },
             content: {
-                VideoList(store: VideoStore(api: self.api, fetch: .user(userID: channelViewModel.channel!.id)))
+                VideoList(store: VideoStore(twitchAPI: self.api, fetch: .user(userID: channelViewModel.channel!.id)))
                     .environmentObject(self.api)
             }
         )
@@ -79,6 +79,6 @@ private extension ChannelList {
 
 struct ChannelList_Previews: PreviewProvider {
     static var previews: some View {
-        ChannelList(store: ChannelStore(api: .shared, fetch: .followed(userID: "1")))
+        ChannelList(store: ChannelStore(twitchAPI: .shared, fetch: .followed(userID: "1")))
     }
 }

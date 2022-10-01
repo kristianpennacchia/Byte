@@ -28,7 +28,8 @@ final class StreamStore: FetchingObject {
 
     private(set) var lastFetched: Date?
 
-    let api: TwitchAPI
+    let twitchAPI: TwitchAPI
+    let youtubeAPI: YoutubeAPI?
     let fetchType: Fetch
     var filter = "" {
         didSet {
@@ -44,8 +45,15 @@ final class StreamStore: FetchingObject {
     @Published private(set) var items = [Stream]()
     @Published private(set) var uniquedItems = [UniqueStream]()
 
-    init(api: TwitchAPI, fetch: Fetch) {
-        self.api = api
+    init(twitchAPI: TwitchAPI, fetch: Fetch) {
+        self.twitchAPI = twitchAPI
+        self.youtubeAPI = nil
+        self.fetchType = fetch
+    }
+
+    init(twitchAPI: TwitchAPI, youtubeAPI: YoutubeAPI, fetch: Fetch) {
+        self.twitchAPI = twitchAPI
+        self.youtubeAPI = youtubeAPI
         self.fetchType = fetch
     }
 
@@ -72,7 +80,7 @@ final class StreamStore: FetchingObject {
                 "from_id": userID,
             ]
 
-            api.executeFetchAll(endpoint: "users/follows", query: query, decoding: [Channel.Stub].self) { [weak self] result in
+            twitchAPI.executeFetchAll(endpoint: "users/follows", query: query, decoding: [Channel.Stub].self) { [weak self] result in
                 guard let self = self else { return }
 
                 switch result {
@@ -90,7 +98,7 @@ final class StreamStore: FetchingObject {
                                 "user_id": stubs.map { $0.toId },
                             ]
 
-                            self.api.executeFetchAll(endpoint: "streams", query: query, decoding: [Stream].self) { result in
+                            self.twitchAPI.executeFetchAll(endpoint: "streams", query: query, decoding: [Stream].self) { result in
                                 switch result {
                                 case .success(let data):
                                     liveStreams += data.data
@@ -113,14 +121,14 @@ final class StreamStore: FetchingObject {
                 "first": 100,
             ]
 
-            api.execute(endpoint: "streams", query: query, decoding: [Stream].self, completion: continueFetch)
+            twitchAPI.execute(endpoint: "streams", query: query, decoding: [Stream].self, completion: continueFetch)
         case .game(let game):
             let query: [String: Any] = [
                 "first": 100,
                 "game_id": game.id,
             ]
 
-            api.execute(endpoint: "streams", query: query, decoding: [Stream].self, completion: continueFetch)
+            twitchAPI.execute(endpoint: "streams", query: query, decoding: [Stream].self, completion: continueFetch)
         }
     }
 }

@@ -78,7 +78,7 @@ struct GameList: View {
                 }
             },
             content: {
-                StreamList(store: StreamStore(api: self.api, fetch: .game(gameViewModel.game!)))
+                StreamList(store: StreamStore(twitchAPI: self.api, fetch: .game(gameViewModel.game!)))
                     .environmentObject(self.api)
             }
         )
@@ -96,6 +96,6 @@ private extension GameList {
 
 struct GameList_Previews: PreviewProvider {
     static var previews: some View {
-        GameList(store: GameStore(api: .shared, fetch: .top))
+        GameList(store: GameStore(twitchAPI: .shared, fetch: .top))
     }
 }

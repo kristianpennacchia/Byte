@@ -97,6 +97,6 @@ private extension VideoStore.Fetch {
 
 struct VideoList_Previews: PreviewProvider {
     static var previews: some View {
-        VideoList(store: VideoStore(api: .shared, fetch: .user(userID: App.previewUsername)))
+        VideoList(store: VideoStore(twitchAPI: .shared, fetch: .user(userID: App.previewUsername)))
     }
 }
