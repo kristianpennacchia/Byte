@@ -22,6 +22,7 @@ struct StreamList: View {
 
     @StateObject private var streamViewModel = StreamViewModel()
 
+    @State private var sessionDidChange = false
     @State private var isRefreshing = false
     @State private var selectedStreams = Set<Stream>()
     @State private var showYoutubeAuthScreen = false
@@ -92,6 +93,9 @@ struct StreamList: View {
                 if store.isStale {
                     refresh()
                 }
+            }
+            .onReceive(sessionStore) { store in
+                sessionDidChange = true
             }
             .onReceive(AppState()) { state in
                 if store.isStale, state == .willEnterForeground {

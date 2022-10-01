@@ -68,6 +68,8 @@ extension YoutubeAPI {
 
     enum Base: String {
         case auth = "https://oauth2.googleapis.com/"
+        case youtube = "https://youtube.googleapis.com/youtube/v3/"
+        case people = "https://people.googleapis.com/v1/"
 
         var url: URL {
             return URL(string: rawValue)!
@@ -77,6 +79,8 @@ extension YoutubeAPI {
             let prefix: String
             switch self {
             case .auth: prefix = "Bearer"
+            case .youtube: prefix = "Bearer"
+            case .people: prefix = "Bearer"
             }
 
             return "\(prefix) \(accessToken)"
@@ -88,15 +92,27 @@ extension YoutubeAPI {
 
     // - MARK: Authentication
 
-    func authenticate(oAuthHandler: @escaping Completion<YoutubeOAuth>, completion: @escaping CompletionRaw) {
-        if false, accessToken != nil {
+    func authenticate(oAuthHandler: @escaping Completion<YoutubeOAuth>, completion: @escaping Completion<YoutubePerson>) {
+        if accessToken != nil {
             // We should be able to get the user info assuming the accessToken is still valid.
-            #warning("TODO: Get the authenticated user data.")
-//            YoutubeAPI.shared.execute(base: .auth, endpoint: "users", decoding: [Channel].self, completion: completion)
+            Task {
+                do {
+                    let person = try await getAuthenticatedPerson()
+
+                    DispatchQueue.main.async {
+                        completion(.success(person))
+                    }
+                } catch {
+                    Swift.print("Failed getting user info.", error)
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
+                    }
+                }
+            }
         } else {
             let query = [
                 "client_id": authentication.clientID,
-                "scope": "https://www.googleapis.com/auth/youtube.readonly",
+                "scope": "https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/userinfo.profile",
             ]
 
             Task {
@@ -128,10 +144,9 @@ extension YoutubeAPI {
                             accessToken = userAuth.accessToken
                             refreshToken = userAuth.refreshToken ?? refreshToken
 
-                            #warning("TODO: Get user data.")
-                            DispatchQueue.main.async {
-                                completion(.success(.empty))
-                            }
+                            // Get user data.
+                            let person = try await getAuthenticatedPerson()
+                            completion(.success(person))
                         } catch let error as YoutubeError {
                             if error.error == "access_denied" {
                                 Swift.print("Failed getting Youtube OAuth response. \(error.localizedDescription)")
@@ -189,10 +204,19 @@ extension YoutubeAPI {
             throw error
         }
     }
+
+    func getAuthenticatedPerson() async throws -> YoutubePerson {
+        // https://developers.google.com/people/v1/profiles
+        let query = [
+            "personFields": "names",
+        ]
+
+        return try await execute(method: .get, base: .people, endpoint: "people/me", query: query, decoding: YoutubePerson.self)
+    }
 }
 
 extension YoutubeAPI {
-    func execute<T>(method: Method = .get, base: Base, endpoint: String, query: [String: Any?] = [:], page: Pagination? = nil, decoding: T.Type) async throws -> T where T: Decodable {
+    func execute<T>(method: Method, base: Base, endpoint: String, query: [String: Any?] = [:], page: Pagination? = nil, decoding: T.Type) async throws -> T where T: Decodable {
         var components = URLComponents(url: base.url.appendingPathComponent(endpoint), resolvingAgainstBaseURL: true)!
         components.query = query.queryParameters()
 

@@ -65,19 +65,21 @@ struct OAuthView: View {
             }
         }
         .onAppear {
-            sessionStore.signInYoutube { result in
+            sessionStore.startYoutubeOAuth { result in
                 switch result {
                 case .success(let data):
                     oAuth = data
-                case .failure(_):
-                    dismiss()
-                }
-            } completion: { error in
-                if let error = error {
+                case .failure(let error):
                     viewModel.authError = error
                     showAuthError = true
-                } else {
+                }
+            } completion: { result in
+                switch result {
+                case .success(_):
                     dismiss()
+                case .failure(let error):
+                    viewModel.authError = error
+                    showAuthError = true
                 }
             }
         }

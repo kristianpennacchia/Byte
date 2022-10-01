@@ -32,7 +32,7 @@ final class SessionStore: ObservableObject {
             didChange.send(self)
         }
     }
-    var youtubeUser: Data? {
+    var youtubeUser: YoutubePerson? {
         didSet {
             didChange.send(self)
         }
@@ -44,12 +44,22 @@ final class SessionStore: ObservableObject {
             case .success(let data):
                 self?.twitchUser = data.data.first
             case .failure(let error):
-                Swift.print("Failed sign-in. \(error)")
+                Swift.print("Failed Twitch sign-in. \(error)")
             }
         }
     }
 
-    func signInYoutube(oAuthHandler: @escaping (Result<YoutubeOAuth, Error>) -> Void, completion: @escaping (_ error: Error?) -> Void) {
+    func signInYoutube() {
+        Task {
+            do {
+                youtubeUser = try await youtubeAPI?.getAuthenticatedPerson()
+            } catch {
+                Swift.print("Failed Youtube sign-in. \(error)")
+            }
+        }
+    }
+
+    func startYoutubeOAuth(oAuthHandler: @escaping (Result<YoutubeOAuth, Error>) -> Void, completion: @escaping (Result<YoutubePerson, Error>) -> Void) {
         youtubeAPI?.authenticate(oAuthHandler: { result in
             if case .failure(let error) = result {
                 Swift.print("Failed to begin Youtube OAuth flow. \(error.localizedDescription)")
@@ -61,16 +71,17 @@ final class SessionStore: ObservableObject {
             case .success(let data):
                 // The user is signed-in.
                 self.youtubeUser = data
-                completion(nil)
+                completion(.success(data))
             case .failure(let error):
                 Swift.print("Failed to complete Youtube sign-in. \(error.localizedDescription)")
-                completion(error)
+                completion(.failure(error))
             }
         })
     }
 
     func signOut() {
         twitchUser = nil
+        youtubeUser = nil
     }
 }
 

@@ -58,6 +58,8 @@ struct ContentView: View {
         .onFirstAppear {
             isSigningIn = true
             sessionStore.signInTwitch()
+            sessionStore.signInYoutube()
+
         }
         .onReceive(sessionStore) { store in
             user = store.twitchUser
