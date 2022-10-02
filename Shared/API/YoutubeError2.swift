@@ -12,8 +12,16 @@ struct YoutubeError2: LocalizedError, Decodable {
     struct NestedError: Decodable {
         let code: Int
         let message: String
-        let status: String
+        let status: String?
     }
 
     let error: NestedError
+
+    var errorDescription: String? {
+        if let status = error.status {
+            return "(\(error.code)) [status: \(status)] \(error.message)"
+        } else {
+            return "(\(error.code)) \(error.message)"
+        }
+    }
 }
