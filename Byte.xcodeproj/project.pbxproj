@@ -208,7 +208,6 @@
 		C1B2992F28E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */; };
 		C1B2993028E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */; };
 		C1B2993128E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */; };
-		C1B2993428E9298800C0D6A8 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = C1B2993328E9298800C0D6A8 /* SwiftSoup */; };
 		C1B2993628E92C9700C0D6A8 /* YoutubeError2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993528E92C9700C0D6A8 /* YoutubeError2.swift */; };
 		C1B2993728E92C9700C0D6A8 /* YoutubeError2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993528E92C9700C0D6A8 /* YoutubeError2.swift */; };
 		C1B2993828E92C9700C0D6A8 /* YoutubeError2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993528E92C9700C0D6A8 /* YoutubeError2.swift */; };
@@ -521,7 +520,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C191FE9128DE0A6F00AED1AE /* Kingfisher in Frameworks */,
-				C1B2993428E9298800C0D6A8 /* SwiftSoup in Frameworks */,
 				C184B9CC276AECEC00578F40 /* SwimplyPlayIndicator in Frameworks */,
 				C180245428DEC8BF00E8AB42 /* KeychainAccess in Frameworks */,
 			);
@@ -1012,7 +1010,6 @@
 				C184B9CB276AECEC00578F40 /* SwimplyPlayIndicator */,
 				C191FE9028DE0A6F00AED1AE /* Kingfisher */,
 				C180245328DEC8BF00E8AB42 /* KeychainAccess */,
-				C1B2993328E9298800C0D6A8 /* SwiftSoup */,
 			);
 			productName = Twitch;
 			productReference = C1FB01A82317D1B000130981 /* Byte.app */;
@@ -1107,7 +1104,6 @@
 				C184B9CA276AECEC00578F40 /* XCRemoteSwiftPackageReference "SwimplyPlayIndicator" */,
 				C191FE8F28DE0A6F00AED1AE /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				C180245228DEC8BF00E8AB42 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
-				C1B2993228E9298800C0D6A8 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 			);
 			productRefGroup = C1FB01A92317D1B000130981 /* Products */;
 			projectDirPath = "";
@@ -2207,14 +2203,6 @@
 				minimumVersion = 7.0.0;
 			};
 		};
-		C1B2993228E9298800C0D6A8 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/scinfu/SwiftSoup";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -2232,11 +2220,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C191FE8F28DE0A6F00AED1AE /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
-		};
-		C1B2993328E9298800C0D6A8 /* SwiftSoup */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C1B2993228E9298800C0D6A8 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
-			productName = SwiftSoup;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
