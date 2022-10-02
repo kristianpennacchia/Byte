@@ -208,6 +208,10 @@
 		C1B2992F28E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */; };
 		C1B2993028E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */; };
 		C1B2993128E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */; };
+		C1B2993428E9298800C0D6A8 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = C1B2993328E9298800C0D6A8 /* SwiftSoup */; };
+		C1B2993628E92C9700C0D6A8 /* YoutubeError2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993528E92C9700C0D6A8 /* YoutubeError2.swift */; };
+		C1B2993728E92C9700C0D6A8 /* YoutubeError2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993528E92C9700C0D6A8 /* YoutubeError2.swift */; };
+		C1B2993828E92C9700C0D6A8 /* YoutubeError2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993528E92C9700C0D6A8 /* YoutubeError2.swift */; };
 		C1B5AC66232E2874001A502F /* StreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B5AC65232E2874001A502F /* StreamView.swift */; };
 		C1B5AC67232E2874001A502F /* StreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B5AC65232E2874001A502F /* StreamView.swift */; };
 		C1B5AC68232E2874001A502F /* StreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B5AC65232E2874001A502F /* StreamView.swift */; };
@@ -417,6 +421,7 @@
 		C1A75360249B8ED1005FB190 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		C1AE3317231E89FD00FE0F99 /* TwitchAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitchAPI.swift; sourceTree = "<group>"; };
 		C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeSearchResult.swift; sourceTree = "<group>"; };
+		C1B2993528E92C9700C0D6A8 /* YoutubeError2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeError2.swift; sourceTree = "<group>"; };
 		C1B5AC65232E2874001A502F /* StreamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamView.swift; sourceTree = "<group>"; };
 		C1B5AC69232E299F001A502F /* ChannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelView.swift; sourceTree = "<group>"; };
 		C1B5AC6D232E29EF001A502F /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
@@ -504,6 +509,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C191FE9128DE0A6F00AED1AE /* Kingfisher in Frameworks */,
+				C1B2993428E9298800C0D6A8 /* SwiftSoup in Frameworks */,
 				C184B9CC276AECEC00578F40 /* SwimplyPlayIndicator in Frameworks */,
 				C180245428DEC8BF00E8AB42 /* KeychainAccess in Frameworks */,
 			);
@@ -655,6 +661,7 @@
 				C193E33428DE7C020064639A /* TwitchError.swift */,
 				C12695A528E5CF1200422F43 /* YoutubeAPI.swift */,
 				C12695AD28E5D22E00422F43 /* YoutubeError.swift */,
+				C1B2993528E92C9700C0D6A8 /* YoutubeError2.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -990,6 +997,7 @@
 				C184B9CB276AECEC00578F40 /* SwimplyPlayIndicator */,
 				C191FE9028DE0A6F00AED1AE /* Kingfisher */,
 				C180245328DEC8BF00E8AB42 /* KeychainAccess */,
+				C1B2993328E9298800C0D6A8 /* SwiftSoup */,
 			);
 			productName = Twitch;
 			productReference = C1FB01A82317D1B000130981 /* Byte.app */;
@@ -1084,6 +1092,7 @@
 				C184B9CA276AECEC00578F40 /* XCRemoteSwiftPackageReference "SwimplyPlayIndicator" */,
 				C191FE8F28DE0A6F00AED1AE /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				C180245228DEC8BF00E8AB42 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				C1B2993228E9298800C0D6A8 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 			);
 			productRefGroup = C1FB01A92317D1B000130981 /* Products */;
 			projectDirPath = "";
@@ -1226,6 +1235,7 @@
 				C1E9428A231E70D9006B7A71 /* GameStore.swift in Sources */,
 				C109BCF628E73A3D00BB83E8 /* YoutubeDataItem.swift in Sources */,
 				C1020D932317E9AE00FBFE16 /* ContentView.swift in Sources */,
+				C1B2993728E92C9700C0D6A8 /* YoutubeError2.swift in Sources */,
 				C15DD8552329235B00EC8EFB /* Video.swift in Sources */,
 				C1E94282231E70B6006B7A71 /* FetchingObject.swift in Sources */,
 				C10FECC026949C9300D48F8D /* StreamVideoPlayer.swift in Sources */,
@@ -1329,6 +1339,7 @@
 				C1EF0BA7276B19F000E311C8 /* PlayerLayer.swift in Sources */,
 				C1D2F9C82322801000657A67 /* Pagination.swift in Sources */,
 				C1BC16C52394EB0B008234EE /* ButtonWrap.swift in Sources */,
+				C1B2993828E92C9700C0D6A8 /* YoutubeError2.swift in Sources */,
 				C193E33728DE7C020064639A /* TwitchError.swift in Sources */,
 				C1729BC82326889D005D0A99 /* Dictionary+Extensions.swift in Sources */,
 				C1C85AB3233654A600E8AB19 /* PresenterViewControllerKey.swift in Sources */,
@@ -1421,6 +1432,7 @@
 				C1F6C4DB232A776A006EA1D5 /* LiveVideoFetcher.swift in Sources */,
 				C1B5AC6E232E29EF001A502F /* GameView.swift in Sources */,
 				C18242A4231800F100595E76 /* Thumbnail.swift in Sources */,
+				C1B2993628E92C9700C0D6A8 /* YoutubeError2.swift in Sources */,
 				C1605F702317DF3500F98BEE /* BrandColor.swift in Sources */,
 				C13F8848233B6B32008649F6 /* Push.swift in Sources */,
 				C117E4FF233F672D0056811D /* AppState.swift in Sources */,
@@ -2171,6 +2183,14 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		C1B2993228E9298800C0D6A8 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -2188,6 +2208,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C191FE8F28DE0A6F00AED1AE /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		C1B2993328E9298800C0D6A8 /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C1B2993228E9298800C0D6A8 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

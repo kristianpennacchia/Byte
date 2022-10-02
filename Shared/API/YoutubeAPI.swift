@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 import Combine
 import KeychainAccess
+import SwiftSoup
 
 final class YoutubeAPI: ObservableObject {
     struct Authentication {
@@ -195,6 +196,7 @@ extension YoutubeAPI {
             didChange.send(person)
         } catch {
             // Refreshing user access token failed, which likely means the refresh token is no longer valid.
+            self.accessToken = nil
             self.refreshToken = nil
             throw error
         }
@@ -227,32 +229,47 @@ extension YoutubeAPI {
 
         do {
             if let rawData = String(data: data, encoding: .utf8), rawData.contains("\"error\":") {
-                throw try decoder.decode(YoutubeError.self, from: data)
+                // It's a fucking error in a successful HTTP status code response. FUCK YOU GOOGLE!
+                do {
+                    throw try decoder.decode(YoutubeError.self, from: data)
+                } catch {
+                    do {
+                        throw try decoder.decode(YoutubeError2.self, from: data)
+                    } catch {
+                        throw error
+                    }
+                }
             } else {
                 return try decoder.decode(T.self, from: data)
             }
-        } catch let de as DecodingError {
+        } catch let error as YoutubeError {
+            if error.errorCode == "UNAUTHENTICATED" {
+                // Authentication failure. The access token has become invalid, try to refresh it.
+                try await refreshAccessToken()
+
+                // Access token refreshed, retry this method.
+                return try await execute(method: method, base: base, endpoint: endpoint, query: query, page: page, decoding: decoding)
+            } else {
+                throw error
+            }
+        } catch let error as YoutubeError2 {
+            if error.error.status == "UNAUTHENTICATED" {
+                // Authentication failure. The access token has become invalid, try to refresh it.
+                try await refreshAccessToken()
+
+                // Access token refreshed, retry this method.
+                return try await execute(method: method, base: base, endpoint: endpoint, query: query, page: page, decoding: decoding)
+            } else {
+                throw error
+            }
+        } catch let error as DecodingError {
             Swift.print("URL from decoding failure = \(request.url?.absoluteString ?? "N/A"), query = \(query)")
 
             if let rawData = String(data: data, encoding: .utf8) {
                 Swift.print("Raw data from decoding failure = \(rawData)")
             }
 
-            do {
-                let error = try self.decoder.decode(YoutubeError.self, from: data)
-
-                if error.errorCode == "TODO: The code which tells you the access token has expired." {
-                    // Authentication failure. The access token has become invalid, try to refresh it.
-                    try await refreshAccessToken()
-
-                    // Access token refreshed, retry this method.
-                    return try await execute(method: method, base: base, endpoint: endpoint, query: query, page: page, decoding: decoding)
-                } else {
-                    throw error
-                }
-            } catch {
-                throw LocalizedDecodingError(decodingError: de)
-            }
+            throw LocalizedDecodingError(decodingError: error)
         } catch {
             throw error
         }
