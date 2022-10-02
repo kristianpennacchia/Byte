@@ -286,7 +286,7 @@ extension YoutubeAPI {
 //        fetch(page: nil)
 //    }
 
-    func executeRaw(method: Method = .get, base: Base, endpoint: String, query: [String: Any?] = [:]) async throws -> Data {
+    func executeRaw(method: Method, base: Base, endpoint: String, query: [String: Any?] = [:]) async throws -> Data {
         var components = URLComponents(url: base.url.appendingPathComponent(endpoint), resolvingAgainstBaseURL: true)!
         components.query = query.queryParameters()
 
