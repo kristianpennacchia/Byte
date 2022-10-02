@@ -84,16 +84,23 @@ final class StreamStore: FetchingObject {
 
                         // Get all currently live channels.
                         var liveChannels = [YoutubeSubscription]()
-                        for subscription in subscriptionData.items {
-                            let channelID = subscription.snippet.resourceId.channelId
-                            do {
-                                let isLive = try await youtubeAPI.getIsLive(channelID: channelID)
-                                if isLive {
-                                    liveChannels.append(subscription)
+
+                        do {
+                            // Running in parallel, check which channels are live.
+                            try await withThrowingTaskGroup(of: (subscription: YoutubeSubscription, isLive: Bool).self) { group in
+                                for subscription in subscriptionData.items {
+                                    group.addTask {
+                                        let isLive = try await youtubeAPI.getIsLive(channelID: subscription.snippet.resourceId.channelId)
+                                        return (subscription, isLive)
+                                    }
                                 }
-                            } catch {
-                                print("Failed to check if channel '\(channelID)' is live.", error)
+
+                                for try await result in group where result.isLive {
+                                    liveChannels.append(result.subscription)
+                                }
                             }
+                        } catch {
+                            print("Failed to check if channels are live. \(error.localizedDescription)")
                         }
 
                         print("live channels = \(liveChannels.map(\.snippet.title))")
