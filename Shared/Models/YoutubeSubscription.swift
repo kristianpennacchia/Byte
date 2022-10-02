@@ -15,7 +15,7 @@ struct YoutubeSubscription: Decodable {
             let channelId: String
         }
 
-        struct Thumbnail: Decodable {
+        struct Thumbnails: Decodable {
             struct URL: Decodable {
                 let url: String
             }
@@ -30,7 +30,7 @@ struct YoutubeSubscription: Decodable {
         let description: String
         let resourceId: ResourceID
         let channelId: String
-        let thumbnails: [Thumbnail]
+        let thumbnails: Thumbnails
     }
 
     struct ContentDetail: Decodable {

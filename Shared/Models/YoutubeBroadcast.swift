@@ -10,7 +10,7 @@ import Foundation
 
 struct YoutubeBroadcast: Decodable {
     struct Snippet: Decodable {
-        struct Thumbnail: Decodable {
+        struct Thumbnails: Decodable {
             struct URL: Decodable {
                 let url: String
                 let width: Int
@@ -26,7 +26,7 @@ struct YoutubeBroadcast: Decodable {
         let title: String
         let description: String
         let channelId: String
-        let thumbnails: [Thumbnail]
+        let thumbnails: Thumbnails
         let scheduledStartTime: String
         let scheduledEndTime: String
         let actualStartTime: String
