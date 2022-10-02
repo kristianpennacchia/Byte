@@ -8,6 +8,7 @@
 
 import Foundation
 
+// https://developers.google.com/youtube/v3/docs/subscriptions#resource-representation
 struct YoutubeSubscription: Decodable {
     struct Snippet: Decodable {
         struct ResourceID: Decodable {
@@ -38,6 +39,8 @@ struct YoutubeSubscription: Decodable {
         let newItemCount: Int
         let activityType: String
     }
+
+    static let part = "snippet,contentDetails"
 
     let kind: String
     let etag: String
