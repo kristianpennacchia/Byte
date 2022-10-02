@@ -61,16 +61,60 @@ final class StreamStore: FetchingObject {
         let continueFetch = { [weak self] (result: Result<TwitchDataItem<[Stream]>, Error>) in
             guard let self = self else { return }
 
-            self.lastFetched = Date()
+            Task {
+                // We got all the Twitch results, now get the Youtube results (if applicable for the fetch type).
+                if let youtubeAPI = self.youtubeAPI, case .followed(userID: _) = self.fetchType {
+                    print("Getting Youtube live streams...")
 
-            switch result {
-            case .success(let data):
-                self.originalItems = Set(data.data).sorted(by: >)
-            case .failure(let error):
-                print("Fetching '\(self.fetchType)' streams failed. \(error.localizedDescription)")
+                    do {
+                        // https://developers.google.com/youtube/v3/docs/subscriptions/list
+                        let subscriptionData = try await youtubeAPI.execute(
+                            method: .get,
+                            base: .youtube,
+                            endpoint: "subscriptions",
+                            query: [
+                                "part": YoutubeSubscription.part,
+                                "maxResults": 50,
+                                "mine": true,
+                            ],
+                            decoding: YoutubeDataItem<YoutubeSubscription>.self
+                        )
+
+                        print("Got \(subscriptionData.items.count) subscriptions.")
+
+                        // Get all currently live channels.
+                        var liveChannels = [YoutubeSubscription]()
+                        for subscription in subscriptionData.items {
+                            let channelID = subscription.snippet.resourceId.channelId
+                            do {
+                                let isLive = try await youtubeAPI.getIsLive(channelID: channelID)
+                                if isLive {
+                                    liveChannels.append(subscription)
+                                }
+                            } catch {
+                                print("Failed to check if channel '\(channelID)' is live.", error)
+                            }
+                        }
+
+                        print("live channels = \(liveChannels.map(\.snippet.title))")
+
+                        #warning("TODO: Add live youtube subscriptions to fetch results.")
+                    } catch {
+                        print("Failed to fetch Youtube live streams. \(error.localizedDescription)")
+                    }
+                }
+
+                self.lastFetched = Date()
+
+                switch result {
+                case .success(let data):
+                    self.originalItems = Set(data.data).sorted(by: >)
+                case .failure(let error):
+                    print("Fetching '\(self.fetchType)' streams failed. \(error.localizedDescription)")
+                }
+
+                completion()
             }
-
-            completion()
         }
 
         switch fetchType {
