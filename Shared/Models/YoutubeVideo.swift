@@ -21,7 +21,7 @@ struct YoutubeVideo: Decodable {
             let high: URL
         }
 
-        let publishedAt: String
+        let publishedAt: Date
         let channelId: String
         let title: String
         let description: String
@@ -54,10 +54,10 @@ struct YoutubeVideo: Decodable {
     }
 
     struct LiveStreamingDetails: Decodable {
-        let actualStartTime: String?
-        let actualEndTime: String?
-        let scheduledStartTime: String?
-        let scheduledEndTime: String?
+        let actualStartTime: Date?
+        let actualEndTime: Date?
+        let scheduledStartTime: Date?
+        let scheduledEndTime: Date?
         let concurrentViewers: UInt?
         let activeLiveChatId: String?
     }

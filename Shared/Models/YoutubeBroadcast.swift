@@ -22,15 +22,15 @@ struct YoutubeBroadcast: Decodable {
             let high: URL
         }
 
-        let publishedAt: String
+        let publishedAt: Date
         let title: String
         let description: String
         let channelId: String
         let thumbnails: Thumbnails
-        let scheduledStartTime: String
-        let scheduledEndTime: String
-        let actualStartTime: String
-        let actualEndTime: String
+        let scheduledStartTime: Date
+        let scheduledEndTime: Date
+        let actualStartTime: Date
+        let actualEndTime: Date
         let isDefaultBroadcast: Bool
         let liveChatId: String
     }

@@ -26,7 +26,7 @@ struct YoutubeSubscription: Decodable {
             let high: URL
         }
 
-        let publishedAt: String
+        let publishedAt: Date
         let title: String
         let description: String
         let resourceId: ResourceID
