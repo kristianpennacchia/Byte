@@ -210,6 +210,15 @@ extension YoutubeAPI {
 
         return try await execute(method: .get, base: .people, endpoint: "people/me", query: query, decoding: YoutubePerson.self)
     }
+
+    func getIsLive(channelID: String) async throws -> Bool {
+        let channelURL = URL(string: "https://www.youtube.com/embed/live_stream?channel=\(channelID)")!
+        let htmlPageData = try await session.data(from: channelURL).0
+        let htmlPageString = String(data: htmlPageData, encoding: .utf8)!
+
+        return htmlPageString.contains(##"<link rel="canonical" href="https://www.youtube.com/watch?v="##)
+            && htmlPageString.contains("scheduledStartTime") == false
+    }
 }
 
 extension YoutubeAPI {
