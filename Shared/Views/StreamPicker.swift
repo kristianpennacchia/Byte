@@ -9,14 +9,14 @@
 import SwiftUI
 
 struct StreamPicker: View {
-    @EnvironmentObject private var api: API
+    @EnvironmentObject private var api: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @ObservedObject var store: StreamStore
 
     @State private var isRefreshing = false
 
-    let onSelectedStream: (Stream) -> Void
+    let onSelectedStream: (any Streamable) -> Void
 
     var body: some View {
         ZStack {
@@ -28,7 +28,7 @@ struct StreamPicker: View {
 
                     let columns = Array(repeating: GridItem(.flexible()), count: 4)
                     LazyVGrid(columns: columns) {
-                        ForEach(store.items) { stream in
+                        ForEach(store.items, id: \.id) { stream in
                             StreamView(stream: stream, isSelected: false, hasFocusEffect: false)
                                 .buttonWrap {
                                     onSelectedStream(stream)
@@ -75,6 +75,6 @@ private extension StreamPicker {
 //struct StreamPicker_Previews: PreviewProvider {
 //    static var previews: some View {
 //        var selectedStream: Binding<Stream>
-//        StreamPicker(store: StreamStore(api: .shared, fetch: .followed(userID: app.previewUsername)), selectedStream: Binding<Stream>())
+//        StreamPicker(store: StreamStore(twitchAPI: .shared, fetch: .followed(userID: app.previewUsername)), selectedStream: Binding<Stream>())
 //    }
 //}

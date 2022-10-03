@@ -15,7 +15,11 @@ final class StreamStore: FetchingObject {
     }
 
     struct UniqueStream: Identifiable, Hashable {
-        let stream: Stream
+        static func == (lhs: StreamStore.UniqueStream, rhs: StreamStore.UniqueStream) -> Bool {
+            return lhs.id == rhs.id
+        }
+
+        let stream: any Streamable
 
         // Force this instance to never be the same, so that the stream view can be updated to show
         // changes in static data.
@@ -24,11 +28,17 @@ final class StreamStore: FetchingObject {
         // Because of this, the views displaying the stream will be showing outdated data even if none
         // of the properties on the Stream model have changed.
         let id = UUID()
+
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(stream)
+            hasher.combine(id)
+        }
     }
 
     private(set) var lastFetched: Date?
 
-    let api: API
+    let twitchAPI: TwitchAPI
+    let youtubeAPI: YoutubeAPI?
     let fetchType: Fetch
     var filter = "" {
         didSet {
@@ -36,33 +46,88 @@ final class StreamStore: FetchingObject {
         }
     }
 
-    @Published private(set) var originalItems = [Stream]() {
+    @Published private(set) var originalItems = [any Streamable]() {
         didSet {
             applyFilter()
         }
     }
-    @Published private(set) var items = [Stream]()
+    @Published private(set) var items = [any Streamable]()
     @Published private(set) var uniquedItems = [UniqueStream]()
 
-    init(api: API, fetch: Fetch) {
-        self.api = api
+    init(twitchAPI: TwitchAPI, fetch: Fetch) {
+        self.twitchAPI = twitchAPI
+        self.youtubeAPI = nil
+        self.fetchType = fetch
+    }
+
+    init(twitchAPI: TwitchAPI, youtubeAPI: YoutubeAPI, fetch: Fetch) {
+        self.twitchAPI = twitchAPI
+        self.youtubeAPI = youtubeAPI
         self.fetchType = fetch
     }
 
     func fetch(completion: @escaping () -> Void) {
-        let continueFetch = { [weak self] (result: Result<DataItem<[Stream]>, Error>) in
+        let continueFetch = { [weak self] (result: Result<TwitchDataItem<[Stream]>, Error>) in
             guard let self = self else { return }
 
-            self.lastFetched = Date()
+            Task {
+                // We got all the Twitch results, now get the Youtube results (if applicable for the fetch type).
+                var liveYoutubeChannels = [YoutubeSubscription]()
 
-            switch result {
-            case .success(let data):
-                self.originalItems = Set(data.data).sorted(by: >)
-            case .failure(let error):
-                print("Fetching '\(self.fetchType)' streams failed. \(error.localizedDescription)")
+                if let youtubeAPI = self.youtubeAPI, case .followed(userID: _) = self.fetchType {
+                    print("Getting Youtube live streams...")
+
+                    do {
+                        // https://developers.google.com/youtube/v3/docs/subscriptions/list
+                        let subscriptions = try await youtubeAPI.executeFetchAll(
+                            method: .get,
+                            base: .youtube,
+                            endpoint: "subscriptions",
+                            query: [
+                                "part": YoutubeSubscription.part,
+                                "maxResults": 50,
+                                "mine": true,
+                            ],
+                            decoding: YoutubeDataItem<YoutubeSubscription>.self
+                        )
+
+                        do {
+                            // Running in parallel, check which channels are live.
+                            try await withThrowingTaskGroup(of: YoutubeSubscription.self) { group in
+                                for subscription in subscriptions {
+                                    group.addTask {
+                                        var subscription = subscription
+                                        subscription.live = try await youtubeAPI.getIsLive(channelID: subscription.snippet.resourceId.channelId)
+                                        return subscription
+                                    }
+                                }
+
+                                for try await subscription in group where subscription.live != nil {
+                                    liveYoutubeChannels.append(subscription)
+                                }
+                            }
+                        } catch {
+                            print("Failed to check if channels are live. \(error.localizedDescription)")
+                        }
+                    } catch {
+                        print("Failed to fetch Youtube live streams. \(error.localizedDescription)")
+                    }
+                }
+
+                self.lastFetched = Date()
+
+                switch result {
+                case .success(let data):
+                    var streams = [any Streamable]()
+                    streams.append(contentsOf: data.data)
+                    streams.append(contentsOf: liveYoutubeChannels)
+                    self.originalItems = streams.sorted(by: compareStreamable)
+                case .failure(let error):
+                    print("Fetching '\(self.fetchType)' streams failed. \(error.localizedDescription)")
+                }
+
+                completion()
             }
-
-            completion()
         }
 
         switch fetchType {
@@ -72,7 +137,7 @@ final class StreamStore: FetchingObject {
                 "from_id": userID,
             ]
 
-            api.executeFetchAll(endpoint: "users/follows", query: query, decoding: [Channel.Stub].self) { [weak self] result in
+            twitchAPI.executeFetchAll(endpoint: "users/follows", query: query, decoding: [Channel.Stub].self) { [weak self] result in
                 guard let self = self else { return }
 
                 switch result {
@@ -90,7 +155,7 @@ final class StreamStore: FetchingObject {
                                 "user_id": stubs.map { $0.toId },
                             ]
 
-                            self.api.executeFetchAll(endpoint: "streams", query: query, decoding: [Stream].self) { result in
+                            self.twitchAPI.executeFetchAll(endpoint: "streams", query: query, decoding: [Stream].self) { result in
                                 switch result {
                                 case .success(let data):
                                     liveStreams += data.data
@@ -102,7 +167,7 @@ final class StreamStore: FetchingObject {
                             }
                     }
                     group.notify(queue: .main) {
-                        continueFetch(.success(DataItem<[Stream]>(data: liveStreams, pagination: nil)))
+                        continueFetch(.success(TwitchDataItem<[Stream]>(data: liveStreams, pagination: nil)))
                     }
                 case .failure(let error):
                     print("Fetching all user follows failed. \(error.localizedDescription)")
@@ -113,14 +178,14 @@ final class StreamStore: FetchingObject {
                 "first": 100,
             ]
 
-            api.execute(endpoint: "streams", query: query, decoding: [Stream].self, completion: continueFetch)
+            twitchAPI.execute(endpoint: "streams", query: query, decoding: [Stream].self, completion: continueFetch)
         case .game(let game):
             let query: [String: Any] = [
                 "first": 100,
                 "game_id": game.id,
             ]
 
-            api.execute(endpoint: "streams", query: query, decoding: [Stream].self, completion: continueFetch)
+            twitchAPI.execute(endpoint: "streams", query: query, decoding: [Stream].self, completion: continueFetch)
         }
     }
 }

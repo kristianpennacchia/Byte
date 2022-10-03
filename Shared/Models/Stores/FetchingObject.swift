@@ -14,7 +14,7 @@ protocol FetchingObject: ObservableObject {
     associatedtype Item
     associatedtype Key: FetchingKey
 
-    var api: API { get }
+    var twitchAPI: TwitchAPI { get }
     var originalItems: [Item] { get }
     var items: [Item] { get }
     var fetchType: Key { get }
@@ -23,7 +23,7 @@ protocol FetchingObject: ObservableObject {
     var isStale: Bool { get }
     var staleTimeoutMinutes: Int { get }
 
-    init(api: API, fetch: Key)
+    init(twitchAPI: TwitchAPI, fetch: Key)
 
     func fetch(completion: @escaping () -> Void)
 }

@@ -1,5 +1,5 @@
 //
-//  API.swift
+//  TwitchAPI.swift
 //  Byte
 //
 //  Created by Kristian Pennacchia on 3/9/19.
@@ -11,14 +11,20 @@ import SwiftUI
 import Combine
 import KeychainAccess
 
-final class API: ObservableObject {
-    typealias Completion<T> = (_ result: Result<DataItem<T>, Error>) -> Void where T: Decodable
+final class TwitchAPI: ObservableObject {
+    struct Authentication {
+        let clientID: String
+        let privateClientID: String
+        let secret: String
+    }
+
+    typealias Completion<T> = (_ result: Result<TwitchDataItem<T>, Error>) -> Void where T: Decodable
     typealias CompletionRaw = (_ result: Result<Data, Error>) -> Void
 
-    static private(set) var shared: API!
+    static private(set) var shared: TwitchAPI!
 
     private let didChange = PassthroughSubject<Output, Failure>()
-    private let keychain = Keychain(service: "auth")
+    private let keychain = Keychain(service: "twitch")
 
     let session: URLSession
     let authentication: Authentication
@@ -35,11 +41,11 @@ final class API: ObservableObject {
         }
     }
 
-    static func setup(authentication: Authentication, accessToken: String? = nil, refreshToken: String? = nil) {
-        shared = API(authentication: authentication, accessToken: accessToken, refreshToken: refreshToken)
+    static func setup(authentication: Authentication, accessToken: String, refreshToken: String? = nil) {
+        shared = TwitchAPI(authentication: authentication, accessToken: accessToken, refreshToken: refreshToken)
     }
 
-    private init(authentication: Authentication, accessToken: String? = nil, refreshToken: String? = nil) {
+    private init(authentication: Authentication, accessToken: String, refreshToken: String? = nil) {
         self.authentication = authentication
         self.accessToken = accessToken
         self.refreshToken = refreshToken
@@ -56,7 +62,7 @@ final class API: ObservableObject {
     }
 }
 
-extension API {
+extension TwitchAPI {
     enum Method: String {
         case get, post, put, patch, delete
     }
@@ -83,14 +89,14 @@ extension API {
     }
 }
 
-extension API {
+extension TwitchAPI {
 
     // - MARK: Authentication
 
     func authenticate(completion: @escaping Completion<[Channel]>) {
         if accessToken != nil {
             // We should be able to get the user info assuming the accessToken is still valid
-            API.shared.execute(endpoint: "users", decoding: [Channel].self, completion: completion)
+            execute(endpoint: "users", decoding: [Channel].self, completion: completion)
         } else {
             /// - Todo: Authenticate
 //            let query = [
@@ -150,9 +156,9 @@ extension API {
     }
 }
 
-extension API {
+extension TwitchAPI {
     @discardableResult
-    func execute<T>(method: Method = .get, base: Base = .helix, endpoint: String, query: [String: Any?] = [:], page: Pagination? = nil, decoding: T.Type, completion: @escaping Completion<T>) -> URLSessionTask {
+    func execute<T>(method: Method = .get, base: Base = .helix, endpoint: String, query: [String: Any?] = [:], decoding: T.Type, completion: @escaping Completion<T>) -> URLSessionTask {
         var components = URLComponents(url: base.url.appendingPathComponent(endpoint), resolvingAgainstBaseURL: true)!
         components.query = query.queryParameters()
 
@@ -167,7 +173,7 @@ extension API {
         let task = session.dataTask(with: request) { data, response, error in
             if let data = data {
                 do {
-                    let result = try self.decoder.decode(DataItem<T>.self, from: data)
+                    let result = try self.decoder.decode(TwitchDataItem<T>.self, from: data)
 
                     DispatchQueue.main.async {
                         completion(.success(result))
@@ -187,7 +193,7 @@ extension API {
                             self.refreshAccessToken { result in
                                 switch result {
                                 case .success(_):
-                                    self.execute(method: method, base: base, endpoint: endpoint, query: query, page: page, decoding: decoding, completion: completion)
+                                    self.execute(method: method, base: base, endpoint: endpoint, query: query, decoding: decoding, completion: completion)
                                 case .failure(let error):
                                     DispatchQueue.main.async {
                                         completion(.failure(error))
@@ -226,14 +232,14 @@ extension API {
             var query = query
             query["after"] = page?.cursor
 
-            execute(method: method, base: base, endpoint: endpoint, query: query, page: page, decoding: decoding) { result in
+            execute(method: method, base: base, endpoint: endpoint, query: query, decoding: decoding) { result in
                 switch result {
                 case .success(let data):
                     allItems += data.data
 
                     if data.pagination == nil || data.pagination!.isValid == false || data.data.isEmpty {
                         // All data has been downloaded
-                        completion(.success(DataItem<[T]>(data: allItems, pagination: data.pagination)))
+                        completion(.success(TwitchDataItem<[T]>(data: allItems, pagination: data.pagination)))
                     } else {
                         fetch(page: data.pagination)
                     }
@@ -273,7 +279,7 @@ extension API {
     }
 }
 
-extension API: Publisher {
+extension TwitchAPI: Publisher {
     typealias Output = Channel
     typealias Failure = Never
 

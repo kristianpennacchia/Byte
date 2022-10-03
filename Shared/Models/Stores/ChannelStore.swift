@@ -15,7 +15,7 @@ final class ChannelStore: FetchingObject {
 
     private(set) var lastFetched: Date?
 
-    let api: API
+    let twitchAPI: TwitchAPI
     let fetchType: Fetch
     var filter = "" {
         didSet {
@@ -31,13 +31,13 @@ final class ChannelStore: FetchingObject {
     }
     @Published private(set) var items = [Channel]()
 
-    init(api: API, fetch: Fetch) {
-        self.api = api
+    init(twitchAPI: TwitchAPI, fetch: Fetch) {
+        self.twitchAPI = twitchAPI
         self.fetchType = fetch
     }
 
     func fetch(completion: @escaping () -> Void) {
-        let continueFetch = { [weak self] (result: Result<DataItem<[Channel]>, Error>) in
+        let continueFetch = { [weak self] (result: Result<TwitchDataItem<[Channel]>, Error>) in
             guard let self = self else { return }
 
             self.lastFetched = Date()
@@ -59,7 +59,7 @@ final class ChannelStore: FetchingObject {
                 "from_id": userID,
             ]
 
-            api.executeFetchAll(endpoint: "users/follows", query: query, decoding: [Channel.Stub].self) { [weak self] result in
+            twitchAPI.executeFetchAll(endpoint: "users/follows", query: query, decoding: [Channel.Stub].self) { [weak self] result in
                 guard let self = self else { return }
 
                 switch result {
@@ -77,7 +77,7 @@ final class ChannelStore: FetchingObject {
                                 "id": stubs.map { $0.toId },
                             ]
 
-                            self.api.executeFetchAll(endpoint: "users", query: query, decoding: [Channel].self) { result in
+                            self.twitchAPI.executeFetchAll(endpoint: "users", query: query, decoding: [Channel].self) { result in
                                 switch result {
                                 case .success(let data):
                                     followedChannels += data.data
@@ -89,7 +89,7 @@ final class ChannelStore: FetchingObject {
                             }
                         }
                     group.notify(queue: .main) {
-                        continueFetch(.success(DataItem<[Channel]>(data: followedChannels, pagination: nil)))
+                        continueFetch(.success(TwitchDataItem<[Channel]>(data: followedChannels, pagination: nil)))
                     }
                 case .failure(let error):
                     print("Fetching all user follows failed. \(error.localizedDescription)")

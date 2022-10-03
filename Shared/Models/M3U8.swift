@@ -22,6 +22,7 @@ struct M3U8 {
 
     let rawText: String
     let meta: [Meta]
+    let rawURLs: [String]
 
     init(data: Data) throws {
         guard let text = String(data: data, encoding: .utf8) else {
@@ -32,13 +33,13 @@ struct M3U8 {
 
         let basicMetadata = text.substrings(matching: Self.videoMetadataRegex)
         let advancedMetadata = text.substrings(matching: Self.videoAdvancedMetadataRegex)
-        let urls = text.substrings(matching: Self.urlRegex)
+        rawURLs = text.substrings(matching: Self.urlRegex).map(String.init)
 
-        guard urls.isEmpty == false else {
+        guard rawURLs.isEmpty == false else {
             throw Error.urlParseFailure
         }
 
-        meta = zip(urls, zip(basicMetadata, advancedMetadata)).map { url, metadata in
+        meta = zip(rawURLs, zip(basicMetadata, advancedMetadata)).map { url, metadata in
             let (basic, advanced) = metadata
             return Meta(url: String(url), metadata: String(basic), advancedMetadata: String(advanced))
         }

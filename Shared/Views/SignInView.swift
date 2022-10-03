@@ -33,7 +33,7 @@ struct SignInView: View {
 
     private func signIn() {
         isSigningIn = true
-        sessionStore.signIn()
+        sessionStore.signInTwitch()
     }
 }
 

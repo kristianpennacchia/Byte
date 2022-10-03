@@ -22,7 +22,7 @@
 		C1020D962317E9AE00FBFE16 /* BrandColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F6F2317DF3500F98BEE /* BrandColor.swift */; };
 		C1020D972317E9AE00FBFE16 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB01D92317D87400130981 /* Channel.swift */; };
 		C1020D982317E9AE00FBFE16 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F712317E31E00F98BEE /* Game.swift */; };
-		C1020D992317E9AE00FBFE16 /* Color+Twitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F6D2317DE6300F98BEE /* Color+Twitch.swift */; };
+		C1020D992317E9AE00FBFE16 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F6D2317DE6300F98BEE /* Color+Extensions.swift */; };
 		C1020DB82317EAC300FBFE16 /* Byte_Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1020DAF2317EAC300FBFE16 /* Byte_Shared.framework */; };
 		C1020DBD2317EAC300FBFE16 /* SharedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1020DBC2317EAC300FBFE16 /* SharedTests.swift */; };
 		C1020DBF2317EAC300FBFE16 /* Shared.h in Headers */ = {isa = PBXBuildFile; fileRef = C1020DB12317EAC300FBFE16 /* Shared.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -34,7 +34,10 @@
 		C1020DCB2317EB0800FBFE16 /* BrandColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F6F2317DF3500F98BEE /* BrandColor.swift */; };
 		C1020DCC2317EB0800FBFE16 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB01D92317D87400130981 /* Channel.swift */; };
 		C1020DCD2317EB0800FBFE16 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F712317E31E00F98BEE /* Game.swift */; };
-		C1020DCE2317EB0800FBFE16 /* Color+Twitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F6D2317DE6300F98BEE /* Color+Twitch.swift */; };
+		C1020DCE2317EB0800FBFE16 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F6D2317DE6300F98BEE /* Color+Extensions.swift */; };
+		C109BCF528E73A3D00BB83E8 /* YoutubeDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C109BCF428E73A3D00BB83E8 /* YoutubeDataItem.swift */; };
+		C109BCF628E73A3D00BB83E8 /* YoutubeDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C109BCF428E73A3D00BB83E8 /* YoutubeDataItem.swift */; };
+		C109BCF728E73A3D00BB83E8 /* YoutubeDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C109BCF428E73A3D00BB83E8 /* YoutubeDataItem.swift */; };
 		C109CFB3231D1D0600C35AD8 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C109CFB2231D1D0600C35AD8 /* SessionStore.swift */; };
 		C109CFB4231D1D0600C35AD8 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C109CFB2231D1D0600C35AD8 /* SessionStore.swift */; };
 		C109CFB5231D1D0600C35AD8 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C109CFB2231D1D0600C35AD8 /* SessionStore.swift */; };
@@ -66,12 +69,27 @@
 		C117E4FF233F672D0056811D /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C117E4FE233F672D0056811D /* AppState.swift */; };
 		C117E500233F672D0056811D /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C117E4FE233F672D0056811D /* AppState.swift */; };
 		C117E501233F672D0056811D /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C117E4FE233F672D0056811D /* AppState.swift */; };
-		C11B670F23226C7C004576A6 /* DataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11B670E23226C7C004576A6 /* DataItem.swift */; };
-		C11B671023226C7C004576A6 /* DataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11B670E23226C7C004576A6 /* DataItem.swift */; };
-		C11B671123226C7C004576A6 /* DataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11B670E23226C7C004576A6 /* DataItem.swift */; };
+		C11B670F23226C7C004576A6 /* TwitchDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11B670E23226C7C004576A6 /* TwitchDataItem.swift */; };
+		C11B671023226C7C004576A6 /* TwitchDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11B670E23226C7C004576A6 /* TwitchDataItem.swift */; };
+		C11B671123226C7C004576A6 /* TwitchDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11B670E23226C7C004576A6 /* TwitchDataItem.swift */; };
 		C12541082317F24D005A9F03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C12541072317F24D005A9F03 /* Assets.xcassets */; };
 		C12541092317F24D005A9F03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C12541072317F24D005A9F03 /* Assets.xcassets */; };
 		C125410A2317F24D005A9F03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C12541072317F24D005A9F03 /* Assets.xcassets */; };
+		C126959E28E5CC9D00422F43 /* TwitchSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C126959D28E5CC9D00422F43 /* TwitchSecrets.swift */; };
+		C126959F28E5CC9D00422F43 /* TwitchSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C126959D28E5CC9D00422F43 /* TwitchSecrets.swift */; };
+		C12695A028E5CC9D00422F43 /* TwitchSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C126959D28E5CC9D00422F43 /* TwitchSecrets.swift */; };
+		C12695A228E5CCA900422F43 /* YoutubeSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12695A128E5CCA900422F43 /* YoutubeSecrets.swift */; };
+		C12695A328E5CCA900422F43 /* YoutubeSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12695A128E5CCA900422F43 /* YoutubeSecrets.swift */; };
+		C12695A428E5CCA900422F43 /* YoutubeSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12695A128E5CCA900422F43 /* YoutubeSecrets.swift */; };
+		C12695A628E5CF1200422F43 /* YoutubeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12695A528E5CF1200422F43 /* YoutubeAPI.swift */; };
+		C12695A728E5CF1200422F43 /* YoutubeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12695A528E5CF1200422F43 /* YoutubeAPI.swift */; };
+		C12695A828E5CF1200422F43 /* YoutubeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12695A528E5CF1200422F43 /* YoutubeAPI.swift */; };
+		C12695AA28E5D1DB00422F43 /* YoutubeOAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12695A928E5D1DB00422F43 /* YoutubeOAuth.swift */; };
+		C12695AB28E5D1DB00422F43 /* YoutubeOAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12695A928E5D1DB00422F43 /* YoutubeOAuth.swift */; };
+		C12695AC28E5D1DB00422F43 /* YoutubeOAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12695A928E5D1DB00422F43 /* YoutubeOAuth.swift */; };
+		C12695AE28E5D22E00422F43 /* YoutubeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12695AD28E5D22E00422F43 /* YoutubeError.swift */; };
+		C12695AF28E5D22E00422F43 /* YoutubeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12695AD28E5D22E00422F43 /* YoutubeError.swift */; };
+		C12695B028E5D22E00422F43 /* YoutubeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12695AD28E5D22E00422F43 /* YoutubeError.swift */; };
 		C1278A2723190BE600400D35 /* Logo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1278A2623190BE600400D35 /* Logo.swift */; };
 		C1278A2823190BE600400D35 /* Logo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1278A2623190BE600400D35 /* Logo.swift */; };
 		C1278A2923190BE600400D35 /* Logo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1278A2623190BE600400D35 /* Logo.swift */; };
@@ -97,23 +115,41 @@
 		C14BCD4E2317FC8900F33A48 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14BCD4D2317FC8900F33A48 /* Stream.swift */; };
 		C14BCD4F2317FC8900F33A48 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14BCD4D2317FC8900F33A48 /* Stream.swift */; };
 		C14BCD502317FC8900F33A48 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14BCD4D2317FC8900F33A48 /* Stream.swift */; };
+		C14D5B9728EA723E00351AC5 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D5B9628EA723E00351AC5 /* AppError.swift */; };
+		C14D5B9828EA723E00351AC5 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D5B9628EA723E00351AC5 /* AppError.swift */; };
+		C14D5B9928EA723E00351AC5 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D5B9628EA723E00351AC5 /* AppError.swift */; };
 		C1557C4D23449BB7002387BE /* ThirdDimensionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1557C4C23449BB7002387BE /* ThirdDimensionEffect.swift */; };
 		C1557C4E23449BB7002387BE /* ThirdDimensionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1557C4C23449BB7002387BE /* ThirdDimensionEffect.swift */; };
 		C1557C4F23449BB7002387BE /* ThirdDimensionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1557C4C23449BB7002387BE /* ThirdDimensionEffect.swift */; };
 		C15DD8542329235B00EC8EFB /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15DD8532329235B00EC8EFB /* Video.swift */; };
 		C15DD8552329235B00EC8EFB /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15DD8532329235B00EC8EFB /* Video.swift */; };
 		C15DD8562329235B00EC8EFB /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15DD8532329235B00EC8EFB /* Video.swift */; };
-		C1605F6E2317DE6300F98BEE /* Color+Twitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F6D2317DE6300F98BEE /* Color+Twitch.swift */; };
+		C15ECCF228EB875A00234CAF /* YoutubePlayerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15ECCF128EB875A00234CAF /* YoutubePlayerResponse.swift */; };
+		C15ECCF328EB875A00234CAF /* YoutubePlayerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15ECCF128EB875A00234CAF /* YoutubePlayerResponse.swift */; };
+		C15ECCF428EB875A00234CAF /* YoutubePlayerResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15ECCF128EB875A00234CAF /* YoutubePlayerResponse.swift */; };
+		C1605F6E2317DE6300F98BEE /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F6D2317DE6300F98BEE /* Color+Extensions.swift */; };
 		C1605F702317DF3500F98BEE /* BrandColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F6F2317DF3500F98BEE /* BrandColor.swift */; };
 		C1605F722317E31E00F98BEE /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F712317E31E00F98BEE /* Game.swift */; };
 		C1605F742317E57E00F98BEE /* GameList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F732317E57E00F98BEE /* GameList.swift */; };
 		C1605F762317E5E100F98BEE /* CoverArt.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1605F752317E5E100F98BEE /* CoverArt.swift */; };
-		C1729BC223268887005D0A99 /* Array+Twitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1729BC123268887005D0A99 /* Array+Twitch.swift */; };
-		C1729BC323268887005D0A99 /* Array+Twitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1729BC123268887005D0A99 /* Array+Twitch.swift */; };
-		C1729BC423268887005D0A99 /* Array+Twitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1729BC123268887005D0A99 /* Array+Twitch.swift */; };
-		C1729BC62326889D005D0A99 /* Dictionary+Twitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1729BC52326889D005D0A99 /* Dictionary+Twitch.swift */; };
-		C1729BC72326889D005D0A99 /* Dictionary+Twitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1729BC52326889D005D0A99 /* Dictionary+Twitch.swift */; };
-		C1729BC82326889D005D0A99 /* Dictionary+Twitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1729BC52326889D005D0A99 /* Dictionary+Twitch.swift */; };
+		C16A7E0128E7FE0600509FFF /* HeartbeatActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16A7E0028E7FE0600509FFF /* HeartbeatActivityIndicator.swift */; };
+		C16A7E0228E7FE0600509FFF /* HeartbeatActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16A7E0028E7FE0600509FFF /* HeartbeatActivityIndicator.swift */; };
+		C16A7E0328E7FE0600509FFF /* HeartbeatActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16A7E0028E7FE0600509FFF /* HeartbeatActivityIndicator.swift */; };
+		C16A7E0528E8077F00509FFF /* YoutubePerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16A7E0428E8077F00509FFF /* YoutubePerson.swift */; };
+		C16A7E0628E8077F00509FFF /* YoutubePerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16A7E0428E8077F00509FFF /* YoutubePerson.swift */; };
+		C16A7E0728E8077F00509FFF /* YoutubePerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16A7E0428E8077F00509FFF /* YoutubePerson.swift */; };
+		C16A7E0928E8140800509FFF /* YoutubeSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16A7E0828E8140800509FFF /* YoutubeSubscription.swift */; };
+		C16A7E0A28E8140800509FFF /* YoutubeSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16A7E0828E8140800509FFF /* YoutubeSubscription.swift */; };
+		C16A7E0B28E8140800509FFF /* YoutubeSubscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16A7E0828E8140800509FFF /* YoutubeSubscription.swift */; };
+		C16A7E0D28E8199900509FFF /* YoutubeBroadcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16A7E0C28E8199900509FFF /* YoutubeBroadcast.swift */; };
+		C16A7E0E28E8199900509FFF /* YoutubeBroadcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16A7E0C28E8199900509FFF /* YoutubeBroadcast.swift */; };
+		C16A7E0F28E8199900509FFF /* YoutubeBroadcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16A7E0C28E8199900509FFF /* YoutubeBroadcast.swift */; };
+		C1729BC223268887005D0A99 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1729BC123268887005D0A99 /* Array+Extensions.swift */; };
+		C1729BC323268887005D0A99 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1729BC123268887005D0A99 /* Array+Extensions.swift */; };
+		C1729BC423268887005D0A99 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1729BC123268887005D0A99 /* Array+Extensions.swift */; };
+		C1729BC62326889D005D0A99 /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1729BC52326889D005D0A99 /* Dictionary+Extensions.swift */; };
+		C1729BC72326889D005D0A99 /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1729BC52326889D005D0A99 /* Dictionary+Extensions.swift */; };
+		C1729BC82326889D005D0A99 /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1729BC52326889D005D0A99 /* Dictionary+Extensions.swift */; };
 		C17627EB26A336A100D4BB11 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17627EA26A336A100D4BB11 /* VisualEffectView.swift */; };
 		C17627EC26A336A100D4BB11 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17627EA26A336A100D4BB11 /* VisualEffectView.swift */; };
 		C17627ED26A336A100D4BB11 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17627EA26A336A100D4BB11 /* VisualEffectView.swift */; };
@@ -163,12 +199,36 @@
 		C19FE9AE246E5A7D004EB60C /* Favourite.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19FE9AD246E5A7D004EB60C /* Favourite.swift */; };
 		C19FE9AF246E5A7D004EB60C /* Favourite.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19FE9AD246E5A7D004EB60C /* Favourite.swift */; };
 		C19FE9B0246E5A7D004EB60C /* Favourite.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19FE9AD246E5A7D004EB60C /* Favourite.swift */; };
+		C1A647C428E7230800699B5B /* Task+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A647C328E7230800699B5B /* Task+Extensions.swift */; };
+		C1A647C528E7230800699B5B /* Task+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A647C328E7230800699B5B /* Task+Extensions.swift */; };
+		C1A647C628E7230800699B5B /* Task+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A647C328E7230800699B5B /* Task+Extensions.swift */; };
+		C1A647C828E72B3F00699B5B /* YoutubeUserAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A647C728E72B3F00699B5B /* YoutubeUserAuth.swift */; };
+		C1A647C928E72B3F00699B5B /* YoutubeUserAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A647C728E72B3F00699B5B /* YoutubeUserAuth.swift */; };
+		C1A647CA28E72B3F00699B5B /* YoutubeUserAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A647C728E72B3F00699B5B /* YoutubeUserAuth.swift */; };
 		C1A75361249B8ED1005FB190 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A75360249B8ED1005FB190 /* ActivityIndicator.swift */; };
 		C1A75362249B8ED1005FB190 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A75360249B8ED1005FB190 /* ActivityIndicator.swift */; };
 		C1A75363249B8ED1005FB190 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A75360249B8ED1005FB190 /* ActivityIndicator.swift */; };
-		C1AE3318231E89FD00FE0F99 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AE3317231E89FD00FE0F99 /* API.swift */; };
-		C1AE3319231E89FD00FE0F99 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AE3317231E89FD00FE0F99 /* API.swift */; };
-		C1AE331A231E89FD00FE0F99 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AE3317231E89FD00FE0F99 /* API.swift */; };
+		C1AE3318231E89FD00FE0F99 /* TwitchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AE3317231E89FD00FE0F99 /* TwitchAPI.swift */; };
+		C1AE3319231E89FD00FE0F99 /* TwitchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AE3317231E89FD00FE0F99 /* TwitchAPI.swift */; };
+		C1AE331A231E89FD00FE0F99 /* TwitchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AE3317231E89FD00FE0F99 /* TwitchAPI.swift */; };
+		C1B0BCAF28EAF2220016089B /* CodableIgnored.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B0BCAE28EAF2220016089B /* CodableIgnored.swift */; };
+		C1B0BCB028EAF2220016089B /* CodableIgnored.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B0BCAE28EAF2220016089B /* CodableIgnored.swift */; };
+		C1B0BCB128EAF2220016089B /* CodableIgnored.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B0BCAE28EAF2220016089B /* CodableIgnored.swift */; };
+		C1B2992F28E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */; };
+		C1B2993028E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */; };
+		C1B2993128E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */; };
+		C1B2993628E92C9700C0D6A8 /* YoutubeError2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993528E92C9700C0D6A8 /* YoutubeError2.swift */; };
+		C1B2993728E92C9700C0D6A8 /* YoutubeError2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993528E92C9700C0D6A8 /* YoutubeError2.swift */; };
+		C1B2993828E92C9700C0D6A8 /* YoutubeError2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993528E92C9700C0D6A8 /* YoutubeError2.swift */; };
+		C1B2993A28E9526B00C0D6A8 /* YoutubeChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993928E9526B00C0D6A8 /* YoutubeChannel.swift */; };
+		C1B2993B28E9526B00C0D6A8 /* YoutubeChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993928E9526B00C0D6A8 /* YoutubeChannel.swift */; };
+		C1B2993C28E9526B00C0D6A8 /* YoutubeChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993928E9526B00C0D6A8 /* YoutubeChannel.swift */; };
+		C1B2993E28E9546B00C0D6A8 /* YoutubeVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993D28E9546B00C0D6A8 /* YoutubeVideo.swift */; };
+		C1B2993F28E9546B00C0D6A8 /* YoutubeVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993D28E9546B00C0D6A8 /* YoutubeVideo.swift */; };
+		C1B2994028E9546B00C0D6A8 /* YoutubeVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993D28E9546B00C0D6A8 /* YoutubeVideo.swift */; };
+		C1B2994228E95FD700C0D6A8 /* YoutubePlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2994128E95FD700C0D6A8 /* YoutubePlaylist.swift */; };
+		C1B2994328E95FD700C0D6A8 /* YoutubePlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2994128E95FD700C0D6A8 /* YoutubePlaylist.swift */; };
+		C1B2994428E95FD700C0D6A8 /* YoutubePlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2994128E95FD700C0D6A8 /* YoutubePlaylist.swift */; };
 		C1B5AC66232E2874001A502F /* StreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B5AC65232E2874001A502F /* StreamView.swift */; };
 		C1B5AC67232E2874001A502F /* StreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B5AC65232E2874001A502F /* StreamView.swift */; };
 		C1B5AC68232E2874001A502F /* StreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B5AC65232E2874001A502F /* StreamView.swift */; };
@@ -181,6 +241,9 @@
 		C1BC16C32394EB0B008234EE /* ButtonWrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC16C22394EB0B008234EE /* ButtonWrap.swift */; };
 		C1BC16C42394EB0B008234EE /* ButtonWrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC16C22394EB0B008234EE /* ButtonWrap.swift */; };
 		C1BC16C52394EB0B008234EE /* ButtonWrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC16C22394EB0B008234EE /* ButtonWrap.swift */; };
+		C1BF599228E9C3C5003C50C9 /* Streamable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BF599128E9C3C5003C50C9 /* Streamable.swift */; };
+		C1BF599328E9C3C5003C50C9 /* Streamable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BF599128E9C3C5003C50C9 /* Streamable.swift */; };
+		C1BF599428E9C3C5003C50C9 /* Streamable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BF599128E9C3C5003C50C9 /* Streamable.swift */; };
 		C1C103EB232DCD8000267736 /* OnSelect.iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C103E9232DCD8000267736 /* OnSelect.iOS.swift */; };
 		C1C103EC232DCD8000267736 /* OnSelect.iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C103E9232DCD8000267736 /* OnSelect.iOS.swift */; };
 		C1C103F0232DCE8400267736 /* OnSelect.tvOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C103EF232DCE8400267736 /* OnSelect.tvOS.swift */; };
@@ -205,12 +268,9 @@
 		C1D2F9C62322801000657A67 /* Pagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2F9C52322801000657A67 /* Pagination.swift */; };
 		C1D2F9C72322801000657A67 /* Pagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2F9C52322801000657A67 /* Pagination.swift */; };
 		C1D2F9C82322801000657A67 /* Pagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D2F9C52322801000657A67 /* Pagination.swift */; };
-		C1D32D7F232E695600BE3A4C /* Strings+Twitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D32D7E232E695600BE3A4C /* Strings+Twitch.swift */; };
-		C1D32D80232E695600BE3A4C /* Strings+Twitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D32D7E232E695600BE3A4C /* Strings+Twitch.swift */; };
-		C1D32D81232E695600BE3A4C /* Strings+Twitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D32D7E232E695600BE3A4C /* Strings+Twitch.swift */; };
-		C1D5CA2D231E908300663FD8 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D5CA2C231E908300663FD8 /* Authentication.swift */; };
-		C1D5CA2E231E908300663FD8 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D5CA2C231E908300663FD8 /* Authentication.swift */; };
-		C1D5CA2F231E908300663FD8 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D5CA2C231E908300663FD8 /* Authentication.swift */; };
+		C1D32D7F232E695600BE3A4C /* Strings+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D32D7E232E695600BE3A4C /* Strings+Extensions.swift */; };
+		C1D32D80232E695600BE3A4C /* Strings+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D32D7E232E695600BE3A4C /* Strings+Extensions.swift */; };
+		C1D32D81232E695600BE3A4C /* Strings+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D32D7E232E695600BE3A4C /* Strings+Extensions.swift */; };
 		C1D5CA31231E931400663FD8 /* AppFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D5CA30231E931400663FD8 /* AppFactory.swift */; };
 		C1D5CA32231E931400663FD8 /* AppFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D5CA30231E931400663FD8 /* AppFactory.swift */; };
 		C1D5CA33231E931400663FD8 /* AppFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1D5CA30231E931400663FD8 /* AppFactory.swift */; };
@@ -249,6 +309,12 @@
 		C1FB01DA2317D87400130981 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB01D92317D87400130981 /* Channel.swift */; };
 		C1FB01DC2317D8A900130981 /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB01DB2317D8A900130981 /* Avatar.swift */; };
 		C1FB01DE2317D8E100130981 /* StreamList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB01DD2317D8E100130981 /* StreamList.swift */; };
+		C1FEBCF228E4768600903D16 /* OAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FEBCF128E4768600903D16 /* OAuthView.swift */; };
+		C1FEBCF328E4768600903D16 /* OAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FEBCF128E4768600903D16 /* OAuthView.swift */; };
+		C1FEBCF428E4768600903D16 /* OAuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FEBCF128E4768600903D16 /* OAuthView.swift */; };
+		C1FEBCF628E4780C00903D16 /* QRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FEBCF528E4780C00903D16 /* QRCode.swift */; };
+		C1FEBCF728E4780C00903D16 /* QRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FEBCF528E4780C00903D16 /* QRCode.swift */; };
+		C1FEBCF828E4780C00903D16 /* QRCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FEBCF528E4780C00903D16 /* QRCode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -309,6 +375,7 @@
 		C1020DB72317EAC300FBFE16 /* Byte SharedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Byte SharedTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1020DBC2317EAC300FBFE16 /* SharedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTests.swift; sourceTree = "<group>"; };
 		C1020DBE2317EAC300FBFE16 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C109BCF428E73A3D00BB83E8 /* YoutubeDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeDataItem.swift; sourceTree = "<group>"; };
 		C109CFB2231D1D0600C35AD8 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
 		C109CFB6231D1EDE00C35AD8 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		C10FECBE26949C9300D48F8D /* StreamVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamVideoPlayer.swift; sourceTree = "<group>"; };
@@ -320,8 +387,13 @@
 		C1141889231936C90004C813 /* AvatarSize.iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarSize.iOS.swift; sourceTree = "<group>"; };
 		C114188C231937920004C813 /* AvatarSize.tvOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarSize.tvOS.swift; sourceTree = "<group>"; };
 		C117E4FE233F672D0056811D /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
-		C11B670E23226C7C004576A6 /* DataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataItem.swift; sourceTree = "<group>"; };
+		C11B670E23226C7C004576A6 /* TwitchDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitchDataItem.swift; sourceTree = "<group>"; };
 		C12541072317F24D005A9F03 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C126959D28E5CC9D00422F43 /* TwitchSecrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitchSecrets.swift; sourceTree = "<group>"; };
+		C12695A128E5CCA900422F43 /* YoutubeSecrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeSecrets.swift; sourceTree = "<group>"; };
+		C12695A528E5CF1200422F43 /* YoutubeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeAPI.swift; sourceTree = "<group>"; };
+		C12695A928E5D1DB00422F43 /* YoutubeOAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeOAuth.swift; sourceTree = "<group>"; };
+		C12695AD28E5D22E00422F43 /* YoutubeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeError.swift; sourceTree = "<group>"; };
 		C1278A2623190BE600400D35 /* Logo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logo.swift; sourceTree = "<group>"; };
 		C1278A2C23190E7300400D35 /* LogoSize.iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoSize.iOS.swift; sourceTree = "<group>"; };
 		C1278A2E23190F1700400D35 /* LogoSize.tvOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoSize.tvOS.swift; sourceTree = "<group>"; };
@@ -333,15 +405,21 @@
 		C133D58123227626005015C8 /* LocalizedDecodingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedDecodingError.swift; sourceTree = "<group>"; };
 		C13F8847233B6B32008649F6 /* Push.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
 		C14BCD4D2317FC8900F33A48 /* Stream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
+		C14D5B9628EA723E00351AC5 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		C1557C4C23449BB7002387BE /* ThirdDimensionEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdDimensionEffect.swift; sourceTree = "<group>"; };
 		C15DD8532329235B00EC8EFB /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
-		C1605F6D2317DE6300F98BEE /* Color+Twitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Twitch.swift"; sourceTree = "<group>"; };
+		C15ECCF128EB875A00234CAF /* YoutubePlayerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubePlayerResponse.swift; sourceTree = "<group>"; };
+		C1605F6D2317DE6300F98BEE /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		C1605F6F2317DF3500F98BEE /* BrandColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandColor.swift; sourceTree = "<group>"; };
 		C1605F712317E31E00F98BEE /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		C1605F732317E57E00F98BEE /* GameList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameList.swift; sourceTree = "<group>"; };
 		C1605F752317E5E100F98BEE /* CoverArt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverArt.swift; sourceTree = "<group>"; };
-		C1729BC123268887005D0A99 /* Array+Twitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Twitch.swift"; sourceTree = "<group>"; };
-		C1729BC52326889D005D0A99 /* Dictionary+Twitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+Twitch.swift"; sourceTree = "<group>"; };
+		C16A7E0028E7FE0600509FFF /* HeartbeatActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartbeatActivityIndicator.swift; sourceTree = "<group>"; };
+		C16A7E0428E8077F00509FFF /* YoutubePerson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubePerson.swift; sourceTree = "<group>"; };
+		C16A7E0828E8140800509FFF /* YoutubeSubscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeSubscription.swift; sourceTree = "<group>"; };
+		C16A7E0C28E8199900509FFF /* YoutubeBroadcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeBroadcast.swift; sourceTree = "<group>"; };
+		C1729BC123268887005D0A99 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
+		C1729BC52326889D005D0A99 /* Dictionary+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+Extensions.swift"; sourceTree = "<group>"; };
 		C17627EA26A336A100D4BB11 /* VisualEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
 		C17630C6234DDC650008629C /* Byte.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Byte.entitlements; sourceTree = "<group>"; };
 		C17766E426C658E80085E848 /* VideoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoStore.swift; sourceTree = "<group>"; };
@@ -360,12 +438,21 @@
 		C1997027233B803D00FFC27A /* Refresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Refresh.swift; sourceTree = "<group>"; };
 		C19D480B2321426900A53AB3 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		C19FE9AD246E5A7D004EB60C /* Favourite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favourite.swift; sourceTree = "<group>"; };
+		C1A647C328E7230800699B5B /* Task+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+Extensions.swift"; sourceTree = "<group>"; };
+		C1A647C728E72B3F00699B5B /* YoutubeUserAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeUserAuth.swift; sourceTree = "<group>"; };
 		C1A75360249B8ED1005FB190 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
-		C1AE3317231E89FD00FE0F99 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		C1AE3317231E89FD00FE0F99 /* TwitchAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitchAPI.swift; sourceTree = "<group>"; };
+		C1B0BCAE28EAF2220016089B /* CodableIgnored.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableIgnored.swift; sourceTree = "<group>"; };
+		C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeSearchResult.swift; sourceTree = "<group>"; };
+		C1B2993528E92C9700C0D6A8 /* YoutubeError2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeError2.swift; sourceTree = "<group>"; };
+		C1B2993928E9526B00C0D6A8 /* YoutubeChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeChannel.swift; sourceTree = "<group>"; };
+		C1B2993D28E9546B00C0D6A8 /* YoutubeVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeVideo.swift; sourceTree = "<group>"; };
+		C1B2994128E95FD700C0D6A8 /* YoutubePlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubePlaylist.swift; sourceTree = "<group>"; };
 		C1B5AC65232E2874001A502F /* StreamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamView.swift; sourceTree = "<group>"; };
 		C1B5AC69232E299F001A502F /* ChannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelView.swift; sourceTree = "<group>"; };
 		C1B5AC6D232E29EF001A502F /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		C1BC16C22394EB0B008234EE /* ButtonWrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonWrap.swift; sourceTree = "<group>"; };
+		C1BF599128E9C3C5003C50C9 /* Streamable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Streamable.swift; sourceTree = "<group>"; };
 		C1C103E9232DCD8000267736 /* OnSelect.iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSelect.iOS.swift; sourceTree = "<group>"; };
 		C1C103EF232DCE8400267736 /* OnSelect.tvOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSelect.tvOS.swift; sourceTree = "<group>"; };
 		C1C1D28F23363DC7006E9165 /* Push.iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.iOS.swift; sourceTree = "<group>"; };
@@ -376,8 +463,7 @@
 		C1C85AB0233654A600E8AB19 /* PresenterViewControllerKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenterViewControllerKey.swift; sourceTree = "<group>"; };
 		C1CEB907231E85A2007C3812 /* OnFirstAppear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnFirstAppear.swift; sourceTree = "<group>"; };
 		C1D2F9C52322801000657A67 /* Pagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pagination.swift; sourceTree = "<group>"; };
-		C1D32D7E232E695600BE3A4C /* Strings+Twitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Strings+Twitch.swift"; sourceTree = "<group>"; };
-		C1D5CA2C231E908300663FD8 /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
+		C1D32D7E232E695600BE3A4C /* Strings+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Strings+Extensions.swift"; sourceTree = "<group>"; };
 		C1D5CA30231E931400663FD8 /* AppFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFactory.swift; sourceTree = "<group>"; };
 		C1E67AB52333A4910024B25C /* ViewControllerHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerHolder.swift; sourceTree = "<group>"; };
 		C1E67AB92333A5F30024B25C /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
@@ -404,6 +490,8 @@
 		C1FB01D92317D87400130981 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		C1FB01DB2317D8A900130981 /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
 		C1FB01DD2317D8E100130981 /* StreamList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamList.swift; sourceTree = "<group>"; };
+		C1FEBCF128E4768600903D16 /* OAuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthView.swift; sourceTree = "<group>"; };
+		C1FEBCF528E4780C00903D16 /* QRCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -580,10 +668,11 @@
 		C1605F6C2317DE4E00F98BEE /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				C1729BC123268887005D0A99 /* Array+Twitch.swift */,
-				C1605F6D2317DE6300F98BEE /* Color+Twitch.swift */,
-				C1729BC52326889D005D0A99 /* Dictionary+Twitch.swift */,
-				C1D32D7E232E695600BE3A4C /* Strings+Twitch.swift */,
+				C1729BC123268887005D0A99 /* Array+Extensions.swift */,
+				C1605F6D2317DE6300F98BEE /* Color+Extensions.swift */,
+				C1729BC52326889D005D0A99 /* Dictionary+Extensions.swift */,
+				C1D32D7E232E695600BE3A4C /* Strings+Extensions.swift */,
+				C1A647C328E7230800699B5B /* Task+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -591,12 +680,14 @@
 		C1AE3316231E89F100FE0F99 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				C1AE3317231E89FD00FE0F99 /* API.swift */,
 				C133D57D23227617005015C8 /* APIError.swift */,
-				C1D5CA2C231E908300663FD8 /* Authentication.swift */,
 				C1F6C4DA232A776A006EA1D5 /* LiveVideoFetcher.swift */,
 				C133D58123227626005015C8 /* LocalizedDecodingError.swift */,
+				C1AE3317231E89FD00FE0F99 /* TwitchAPI.swift */,
 				C193E33428DE7C020064639A /* TwitchError.swift */,
+				C12695A528E5CF1200422F43 /* YoutubeAPI.swift */,
+				C12695AD28E5D22E00422F43 /* YoutubeError.swift */,
+				C1B2993528E92C9700C0D6A8 /* YoutubeError2.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -609,10 +700,12 @@
 				C1B5AC69232E299F001A502F /* ChannelView.swift */,
 				C1605F752317E5E100F98BEE /* CoverArt.swift */,
 				C1B5AC6D232E29EF001A502F /* GameView.swift */,
+				C16A7E0028E7FE0600509FFF /* HeartbeatActivityIndicator.swift */,
 				C1278A2623190BE600400D35 /* Logo.swift */,
 				C10FECC226949CE600D48F8D /* MultiStreamVideoPlayer.swift */,
 				C1EF0BA4276B19F000E311C8 /* PlayerLayer.swift */,
 				C1E67AB92333A5F30024B25C /* PlayerViewController.swift */,
+				C1FEBCF528E4780C00903D16 /* QRCode.swift */,
 				C1997027233B803D00FFC27A /* Refresh.swift */,
 				C10FECBE26949C9300D48F8D /* StreamVideoPlayer.swift */,
 				C1B5AC65232E2874001A502F /* StreamView.swift */,
@@ -760,12 +853,13 @@
 		C1FB01DF2317DAAD00130981 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				C14D5B9628EA723E00351AC5 /* AppError.swift */,
 				C117E4FE233F672D0056811D /* AppState.swift */,
 				C1141885231936A60004C813 /* AvatarSize.swift */,
 				C1605F6F2317DF3500F98BEE /* BrandColor.swift */,
 				C1FB01D92317D87400130981 /* Channel.swift */,
+				C1B0BCAE28EAF2220016089B /* CodableIgnored.swift */,
 				C18778FD23195C23008CA61E /* CovertArtSize.swift */,
-				C11B670E23226C7C004576A6 /* DataItem.swift */,
 				C19FE9AD246E5A7D004EB60C /* Favourite.swift */,
 				C1605F712317E31E00F98BEE /* Game.swift */,
 				C180244E28DEC5F900E8AB42 /* KeychainKey.swift */,
@@ -776,7 +870,22 @@
 				C11418812319358E0004C813 /* SizeProvider.swift */,
 				C185E18C2375AE3C008DD09C /* SpoilerFilter.swift */,
 				C14BCD4D2317FC8900F33A48 /* Stream.swift */,
+				C1BF599128E9C3C5003C50C9 /* Streamable.swift */,
+				C11B670E23226C7C004576A6 /* TwitchDataItem.swift */,
+				C126959D28E5CC9D00422F43 /* TwitchSecrets.swift */,
 				C15DD8532329235B00EC8EFB /* Video.swift */,
+				C16A7E0C28E8199900509FFF /* YoutubeBroadcast.swift */,
+				C1B2993928E9526B00C0D6A8 /* YoutubeChannel.swift */,
+				C109BCF428E73A3D00BB83E8 /* YoutubeDataItem.swift */,
+				C12695A928E5D1DB00422F43 /* YoutubeOAuth.swift */,
+				C16A7E0428E8077F00509FFF /* YoutubePerson.swift */,
+				C15ECCF128EB875A00234CAF /* YoutubePlayerResponse.swift */,
+				C1B2994128E95FD700C0D6A8 /* YoutubePlaylist.swift */,
+				C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */,
+				C12695A128E5CCA900422F43 /* YoutubeSecrets.swift */,
+				C16A7E0828E8140800509FFF /* YoutubeSubscription.swift */,
+				C1A647C728E72B3F00699B5B /* YoutubeUserAuth.swift */,
+				C1B2993D28E9546B00C0D6A8 /* YoutubeVideo.swift */,
 				C1E9427F231E70A6006B7A71 /* Stores */,
 			);
 			path = Models;
@@ -788,6 +897,7 @@
 				C182429D2317FF4900595E76 /* ChannelList.swift */,
 				C1FB01AD2317D1B000130981 /* ContentView.swift */,
 				C1605F732317E57E00F98BEE /* GameList.swift */,
+				C1FEBCF128E4768600903D16 /* OAuthView.swift */,
 				C109CFB6231D1EDE00C35AD8 /* SignInView.swift */,
 				C1FB01DD2317D8E100130981 /* StreamList.swift */,
 				C1C79E752696EC1B00E653E7 /* StreamPicker.swift */,
@@ -1107,52 +1217,74 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1A647C528E7230800699B5B /* Task+Extensions.swift in Sources */,
+				C1B0BCB028EAF2220016089B /* CodableIgnored.swift in Sources */,
 				C109CFB4231D1D0600C35AD8 /* SessionStore.swift in Sources */,
+				C14D5B9828EA723E00351AC5 /* AppError.swift in Sources */,
 				C1E9428E231E70E6006B7A71 /* StreamStore.swift in Sources */,
+				C1B2993028E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */,
 				C187790323195C3F008CA61E /* CovertArtSize.iOS.swift in Sources */,
 				C133D57F23227617005015C8 /* APIError.swift in Sources */,
+				C15ECCF328EB875A00234CAF /* YoutubePlayerResponse.swift in Sources */,
 				C1C79E772696EC1B00E653E7 /* StreamPicker.swift in Sources */,
 				C13F8849233B6B32008649F6 /* Push.swift in Sources */,
 				C1020D912317E9AE00FBFE16 /* Avatar.swift in Sources */,
 				C1C85AB2233654A600E8AB19 /* PresenterViewControllerKey.swift in Sources */,
-				C1729BC323268887005D0A99 /* Array+Twitch.swift in Sources */,
-				C11B671023226C7C004576A6 /* DataItem.swift in Sources */,
+				C1729BC323268887005D0A99 /* Array+Extensions.swift in Sources */,
+				C11B671023226C7C004576A6 /* TwitchDataItem.swift in Sources */,
 				C19D480D2321426900A53AB3 /* App.swift in Sources */,
+				C12695AB28E5D1DB00422F43 /* YoutubeOAuth.swift in Sources */,
+				C1A647C928E72B3F00699B5B /* YoutubeUserAuth.swift in Sources */,
+				C12695A728E5CF1200422F43 /* YoutubeAPI.swift in Sources */,
 				C1278A2823190BE600400D35 /* Logo.swift in Sources */,
+				C1B2993F28E9546B00C0D6A8 /* YoutubeVideo.swift in Sources */,
 				C1E67ABB2333A5F30024B25C /* PlayerViewController.swift in Sources */,
+				C16A7E0E28E8199900509FFF /* YoutubeBroadcast.swift in Sources */,
 				C1020D982317E9AE00FBFE16 /* Game.swift in Sources */,
-				C1020D992317E9AE00FBFE16 /* Color+Twitch.swift in Sources */,
+				C1020D992317E9AE00FBFE16 /* Color+Extensions.swift in Sources */,
 				C1020D962317E9AE00FBFE16 /* BrandColor.swift in Sources */,
+				C12695A328E5CCA900422F43 /* YoutubeSecrets.swift in Sources */,
 				C1B5AC6B232E299F001A502F /* ChannelView.swift in Sources */,
 				C1278A392319124000400D35 /* WatermarkedContainer.iOS.swift in Sources */,
 				C1B5AC6F232E29EF001A502F /* GameView.swift in Sources */,
+				C16A7E0628E8077F00509FFF /* YoutubePerson.swift in Sources */,
+				C1B2993B28E9526B00C0D6A8 /* YoutubeChannel.swift in Sources */,
 				C17766F226C66DEA0085E848 /* Functions.swift in Sources */,
+				C16A7E0228E7FE0600509FFF /* HeartbeatActivityIndicator.swift in Sources */,
 				C1C103EB232DCD8000267736 /* OnSelect.iOS.swift in Sources */,
+				C1FEBCF728E4780C00903D16 /* QRCode.swift in Sources */,
 				C17766EE26C65EA80085E848 /* VideoList.swift in Sources */,
 				C1278A2D23190E7300400D35 /* LogoSize.iOS.swift in Sources */,
 				C1141887231936A60004C813 /* AvatarSize.swift in Sources */,
 				C1CEB909231E85A2007C3812 /* OnFirstAppear.swift in Sources */,
+				C16A7E0A28E8140800509FFF /* YoutubeSubscription.swift in Sources */,
 				C10FECC426949CE600D48F8D /* MultiStreamVideoPlayer.swift in Sources */,
 				C1C1D29023363DC7006E9165 /* Push.iOS.swift in Sources */,
 				C114187F231934E90004C813 /* LogoSize.swift in Sources */,
-				C1729BC72326889D005D0A99 /* Dictionary+Twitch.swift in Sources */,
+				C1729BC72326889D005D0A99 /* Dictionary+Extensions.swift in Sources */,
+				C12695AF28E5D22E00422F43 /* YoutubeError.swift in Sources */,
 				C1D2F9C72322801000657A67 /* Pagination.swift in Sources */,
 				C1020D942317E9AE00FBFE16 /* CoverArt.swift in Sources */,
 				C1997029233B803D00FFC27A /* Refresh.swift in Sources */,
 				C17766E626C658E80085E848 /* VideoStore.swift in Sources */,
 				C117E500233F672D0056811D /* AppState.swift in Sources */,
 				C1E9428A231E70D9006B7A71 /* GameStore.swift in Sources */,
+				C109BCF628E73A3D00BB83E8 /* YoutubeDataItem.swift in Sources */,
 				C1020D932317E9AE00FBFE16 /* ContentView.swift in Sources */,
+				C1B2993728E92C9700C0D6A8 /* YoutubeError2.swift in Sources */,
 				C15DD8552329235B00EC8EFB /* Video.swift in Sources */,
+				C1B2994328E95FD700C0D6A8 /* YoutubePlaylist.swift in Sources */,
 				C1E94282231E70B6006B7A71 /* FetchingObject.swift in Sources */,
 				C10FECC026949C9300D48F8D /* StreamVideoPlayer.swift in Sources */,
 				C1557C4E23449BB7002387BE /* ThirdDimensionEffect.swift in Sources */,
 				C18778FF23195C23008CA61E /* CovertArtSize.swift in Sources */,
+				C126959F28E5CC9D00422F43 /* TwitchSecrets.swift in Sources */,
 				C1D5CA32231E931400663FD8 /* AppFactory.swift in Sources */,
 				C185E18E2375AE3C008DD09C /* SpoilerFilter.swift in Sources */,
 				C114188A231936C90004C813 /* AvatarSize.iOS.swift in Sources */,
 				C180245028DEC5F900E8AB42 /* KeychainKey.swift in Sources */,
 				C19FE9AF246E5A7D004EB60C /* Favourite.swift in Sources */,
+				C1FEBCF328E4768600903D16 /* OAuthView.swift in Sources */,
 				C193E33628DE7C020064639A /* TwitchError.swift in Sources */,
 				C1BC16C42394EB0B008234EE /* ButtonWrap.swift in Sources */,
 				C129B70E232B88C500FDDA99 /* M3U8.swift in Sources */,
@@ -1160,13 +1292,13 @@
 				C129B712232B8F5900FDDA99 /* M3U8Meta.swift in Sources */,
 				C1141884231935A50004C813 /* SizeProvider.swift in Sources */,
 				C1C85AAE2336523F00E8AB19 /* RootViewControllerKey.swift in Sources */,
-				C1AE3319231E89FD00FE0F99 /* API.swift in Sources */,
+				C1AE3319231E89FD00FE0F99 /* TwitchAPI.swift in Sources */,
 				C133D58323227626005015C8 /* LocalizedDecodingError.swift in Sources */,
 				C1B5AC67232E2874001A502F /* StreamView.swift in Sources */,
 				C109CFB8231D1EDE00C35AD8 /* SignInView.swift in Sources */,
 				C1020D922317E9AE00FBFE16 /* StreamList.swift in Sources */,
+				C1BF599328E9C3C5003C50C9 /* Streamable.swift in Sources */,
 				C1EF0BA6276B19F000E311C8 /* PlayerLayer.swift in Sources */,
-				C1D5CA2E231E908300663FD8 /* Authentication.swift in Sources */,
 				C14BCD4F2317FC8900F33A48 /* Stream.swift in Sources */,
 				C1020D642317E8E200FBFE16 /* AppDelegate.swift in Sources */,
 				C1E94286231E70CE006B7A71 /* ChannelStore.swift in Sources */,
@@ -1174,7 +1306,7 @@
 				C17766EA26C65A610085E848 /* VideoView.swift in Sources */,
 				C1E74B88232E4A940023C4B8 /* Focusable.iOS.swift in Sources */,
 				C182429F2318001600595E76 /* ChannelList.swift in Sources */,
-				C1D32D80232E695600BE3A4C /* Strings+Twitch.swift in Sources */,
+				C1D32D80232E695600BE3A4C /* Strings+Extensions.swift in Sources */,
 				C1F6C4DC232A776A006EA1D5 /* LiveVideoFetcher.swift in Sources */,
 				C1E67AB72333A4910024B25C /* ViewControllerHolder.swift in Sources */,
 				C1020D952317E9AE00FBFE16 /* GameList.swift in Sources */,
@@ -1211,72 +1343,94 @@
 				C129B713232B8F5900FDDA99 /* M3U8Meta.swift in Sources */,
 				C114188B231936C90004C813 /* AvatarSize.iOS.swift in Sources */,
 				C1278A2923190BE600400D35 /* Logo.swift in Sources */,
+				C12695A828E5CF1200422F43 /* YoutubeAPI.swift in Sources */,
+				C1FEBCF828E4780C00903D16 /* QRCode.swift in Sources */,
 				C17766EB26C65A610085E848 /* VideoView.swift in Sources */,
+				C16A7E0F28E8199900509FFF /* YoutubeBroadcast.swift in Sources */,
 				C187790023195C23008CA61E /* CovertArtSize.swift in Sources */,
 				C1020DC62317EB0800FBFE16 /* Avatar.swift in Sources */,
 				C17766F326C66DEA0085E848 /* Functions.swift in Sources */,
 				C13F884A233B6B32008649F6 /* Push.swift in Sources */,
+				C16A7E0728E8077F00509FFF /* YoutubePerson.swift in Sources */,
 				C133D58423227626005015C8 /* LocalizedDecodingError.swift in Sources */,
 				C1E9428B231E70D9006B7A71 /* GameStore.swift in Sources */,
 				C11418822319358E0004C813 /* SizeProvider.swift in Sources */,
+				C12695A028E5CC9D00422F43 /* TwitchSecrets.swift in Sources */,
 				C18242A22318007A00595E76 /* Thumbnail.swift in Sources */,
 				C15DD8562329235B00EC8EFB /* Video.swift in Sources */,
+				C1FEBCF428E4768600903D16 /* OAuthView.swift in Sources */,
 				C10FECC126949C9300D48F8D /* StreamVideoPlayer.swift in Sources */,
 				C1E9428F231E70E6006B7A71 /* StreamStore.swift in Sources */,
 				C185E18F2375AE3C008DD09C /* SpoilerFilter.swift in Sources */,
 				C1E67AB82333A4910024B25C /* ViewControllerHolder.swift in Sources */,
+				C16A7E0328E7FE0600509FFF /* HeartbeatActivityIndicator.swift in Sources */,
 				C1020DC72317EB0800FBFE16 /* StreamList.swift in Sources */,
 				C1020DCA2317EB0800FBFE16 /* GameList.swift in Sources */,
 				C109CFB9231D1EDE00C35AD8 /* SignInView.swift in Sources */,
+				C109BCF728E73A3D00BB83E8 /* YoutubeDataItem.swift in Sources */,
+				C15ECCF428EB875A00234CAF /* YoutubePlayerResponse.swift in Sources */,
 				C10FECC526949CE600D48F8D /* MultiStreamVideoPlayer.swift in Sources */,
 				C1F6C4DD232A776A006EA1D5 /* LiveVideoFetcher.swift in Sources */,
 				C1D5CA33231E931400663FD8 /* AppFactory.swift in Sources */,
 				C129B70F232B88C500FDDA99 /* M3U8.swift in Sources */,
 				C1CEB90A231E85A2007C3812 /* OnFirstAppear.swift in Sources */,
+				C14D5B9928EA723E00351AC5 /* AppError.swift in Sources */,
 				C1B5AC70232E29EF001A502F /* GameView.swift in Sources */,
 				C1EF0BA7276B19F000E311C8 /* PlayerLayer.swift in Sources */,
 				C1D2F9C82322801000657A67 /* Pagination.swift in Sources */,
 				C1BC16C52394EB0B008234EE /* ButtonWrap.swift in Sources */,
+				C1B2993828E92C9700C0D6A8 /* YoutubeError2.swift in Sources */,
 				C193E33728DE7C020064639A /* TwitchError.swift in Sources */,
-				C1729BC82326889D005D0A99 /* Dictionary+Twitch.swift in Sources */,
+				C1729BC82326889D005D0A99 /* Dictionary+Extensions.swift in Sources */,
 				C1C85AB3233654A600E8AB19 /* PresenterViewControllerKey.swift in Sources */,
 				C1557C4F23449BB7002387BE /* ThirdDimensionEffect.swift in Sources */,
 				C1E94283231E70B6006B7A71 /* FetchingObject.swift in Sources */,
 				C17766EF26C65EA80085E848 /* VideoList.swift in Sources */,
 				C182429E2317FF4900595E76 /* ChannelList.swift in Sources */,
-				C1D5CA2F231E908300663FD8 /* Authentication.swift in Sources */,
-				C11B671123226C7C004576A6 /* DataItem.swift in Sources */,
+				C11B671123226C7C004576A6 /* TwitchDataItem.swift in Sources */,
+				C1B2994028E9546B00C0D6A8 /* YoutubeVideo.swift in Sources */,
 				C1E94287231E70CE006B7A71 /* ChannelStore.swift in Sources */,
 				C19FE9B0246E5A7D004EB60C /* Favourite.swift in Sources */,
-				C1020DCE2317EB0800FBFE16 /* Color+Twitch.swift in Sources */,
-				C1D32D81232E695600BE3A4C /* Strings+Twitch.swift in Sources */,
+				C1BF599428E9C3C5003C50C9 /* Streamable.swift in Sources */,
+				C1020DCE2317EB0800FBFE16 /* Color+Extensions.swift in Sources */,
+				C1D32D81232E695600BE3A4C /* Strings+Extensions.swift in Sources */,
+				C12695B028E5D22E00422F43 /* YoutubeError.swift in Sources */,
 				C199702A233B803D00FFC27A /* Refresh.swift in Sources */,
 				C1020DC82317EB0800FBFE16 /* ContentView.swift in Sources */,
 				C1020DC92317EB0800FBFE16 /* CoverArt.swift in Sources */,
 				C1C103EC232DCD8000267736 /* OnSelect.iOS.swift in Sources */,
 				C1141888231936A60004C813 /* AvatarSize.swift in Sources */,
+				C1B2993128E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */,
 				C109CFB5231D1D0600C35AD8 /* SessionStore.swift in Sources */,
 				C1C103F1232DCE8400267736 /* OnSelect.tvOS.swift in Sources */,
 				C1020DCB2317EB0800FBFE16 /* BrandColor.swift in Sources */,
 				C114187C2319345E0004C813 /* WatermarkedContainer.swift in Sources */,
 				C17766E726C658E80085E848 /* VideoStore.swift in Sources */,
-				C1AE331A231E89FD00FE0F99 /* API.swift in Sources */,
+				C1AE331A231E89FD00FE0F99 /* TwitchAPI.swift in Sources */,
 				C180245128DEC5F900E8AB42 /* KeychainKey.swift in Sources */,
-				C1729BC423268887005D0A99 /* Array+Twitch.swift in Sources */,
+				C1729BC423268887005D0A99 /* Array+Extensions.swift in Sources */,
 				C1A75363249B8ED1005FB190 /* ActivityIndicator.swift in Sources */,
 				C114188E231937920004C813 /* AvatarSize.tvOS.swift in Sources */,
 				C1141880231934E90004C813 /* LogoSize.swift in Sources */,
 				C133D58023227617005015C8 /* APIError.swift in Sources */,
+				C12695A428E5CCA900422F43 /* YoutubeSecrets.swift in Sources */,
 				C19D480E2321426900A53AB3 /* App.swift in Sources */,
+				C12695AC28E5D1DB00422F43 /* YoutubeOAuth.swift in Sources */,
 				C117E501233F672D0056811D /* AppState.swift in Sources */,
+				C1A647CA28E72B3F00699B5B /* YoutubeUserAuth.swift in Sources */,
 				C187790723195C80008CA61E /* CoverArtSize.tvOS.swift in Sources */,
 				C1B5AC68232E2874001A502F /* StreamView.swift in Sources */,
 				C187790423195C3F008CA61E /* CovertArtSize.iOS.swift in Sources */,
 				C1C79E782696EC1B00E653E7 /* StreamPicker.swift in Sources */,
+				C16A7E0B28E8140800509FFF /* YoutubeSubscription.swift in Sources */,
 				C1E67ABC2333A5F30024B25C /* PlayerViewController.swift in Sources */,
 				C1020DCD2317EB0800FBFE16 /* Game.swift in Sources */,
+				C1A647C628E7230800699B5B /* Task+Extensions.swift in Sources */,
+				C1B2993C28E9526B00C0D6A8 /* YoutubeChannel.swift in Sources */,
 				C14BCD502317FC8900F33A48 /* Stream.swift in Sources */,
 				C1C85AAF2336523F00E8AB19 /* RootViewControllerKey.swift in Sources */,
+				C1B0BCB128EAF2220016089B /* CodableIgnored.swift in Sources */,
+				C1B2994428E95FD700C0D6A8 /* YoutubePlaylist.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1296,10 +1450,13 @@
 				C129B70D232B88C500FDDA99 /* M3U8.swift in Sources */,
 				C14BCD4E2317FC8900F33A48 /* Stream.swift in Sources */,
 				C1D2F9C62322801000657A67 /* Pagination.swift in Sources */,
+				C12695A228E5CCA900422F43 /* YoutubeSecrets.swift in Sources */,
 				C1FB01AE2317D1B000130981 /* ContentView.swift in Sources */,
 				C1D5CA31231E931400663FD8 /* AppFactory.swift in Sources */,
 				C1FB01DA2317D87400130981 /* Channel.swift in Sources */,
-				C11B670F23226C7C004576A6 /* DataItem.swift in Sources */,
+				C11B670F23226C7C004576A6 /* TwitchDataItem.swift in Sources */,
+				C1B0BCAF28EAF2220016089B /* CodableIgnored.swift in Sources */,
+				C1FEBCF628E4780C00903D16 /* QRCode.swift in Sources */,
 				C1FB01DC2317D8A900130981 /* Avatar.swift in Sources */,
 				C1FB01AC2317D1B000130981 /* AppDelegate.swift in Sources */,
 				C17766F126C66DEA0085E848 /* Functions.swift in Sources */,
@@ -1309,8 +1466,12 @@
 				C18778FE23195C23008CA61E /* CovertArtSize.swift in Sources */,
 				C133D58223227626005015C8 /* LocalizedDecodingError.swift in Sources */,
 				C1E67AB62333A4910024B25C /* ViewControllerHolder.swift in Sources */,
+				C126959E28E5CC9D00422F43 /* TwitchSecrets.swift in Sources */,
 				C114187A2319345E0004C813 /* WatermarkedContainer.swift in Sources */,
 				C1E94289231E70D9006B7A71 /* GameStore.swift in Sources */,
+				C16A7E0528E8077F00509FFF /* YoutubePerson.swift in Sources */,
+				C1BF599228E9C3C5003C50C9 /* Streamable.swift in Sources */,
+				C16A7E0D28E8199900509FFF /* YoutubeBroadcast.swift in Sources */,
 				C1E94285231E70CE006B7A71 /* ChannelStore.swift in Sources */,
 				C15DD8542329235B00EC8EFB /* Video.swift in Sources */,
 				C18242A02318001700595E76 /* ChannelList.swift in Sources */,
@@ -1318,9 +1479,11 @@
 				C1F6C4DB232A776A006EA1D5 /* LiveVideoFetcher.swift in Sources */,
 				C1B5AC6E232E29EF001A502F /* GameView.swift in Sources */,
 				C18242A4231800F100595E76 /* Thumbnail.swift in Sources */,
+				C1B2993628E92C9700C0D6A8 /* YoutubeError2.swift in Sources */,
 				C1605F702317DF3500F98BEE /* BrandColor.swift in Sources */,
 				C13F8848233B6B32008649F6 /* Push.swift in Sources */,
 				C117E4FF233F672D0056811D /* AppState.swift in Sources */,
+				C15ECCF228EB875A00234CAF /* YoutubePlayerResponse.swift in Sources */,
 				C1997028233B803D00FFC27A /* Refresh.swift in Sources */,
 				C1BC16C32394EB0B008234EE /* ButtonWrap.swift in Sources */,
 				C1141886231936A60004C813 /* AvatarSize.swift in Sources */,
@@ -1328,26 +1491,37 @@
 				C1C85AAD2336523F00E8AB19 /* RootViewControllerKey.swift in Sources */,
 				C109CFB3231D1D0600C35AD8 /* SessionStore.swift in Sources */,
 				C19D480C2321426900A53AB3 /* App.swift in Sources */,
-				C1729BC62326889D005D0A99 /* Dictionary+Twitch.swift in Sources */,
+				C1729BC62326889D005D0A99 /* Dictionary+Extensions.swift in Sources */,
+				C14D5B9728EA723E00351AC5 /* AppError.swift in Sources */,
 				C109CFB7231D1EDE00C35AD8 /* SignInView.swift in Sources */,
 				C114188D231937920004C813 /* AvatarSize.tvOS.swift in Sources */,
+				C109BCF528E73A3D00BB83E8 /* YoutubeDataItem.swift in Sources */,
 				C17766E926C65A610085E848 /* VideoView.swift in Sources */,
-				C1D32D7F232E695600BE3A4C /* Strings+Twitch.swift in Sources */,
+				C1D32D7F232E695600BE3A4C /* Strings+Extensions.swift in Sources */,
+				C16A7E0928E8140800509FFF /* YoutubeSubscription.swift in Sources */,
 				C1A75361249B8ED1005FB190 /* ActivityIndicator.swift in Sources */,
+				C12695AA28E5D1DB00422F43 /* YoutubeOAuth.swift in Sources */,
 				C1278A2723190BE600400D35 /* Logo.swift in Sources */,
-				C1729BC223268887005D0A99 /* Array+Twitch.swift in Sources */,
+				C1A647C828E72B3F00699B5B /* YoutubeUserAuth.swift in Sources */,
+				C1B2993E28E9546B00C0D6A8 /* YoutubeVideo.swift in Sources */,
+				C1729BC223268887005D0A99 /* Array+Extensions.swift in Sources */,
+				C12695A628E5CF1200422F43 /* YoutubeAPI.swift in Sources */,
 				C185E18D2375AE3C008DD09C /* SpoilerFilter.swift in Sources */,
 				C133D57E23227617005015C8 /* APIError.swift in Sources */,
 				C1E9428D231E70E6006B7A71 /* StreamStore.swift in Sources */,
+				C1B2992F28E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */,
 				C1557C4D23449BB7002387BE /* ThirdDimensionEffect.swift in Sources */,
+				C12695AE28E5D22E00422F43 /* YoutubeError.swift in Sources */,
 				C1605F762317E5E100F98BEE /* CoverArt.swift in Sources */,
 				C193E33528DE7C020064639A /* TwitchError.swift in Sources */,
 				C1C103F0232DCE8400267736 /* OnSelect.tvOS.swift in Sources */,
-				C1605F6E2317DE6300F98BEE /* Color+Twitch.swift in Sources */,
+				C1605F6E2317DE6300F98BEE /* Color+Extensions.swift in Sources */,
 				C1FB01DE2317D8E100130981 /* StreamList.swift in Sources */,
 				C1278A2F23190F1700400D35 /* LogoSize.tvOS.swift in Sources */,
+				C1B2993A28E9526B00C0D6A8 /* YoutubeChannel.swift in Sources */,
 				C17627EB26A336A100D4BB11 /* VisualEffectView.swift in Sources */,
 				C1C79E762696EC1B00E653E7 /* StreamPicker.swift in Sources */,
+				C1A647C428E7230800699B5B /* Task+Extensions.swift in Sources */,
 				C1E94281231E70B6006B7A71 /* FetchingObject.swift in Sources */,
 				C10FECBF26949C9300D48F8D /* StreamVideoPlayer.swift in Sources */,
 				C1605F742317E57E00F98BEE /* GameList.swift in Sources */,
@@ -1355,16 +1529,18 @@
 				C187790623195C80008CA61E /* CoverArtSize.tvOS.swift in Sources */,
 				C114187E231934E90004C813 /* LogoSize.swift in Sources */,
 				C1C1D29223363E87006E9165 /* Push.tvOS.swift in Sources */,
+				C1B2994228E95FD700C0D6A8 /* YoutubePlaylist.swift in Sources */,
 				C1605F722317E31E00F98BEE /* Game.swift in Sources */,
 				C129B711232B8F5900FDDA99 /* M3U8Meta.swift in Sources */,
 				C1C85AB1233654A600E8AB19 /* PresenterViewControllerKey.swift in Sources */,
 				C10FECC326949CE600D48F8D /* MultiStreamVideoPlayer.swift in Sources */,
 				C1B5AC66232E2874001A502F /* StreamView.swift in Sources */,
-				C1AE3318231E89FD00FE0F99 /* API.swift in Sources */,
+				C1AE3318231E89FD00FE0F99 /* TwitchAPI.swift in Sources */,
 				C17766E526C658E80085E848 /* VideoStore.swift in Sources */,
+				C1FEBCF228E4768600903D16 /* OAuthView.swift in Sources */,
 				C1E67ABA2333A5F30024B25C /* PlayerViewController.swift in Sources */,
+				C16A7E0128E7FE0600509FFF /* HeartbeatActivityIndicator.swift in Sources */,
 				C1278A34231911D900400D35 /* WatermarkedContainer.tvOS.swift in Sources */,
-				C1D5CA2D231E908300663FD8 /* Authentication.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

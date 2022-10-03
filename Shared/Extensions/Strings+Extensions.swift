@@ -1,5 +1,5 @@
 //
-//  Strings+Twitch.swift
+//  Strings+Extensions.swift
 //  Byte
 //
 //  Created by Kristian Pennacchia on 15/9/19.

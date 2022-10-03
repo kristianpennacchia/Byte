@@ -6,19 +6,36 @@ In order for this project to run and work, it requires you to create a `Secrets.
 
 ```json
 {
-    "previewUsername": "TWITCH_USERNAME_FOR_SWIFTUI_PREVIEWS",
-    "clientID": {
-        "twitch": "KEY_HERE",
-        "byte": "KEY_HERE",
+    "twitch": {
+        "previewUsername": "TWITCH_USERNAME_FOR_SWIFTUI_PREVIEWS",
+        "clientID": {
+            "twitch": "KEY_HERE",
+            "byte": "KEY_HERE",
+        },
+        "secret": {
+            "byte": "KEY_HERE",
+        },
+        "oAuthToken": {
+            "byteUserAccessToken": "KEY_HERE",
+            "byteUserRefreshToken": "KEY_HERE",
+        },
     },
-    "secret": {
-        "byte": "KEY_HERE",
-    },
-    "oAuthToken": {
-        "byteUserAccessToken": "KEY_HERE",
-        "byteUserRefreshToken": "KEY_HERE",
+    "youtube": {
+        "clientID": {
+            "byte": "KEY_HERE",
+        },
+        "secret": {
+            "byte": "KEY_HERE",
+        },
     },
 }
+
+```
+
+Youtube support is **optional**. If you do not want to support Youtube, change the JSON to look like this:
+
+```
+"youtube": null,
 ```
 
 ### How To Get The Above Information
@@ -48,3 +65,11 @@ This comes from the Twitch network response data and does not change. It is `kim
 5. Click the green 'Generate Token!' button.
 6. Follow the prompts.
 7. Once you have been redirected back to https://twitchtokengenerator.com find the newly generated "ACCESS TOKEN" and "REFRESH TOKEN" and copy them. These are your OAuth tokens.
+
+**Youtube**
+
+This app uses the Youtube Data API, so you will need to create an account (free) and follow the following guide to generate the necessary Client ID and Client Secret tokens.
+ 
+Guide: https://developers.google.com/youtube/v3/guides/auth/devices
+ 
+When prompted for a project name or project ID/bundle ID, just enter whatever you want.

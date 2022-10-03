@@ -11,10 +11,10 @@ import AVKit
 
 struct MultiStreamVideoPlayer: View {
     private class StreamViewModel: ObservableObject {
-        @Published var selectedStream: Stream?
+        @Published var selectedStream: (any Streamable)?
     }
 
-    @EnvironmentObject private var api: API
+    @EnvironmentObject private var api: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @StateObject private var streamViewModel = StreamViewModel()
@@ -23,9 +23,9 @@ struct MultiStreamVideoPlayer: View {
     @State private var showStreamPicker = false
 
     @ObservedObject var store: StreamStore
-    @State var streams: Set<Stream>
-    @State var audioOnlyStreams = [Stream]()
-    @State var flippedStreams = [Stream]()
+    @State var streams: [any Streamable]
+    @State var audioOnlyStreams = [any Streamable]()
+    @State var flippedStreams = [any Streamable]()
     @State var focusedPlayer: AVPlayer?
     @Binding var isPresented: Bool
 
@@ -37,12 +37,12 @@ struct MultiStreamVideoPlayer: View {
             }
             GeometryReader { reader in
                 LazyVGrid(columns: makeColumns(streamCount: streams.count, reader: reader), alignment: .center, spacing: 0) {
-                    ForEach(Array(streams), id: \.id) { stream in
+                    ForEach(streams, id: \.id) { stream in
                         StreamVideoPlayer(
                             videoMode: .live(stream),
                             muteNotFocused: shouldMuteWhenNotInFocus(stream: stream),
-                            isAudioOnly: audioOnlyStreams.contains(stream),
-                            isFlipped: flippedStreams.contains(stream),
+                            isAudioOnly: audioOnlyStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }),
+                            isFlipped: flippedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }),
                             isPresented: $isPresented
                         )
                         .onPlayToEndTime {
@@ -74,10 +74,10 @@ struct MultiStreamVideoPlayer: View {
         }
         .actionSheet(isPresented: $showMenu) {
             let stream = streamViewModel.selectedStream!
-            let isAudioOnly = audioOnlyStreams.contains(stream)
-            let isFlipped = flippedStreams.contains(stream)
+            let isAudioOnly = audioOnlyStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
+            let isFlipped = flippedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
 
-            return ActionSheet(title: Text("\(stream.userName)\n\(stream.duration)"), message: Text(stream.title), buttons: [
+            return ActionSheet(title: Text("\(stream.userName)\n\(stream.duration ?? "")"), message: Text(stream.title), buttons: [
                 .default(Text("Add New Stream")) {
                     showStreamPicker = true
                 },
@@ -100,7 +100,7 @@ struct MultiStreamVideoPlayer: View {
             content: {
                 StreamPicker(store: store) { stream in
                     showStreamPicker = false
-                    self.streams.insert(stream)
+                    streams.append(stream)
                 }
             }
         )
@@ -125,8 +125,8 @@ private extension MultiStreamVideoPlayer {
         }
     }
 
-    func remove(stream: Stream) {
-        guard let index = streams.firstIndex(of: stream) else { return }
+    func remove(stream: any Streamable) {
+        guard let index = streams.firstIndex(where: {equalsStreamable(lhs: $0, rhs: stream) }) else { return }
 
         streams.remove(at: index)
 
@@ -136,25 +136,25 @@ private extension MultiStreamVideoPlayer {
         }
     }
 
-    func toggleShowingVideo(for stream: Stream) {
-        if let index = audioOnlyStreams.firstIndex(of: stream) {
+    func toggleShowingVideo(for stream: any Streamable) {
+        if let index = audioOnlyStreams.firstIndex(where: { equalsStreamable(lhs: $0, rhs: stream) }) {
             audioOnlyStreams.remove(at: index)
         } else {
             audioOnlyStreams.append(stream)
         }
     }
 
-    func toggleFlippingVideo(for stream: Stream) {
-        if let index = flippedStreams.firstIndex(of: stream) {
+    func toggleFlippingVideo(for stream: any Streamable) {
+        if let index = flippedStreams.firstIndex(where: { equalsStreamable(lhs: $0, rhs: stream) }) {
             flippedStreams.remove(at: index)
         } else {
             flippedStreams.append(stream)
         }
     }
 
-    func shouldMuteWhenNotInFocus(stream: Stream) -> Bool {
+    func shouldMuteWhenNotInFocus(stream: any Streamable) -> Bool {
         if showMenu || showStreamPicker {
-            return streamViewModel.selectedStream != stream
+            return streamViewModel.selectedStream != nil && equalsStreamable(lhs: streamViewModel.selectedStream!, rhs: stream) == false
         } else {
             return streams.count > 1
         }

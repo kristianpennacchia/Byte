@@ -13,7 +13,7 @@ struct VideoList: View {
         @Published var video: Video?
     }
 
-    @EnvironmentObject private var api: API
+    @EnvironmentObject private var api: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @ObservedObject var store: VideoStore
@@ -97,6 +97,6 @@ private extension VideoStore.Fetch {
 
 struct VideoList_Previews: PreviewProvider {
     static var previews: some View {
-        VideoList(store: VideoStore(api: .shared, fetch: .user(userID: App.previewUsername)))
+        VideoList(store: VideoStore(twitchAPI: .shared, fetch: .user(userID: App.previewUsername)))
     }
 }

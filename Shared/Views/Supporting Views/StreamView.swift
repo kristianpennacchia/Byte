@@ -15,24 +15,24 @@ struct StreamView: View {
         return formatter
     }()
 
-    @EnvironmentObject private var api: API
+    @EnvironmentObject private var api: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @State private var isFocused = false
     @State private var game: Game?
 
-    let stream: Stream
+    let stream: any Streamable
     let isSelected: Bool
     let hasFocusEffect: Bool
 
     var body: some View {
-        if game?.id != stream.gameId {
+        if let stream = stream as? Stream, game?.id != stream.gameId {
             stream.game(api: api) { result in
                 switch result {
                 case .success(let data):
                     self.game = data
                 case .failure(let error):
-                    print("Fetching game (id = \(self.stream.gameId) failed. \(error.localizedDescription))")
+                    print("Fetching game (id = \(stream.gameId) failed. \(error.localizedDescription))")
                 }
             }
         }
@@ -43,14 +43,16 @@ struct StreamView: View {
                     Thumbnail(videoStream: .stream(stream))
                         .frame(minWidth: 0, maxWidth: .infinity)
                         .cornerRadius(hasFocusEffect ? 0 : 8)
-                    Group {
-                        if self.game != nil {
-                            CoverArt(game: self.game!, artSize: CovertArtSize.small)
-                        } else {
-                            CoverArt.Placeholder(artSize: CovertArtSize.small)
+                    if stream is Stream {
+                        Group {
+                            if self.game != nil {
+                                CoverArt(game: self.game!, artSize: CovertArtSize.small)
+                            } else {
+                                CoverArt.Placeholder(artSize: CovertArtSize.small)
+                            }
                         }
+                        .border(Color.black)
                     }
-                    .border(Color.black)
                 }
 
                 if isSelected {
@@ -79,17 +81,20 @@ struct StreamView: View {
                             .bold()
                             .foregroundColor(isFocused ? .brand.purple : .white)
                             .lineLimit(1)
-                        Spacer(minLength: 4)
-                        HStack(alignment: .center, spacing: 4) {
-                            Text(Self.viewCountFormatter.string(from: NSNumber(integerLiteral: stream.viewerCount)) ?? "")
-                                .font(.caption)
-                                .bold()
-                                .foregroundColor(.brand.live)
-                            Image(systemName: "person.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: 18)
-                                .foregroundColor(.brand.live)
+                        if let viewerCount = stream.viewerCount,
+                           let number = Self.viewCountFormatter.string(from: NSNumber(integerLiteral: viewerCount)) {
+                            Spacer(minLength: 4)
+                            HStack(alignment: .center, spacing: 4) {
+                                Text(number)
+                                    .font(.caption)
+                                    .bold()
+                                    .foregroundColor(.brand.live)
+                                Image(systemName: "person.fill")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: 18)
+                                    .foregroundColor(.brand.live)
+                            }
                         }
                     }
                     Text(stream.title)
@@ -131,6 +136,6 @@ struct StreamView: View {
 
 struct StreamView_Previews: PreviewProvider {
     static var previews: some View {
-        StreamView(stream: .preview, isSelected: false, hasFocusEffect: true)
+        StreamView(stream: streamablePreview, isSelected: false, hasFocusEffect: true)
     }
 }

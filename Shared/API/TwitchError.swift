@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct TwitchError: Decodable {
+struct TwitchError: LocalizedError, Decodable {
     let error: String
     let status: Int
     let message: String?

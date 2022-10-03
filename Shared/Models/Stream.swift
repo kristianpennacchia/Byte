@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Stream: Identifiable, Hashable, Decodable {
+struct Stream: Decodable, Streamable {
     enum Live: String, Decodable {
         case live
     }
@@ -20,36 +20,26 @@ struct Stream: Identifiable, Hashable, Decodable {
         return $0
     }(DateComponentsFormatter())
 
+    static let platform = StreamablePlatform.twitch
+
     let id: String
     let userId: String
     let userName: String
     let gameId: String
     let type: Live
     let title: String
-    let viewerCount: Int
-    let startedAt: Date
+    let viewerCount: Int?
+    let startedAt: Date?
     let thumbnailUrl: String
-    var duration: String {
+    var duration: String? {
         Self.formatter
-            .string(from: startedAt, to: Date())?
+            .string(from: startedAt!, to: Date())?
             .replacingOccurrences(of: "min.", with: "m")
             ?? ""
     }
 }
 
 extension Stream {
-    static let preview = Stream(
-        id: App.previewUsername,
-        userId: App.previewUsername,
-        userName: App.previewUsername,
-        gameId: "23124",
-        type: .live,
-        title: "Some stream",
-        viewerCount: .random(in: .min ... .max),
-        startedAt: Date(),
-        thumbnailUrl: ""
-    )
-
     func thumbnail(width: Int, height: Int) -> String {
         thumbnailUrl
             .replacingOccurrences(of: "{width}", with: "\(width)")
@@ -57,7 +47,7 @@ extension Stream {
     }
 
     @discardableResult
-    func game(api: API, completion: @escaping (Result<Game, Error>) -> Void) -> URLSessionTask? {
+    func game(api: TwitchAPI, completion: @escaping (Result<Game, Error>) -> Void) -> URLSessionTask? {
         api.execute(endpoint: "games", query: ["id": gameId], decoding: [Game].self) { result in
             switch result {
             case .success(let data):
@@ -70,11 +60,5 @@ extension Stream {
                 completion(.failure(error))
             }
         }
-    }
-}
-
-extension Stream: Comparable {
-    static func < (lhs: Stream, rhs: Stream) -> Bool {
-        lhs.viewerCount < rhs.viewerCount
     }
 }

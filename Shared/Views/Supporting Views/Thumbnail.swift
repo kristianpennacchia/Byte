@@ -13,27 +13,35 @@ struct Thumbnail: View {
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     enum VideoStream {
-        case stream(Stream), vod(Video)
+        case stream(any Streamable), vod(Video)
     }
 
     let videoStream: VideoStream
     
     var body: some View {
         let url: URL?
-        let duration: String
+        let duration: String?
+        let isSpoiler: Bool
         switch videoStream {
         case .stream(let stream):
             url = URL(string: stream.thumbnail(width: 300, height: 200))
             duration = stream.duration
+
+            if let twitchStream = stream as? Stream {
+                isSpoiler = spoilerFilter.isSpoiler(gameID: twitchStream.gameId)
+            } else {
+                isSpoiler = false
+            }
         case .vod(let video):
             url = URL(string: video.thumbnail(size: 300))
             duration = video.duration
+            isSpoiler = false
         }
 
         return ZStack(alignment: .bottomLeading) {
             switch videoStream {
-            case .stream(let stream):
-                KFImage(spoilerFilter.isSpoiler(gameID: stream.gameId) ? nil : url)
+            case .stream(_):
+                KFImage(isSpoiler ? nil : url)
                     .cacheMemoryOnly()
                     .memoryCacheExpiration(.seconds(300))
                     .memoryCacheAccessExtending(.none)
@@ -54,14 +62,15 @@ struct Thumbnail: View {
                     .resizable()
                     .aspectRatio(1.5, contentMode: .fill)
             }
-            Text("  \(duration)  ")
-                .font(.caption)
-                .bold()
-                .foregroundColor(.white)
-                .background(Color.accentColor)
-                .cornerRadius(8)
-                .padding([.leading, .bottom], 8)
-
+            if let duration {
+                Text("  \(duration)  ")
+                    .font(.caption)
+                    .bold()
+                    .foregroundColor(.white)
+                    .background(Color.accentColor)
+                    .cornerRadius(8)
+                    .padding([.leading, .bottom], 8)
+            }
         }
     }
 }
@@ -84,6 +93,6 @@ extension Thumbnail {
 
 struct Thumbnail_Previews: PreviewProvider {
     static var previews: some View {
-        Thumbnail(videoStream: .stream(.preview))
+        Thumbnail(videoStream: .stream(streamablePreview))
     }
 }

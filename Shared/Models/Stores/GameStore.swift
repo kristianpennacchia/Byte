@@ -15,7 +15,7 @@ final class GameStore: FetchingObject {
 
     private(set) var lastFetched: Date?
 
-    let api: API
+    let twitchAPI: TwitchAPI
     let fetchType: Fetch
     var filter = "" {
         didSet {
@@ -30,8 +30,8 @@ final class GameStore: FetchingObject {
     }
     @Published private(set) var items = [Game]()
 
-    init(api: API, fetch: Fetch) {
-        self.api = api
+    init(twitchAPI: TwitchAPI, fetch: Fetch) {
+        self.twitchAPI = twitchAPI
         self.fetchType = fetch
     }
 
@@ -42,7 +42,7 @@ final class GameStore: FetchingObject {
 
         switch fetchType {
         case .top:
-            api.execute(endpoint: "games/top", query: query, decoding: [Game].self) { [weak self] result in
+            twitchAPI.execute(endpoint: "games/top", query: query, decoding: [Game].self) { [weak self] result in
                 guard let self = self else { return }
 
                 self.lastFetched = Date()
