@@ -299,33 +299,25 @@ extension YoutubeAPI {
         }
     }
 
-    #warning("TODO: Implement fetching all pages for a request that supports pagination.")
-//    func executeFetchAll<T>(method: Method = .get, base: Base, endpoint: String, query: [String: Any?] = [:], decoding: [T].Type, completion: @escaping Completion<[T]>) where T: Decodable {
-//        var allItems = [T]()
-//
-//        func fetch(page: Pagination?) {
-//            var query = query
-//            query["after"] = page?.cursor
-//
-//            execute(method: method, base: base, endpoint: endpoint, query: query, page: page, decoding: decoding) { result in
-//                switch result {
-//                case .success(let data):
-//                    allItems += data.data
-//
-//                    if data.pagination == nil || data.pagination!.isValid == false || data.data.isEmpty {
-//                        // All data has been downloaded
-//                        completion(.success(DataItem<[T]>(data: allItems, pagination: data.pagination)))
-//                    } else {
-//                        fetch(page: data.pagination)
-//                    }
-//                case .failure(let error):
-//                    completion(.failure(error))
-//                }
-//            }
-//        }
-//
-//        fetch(page: nil)
-//    }
+    func executeFetchAll<T>(method: Method = .get, base: Base, endpoint: String, query: [String: Any?] = [:], decoding: YoutubeDataItem<T>.Type) async throws -> [T] where T: Decodable {
+        var allItems = [T]()
+        var nextPageToken: String?
+
+        repeat {
+            var query = query
+            query["pageToken"] = nextPageToken
+
+            let data = try await execute(method: method, base: base, endpoint: endpoint, query: query, decoding: decoding)
+            allItems += data.items
+
+            nextPageToken = data.nextPageToken
+            if data.items.isEmpty {
+                nextPageToken = nil
+            }
+        } while nextPageToken != nil
+
+        return allItems
+    }
 
     func executeRaw(method: Method, base: Base, endpoint: String, query: [String: Any?] = [:]) async throws -> Data {
         var components = URLComponents(url: base.url.appendingPathComponent(endpoint), resolvingAgainstBaseURL: true)!
