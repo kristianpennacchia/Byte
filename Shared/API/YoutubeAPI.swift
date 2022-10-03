@@ -26,6 +26,12 @@ final class YoutubeAPI: ObservableObject {
 
     private let didChange = PassthroughSubject<Output, Failure>()
     private let keychain = Keychain(service: "youtube")
+    private let dateFormatter = ISO8601DateFormatter()
+    private let dateMillisFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SZ"
+        return df
+    }()
 
     let session: URLSession
     let authentication: Authentication
@@ -58,7 +64,16 @@ final class YoutubeAPI: ObservableObject {
         session = URLSession(configuration: .default)
 
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .custom { [unowned self] decoder in
+            let valueContainer = try decoder.singleValueContainer()
+            let dateString = try valueContainer.decode(String.self)
+
+            if let date = self.dateFormatter.date(from: dateString) ?? self.dateMillisFormatter.date(from: dateString) {
+                return date
+            } else {
+                throw AppError(message: "Failed parsing date = \(dateString)")
+            }
+        }
     }
 }
 
