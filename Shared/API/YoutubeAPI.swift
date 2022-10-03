@@ -10,7 +10,6 @@ import Foundation
 import SwiftUI
 import Combine
 import KeychainAccess
-import SwiftSoup
 
 final class YoutubeAPI: ObservableObject {
     struct Authentication {
