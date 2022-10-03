@@ -17,7 +17,7 @@ struct StreamVideoPlayer: View {
         var isConfigured: Bool { player.currentItem != nil }
     }
 
-    @EnvironmentObject private var api: TwitchAPI
+    @EnvironmentObject private var twitchAPI: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @State private var showErrorAlert = false
@@ -54,7 +54,7 @@ struct StreamVideoPlayer: View {
             playerViewModel.player.isMuted = muteNotFocused
         }
 
-        let fetcher = LiveVideoFetcher(api: api, videoMode: videoMode)
+        let fetcher = LiveVideoFetcher(twitchAPI: twitchAPI, videoMode: videoMode)
 
         // If this was already been configured but a variable has been changed, let us immediately re-initiate the stream so that we can apply the new variables.
         if playerViewModel.isConfigured {
@@ -185,7 +185,7 @@ private extension StreamVideoPlayer {
         fetcher.fetch { result in
             switch result {
             case .success(let playlist):
-                if let urlString = playlist.meta.sorted(by: >).first?.url,
+                if let urlString = playlist.meta.isEmpty ? playlist.rawURLs.last : playlist.meta.sorted(by: >).first?.url,
                    let url = URL(string: urlString)
                 {
                     currentStreamURL = url
