@@ -208,6 +208,9 @@
 		C1AE3318231E89FD00FE0F99 /* TwitchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AE3317231E89FD00FE0F99 /* TwitchAPI.swift */; };
 		C1AE3319231E89FD00FE0F99 /* TwitchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AE3317231E89FD00FE0F99 /* TwitchAPI.swift */; };
 		C1AE331A231E89FD00FE0F99 /* TwitchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1AE3317231E89FD00FE0F99 /* TwitchAPI.swift */; };
+		C1B0BCAF28EAF2220016089B /* CodableIgnored.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B0BCAE28EAF2220016089B /* CodableIgnored.swift */; };
+		C1B0BCB028EAF2220016089B /* CodableIgnored.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B0BCAE28EAF2220016089B /* CodableIgnored.swift */; };
+		C1B0BCB128EAF2220016089B /* CodableIgnored.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B0BCAE28EAF2220016089B /* CodableIgnored.swift */; };
 		C1B2992F28E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */; };
 		C1B2993028E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */; };
 		C1B2993128E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */; };
@@ -435,6 +438,7 @@
 		C1A647C728E72B3F00699B5B /* YoutubeUserAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeUserAuth.swift; sourceTree = "<group>"; };
 		C1A75360249B8ED1005FB190 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		C1AE3317231E89FD00FE0F99 /* TwitchAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitchAPI.swift; sourceTree = "<group>"; };
+		C1B0BCAE28EAF2220016089B /* CodableIgnored.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableIgnored.swift; sourceTree = "<group>"; };
 		C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeSearchResult.swift; sourceTree = "<group>"; };
 		C1B2993528E92C9700C0D6A8 /* YoutubeError2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeError2.swift; sourceTree = "<group>"; };
 		C1B2993928E9526B00C0D6A8 /* YoutubeChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeChannel.swift; sourceTree = "<group>"; };
@@ -850,6 +854,7 @@
 				C1141885231936A60004C813 /* AvatarSize.swift */,
 				C1605F6F2317DF3500F98BEE /* BrandColor.swift */,
 				C1FB01D92317D87400130981 /* Channel.swift */,
+				C1B0BCAE28EAF2220016089B /* CodableIgnored.swift */,
 				C18778FD23195C23008CA61E /* CovertArtSize.swift */,
 				C19FE9AD246E5A7D004EB60C /* Favourite.swift */,
 				C1605F712317E31E00F98BEE /* Game.swift */,
@@ -1208,6 +1213,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1A647C528E7230800699B5B /* Task+Extensions.swift in Sources */,
+				C1B0BCB028EAF2220016089B /* CodableIgnored.swift in Sources */,
 				C109CFB4231D1D0600C35AD8 /* SessionStore.swift in Sources */,
 				C14D5B9828EA723E00351AC5 /* AppError.swift in Sources */,
 				C1E9428E231E70E6006B7A71 /* StreamStore.swift in Sources */,
@@ -1416,6 +1422,7 @@
 				C1B2993C28E9526B00C0D6A8 /* YoutubeChannel.swift in Sources */,
 				C14BCD502317FC8900F33A48 /* Stream.swift in Sources */,
 				C1C85AAF2336523F00E8AB19 /* RootViewControllerKey.swift in Sources */,
+				C1B0BCB128EAF2220016089B /* CodableIgnored.swift in Sources */,
 				C1B2994428E95FD700C0D6A8 /* YoutubePlaylist.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1441,6 +1448,7 @@
 				C1D5CA31231E931400663FD8 /* AppFactory.swift in Sources */,
 				C1FB01DA2317D87400130981 /* Channel.swift in Sources */,
 				C11B670F23226C7C004576A6 /* TwitchDataItem.swift in Sources */,
+				C1B0BCAF28EAF2220016089B /* CodableIgnored.swift in Sources */,
 				C1FEBCF628E4780C00903D16 /* QRCode.swift in Sources */,
 				C1FB01DC2317D8A900130981 /* Avatar.swift in Sources */,
 				C1FB01AC2317D1B000130981 /* AppDelegate.swift in Sources */,
