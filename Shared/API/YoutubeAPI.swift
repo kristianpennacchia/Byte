@@ -277,10 +277,10 @@ extension YoutubeAPI {
                 // It's a fucking error in a successful HTTP status code response. FUCK YOU GOOGLE!
                 do {
                     throw try decoder.decode(YoutubeError.self, from: data)
-                } catch {
+                } catch is DecodingError {
                     do {
                         throw try decoder.decode(YoutubeError2.self, from: data)
-                    } catch {
+                    } catch let error as DecodingError {
                         throw error
                     }
                 }
