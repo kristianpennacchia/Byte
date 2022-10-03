@@ -68,7 +68,7 @@ final class StreamStore: FetchingObject {
 
                     do {
                         // https://developers.google.com/youtube/v3/docs/subscriptions/list
-                        let subscriptionData = try await youtubeAPI.execute(
+                        let subscriptions = try await youtubeAPI.executeFetchAll(
                             method: .get,
                             base: .youtube,
                             endpoint: "subscriptions",
@@ -80,7 +80,7 @@ final class StreamStore: FetchingObject {
                             decoding: YoutubeDataItem<YoutubeSubscription>.self
                         )
 
-                        print("Got \(subscriptionData.items.count) subscriptions.")
+                        print("Got \(subscriptions.count) subscriptions.")
 
                         // Get all currently live channels.
                         var liveChannels = [YoutubeSubscription]()
@@ -88,7 +88,7 @@ final class StreamStore: FetchingObject {
                         do {
                             // Running in parallel, check which channels are live.
                             try await withThrowingTaskGroup(of: (subscription: YoutubeSubscription, isLive: Bool).self) { group in
-                                for subscription in subscriptionData.items {
+                                for subscription in subscriptions {
                                     group.addTask {
                                         let isLive = try await youtubeAPI.getIsLive(channelID: subscription.snippet.resourceId.channelId)
                                         return (subscription, isLive)
