@@ -18,6 +18,12 @@ final class YoutubeAPI: ObservableObject {
         let secret: String
     }
 
+    struct LiveResult: Hashable {
+        let videoID: String
+        let innertubeAPIKey: String
+        let innertubeClientID: String
+    }
+
     typealias Completion<T> = (_ result: Result<T, Error>) -> Void where T: Decodable
     typealias CompletionRaw = (_ result: Result<Data, Error>) -> Void
 
@@ -226,13 +232,29 @@ extension YoutubeAPI {
         return try await execute(method: .get, base: .people, endpoint: "people/me", query: query, decoding: YoutubePerson.self)
     }
 
-    func getIsLive(channelID: String) async throws -> Bool {
+    func getIsLive(channelID: String) async throws -> LiveResult? {
         let channelURL = URL(string: "https://www.youtube.com/embed/live_stream?channel=\(channelID)")!
         let htmlPageData = try await session.data(from: channelURL).0
         let htmlPageString = String(data: htmlPageData, encoding: .utf8)!
 
-        return htmlPageString.contains(##"<link rel="canonical" href="https://www.youtube.com/watch?v="##)
-            && htmlPageString.contains("scheduledStartTime") == false
+        guard htmlPageString.contains(##"<link rel="canonical" href="https://www.youtube.com/watch?v="##)
+           && htmlPageString.contains("scheduledStartTime") == false
+        else {
+            return nil
+        }
+
+        guard let videoID = try /"video_id":\s*"([^"]+)"/.firstMatch(in: htmlPageString)?.output.1 else {
+            throw AppError(message: "Failed to get video ID in live stream = \(channelURL)")
+        }
+
+        let innertubeAPIKey = try /"INNERTUBE_API_KEY":\s*"([^"]+)"/.firstMatch(in: htmlPageString)?.output.1 ?? "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+        let innertubeClientID = try /"INNERTUBE_CLIENT_VERSION":\s*"([\d\.]+)"/.firstMatch(in: htmlPageString)?.output.1 ?? "1.20210616.1.0"
+
+        Swift.print("videoID = \(videoID)")
+        Swift.print("innertubeAPIKey = \(innertubeAPIKey)")
+        Swift.print("innertubeClientID = \(innertubeClientID)")
+
+        return LiveResult(videoID: String(videoID), innertubeAPIKey: String(innertubeAPIKey), innertubeClientID: String(innertubeClientID))
     }
 }
 
