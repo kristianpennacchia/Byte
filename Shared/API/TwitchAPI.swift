@@ -158,7 +158,7 @@ extension TwitchAPI {
 
 extension TwitchAPI {
     @discardableResult
-    func execute<T>(method: Method = .get, base: Base = .helix, endpoint: String, query: [String: Any?] = [:], page: Pagination? = nil, decoding: T.Type, completion: @escaping Completion<T>) -> URLSessionTask {
+    func execute<T>(method: Method = .get, base: Base = .helix, endpoint: String, query: [String: Any?] = [:], decoding: T.Type, completion: @escaping Completion<T>) -> URLSessionTask {
         var components = URLComponents(url: base.url.appendingPathComponent(endpoint), resolvingAgainstBaseURL: true)!
         components.query = query.queryParameters()
 
@@ -193,7 +193,7 @@ extension TwitchAPI {
                             self.refreshAccessToken { result in
                                 switch result {
                                 case .success(_):
-                                    self.execute(method: method, base: base, endpoint: endpoint, query: query, page: page, decoding: decoding, completion: completion)
+                                    self.execute(method: method, base: base, endpoint: endpoint, query: query, decoding: decoding, completion: completion)
                                 case .failure(let error):
                                     DispatchQueue.main.async {
                                         completion(.failure(error))
@@ -232,7 +232,7 @@ extension TwitchAPI {
             var query = query
             query["after"] = page?.cursor
 
-            execute(method: method, base: base, endpoint: endpoint, query: query, page: page, decoding: decoding) { result in
+            execute(method: method, base: base, endpoint: endpoint, query: query, decoding: decoding) { result in
                 switch result {
                 case .success(let data):
                     allItems += data.data

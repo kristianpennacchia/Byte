@@ -237,7 +237,7 @@ extension YoutubeAPI {
 }
 
 extension YoutubeAPI {
-    func execute<T>(method: Method, base: Base, endpoint: String, query: [String: Any?] = [:], page: Pagination? = nil, decoding: T.Type) async throws -> T where T: Decodable {
+    func execute<T>(method: Method, base: Base, endpoint: String, query: [String: Any?] = [:], decoding: T.Type) async throws -> T where T: Decodable {
         var components = URLComponents(url: base.url.appendingPathComponent(endpoint), resolvingAgainstBaseURL: true)!
         components.query = query.queryParameters()
 
@@ -272,7 +272,7 @@ extension YoutubeAPI {
                 try await refreshAccessToken()
 
                 // Access token refreshed, retry this method.
-                return try await execute(method: method, base: base, endpoint: endpoint, query: query, page: page, decoding: decoding)
+                return try await execute(method: method, base: base, endpoint: endpoint, query: query, decoding: decoding)
             } else {
                 throw error
             }
@@ -282,7 +282,7 @@ extension YoutubeAPI {
                 try await refreshAccessToken()
 
                 // Access token refreshed, retry this method.
-                return try await execute(method: method, base: base, endpoint: endpoint, query: query, page: page, decoding: decoding)
+                return try await execute(method: method, base: base, endpoint: endpoint, query: query, decoding: decoding)
             } else {
                 throw error
             }
