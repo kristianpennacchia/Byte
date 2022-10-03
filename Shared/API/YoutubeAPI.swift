@@ -21,7 +21,7 @@ final class YoutubeAPI: ObservableObject {
     struct LiveResult: Hashable {
         let videoID: String
         let innertubeAPIKey: String
-        let innertubeClientID: String
+        let innertubeClientVersion: String
     }
 
     typealias Completion<T> = (_ result: Result<T, Error>) -> Void where T: Decodable
@@ -248,13 +248,13 @@ extension YoutubeAPI {
         }
 
         let innertubeAPIKey = try /"INNERTUBE_API_KEY":\s*"([^"]+)"/.firstMatch(in: htmlPageString)?.output.1 ?? "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
-        let innertubeClientID = try /"INNERTUBE_CLIENT_VERSION":\s*"([\d\.]+)"/.firstMatch(in: htmlPageString)?.output.1 ?? "1.20210616.1.0"
+        let innertubeClientVersion = try /"INNERTUBE_CLIENT_VERSION":\s*"([\d\.]+)"/.firstMatch(in: htmlPageString)?.output.1 ?? "1.20210616.1.0"
 
         Swift.print("videoID = \(videoID)")
         Swift.print("innertubeAPIKey = \(innertubeAPIKey)")
-        Swift.print("innertubeClientID = \(innertubeClientID)")
+        Swift.print("innertubeClientVersion = \(innertubeClientVersion)")
 
-        return LiveResult(videoID: String(videoID), innertubeAPIKey: String(innertubeAPIKey), innertubeClientID: String(innertubeClientID))
+        return LiveResult(videoID: String(videoID), innertubeAPIKey: String(innertubeAPIKey), innertubeClientVersion: String(innertubeClientVersion))
     }
 }
 
