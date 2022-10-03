@@ -235,6 +235,9 @@
 		C1BC16C32394EB0B008234EE /* ButtonWrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC16C22394EB0B008234EE /* ButtonWrap.swift */; };
 		C1BC16C42394EB0B008234EE /* ButtonWrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC16C22394EB0B008234EE /* ButtonWrap.swift */; };
 		C1BC16C52394EB0B008234EE /* ButtonWrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BC16C22394EB0B008234EE /* ButtonWrap.swift */; };
+		C1BF599228E9C3C5003C50C9 /* Streamable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BF599128E9C3C5003C50C9 /* Streamable.swift */; };
+		C1BF599328E9C3C5003C50C9 /* Streamable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BF599128E9C3C5003C50C9 /* Streamable.swift */; };
+		C1BF599428E9C3C5003C50C9 /* Streamable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1BF599128E9C3C5003C50C9 /* Streamable.swift */; };
 		C1C103EB232DCD8000267736 /* OnSelect.iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C103E9232DCD8000267736 /* OnSelect.iOS.swift */; };
 		C1C103EC232DCD8000267736 /* OnSelect.iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C103E9232DCD8000267736 /* OnSelect.iOS.swift */; };
 		C1C103F0232DCE8400267736 /* OnSelect.tvOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C103EF232DCE8400267736 /* OnSelect.tvOS.swift */; };
@@ -441,6 +444,7 @@
 		C1B5AC69232E299F001A502F /* ChannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelView.swift; sourceTree = "<group>"; };
 		C1B5AC6D232E29EF001A502F /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		C1BC16C22394EB0B008234EE /* ButtonWrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonWrap.swift; sourceTree = "<group>"; };
+		C1BF599128E9C3C5003C50C9 /* Streamable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Streamable.swift; sourceTree = "<group>"; };
 		C1C103E9232DCD8000267736 /* OnSelect.iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSelect.iOS.swift; sourceTree = "<group>"; };
 		C1C103EF232DCE8400267736 /* OnSelect.tvOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnSelect.tvOS.swift; sourceTree = "<group>"; };
 		C1C1D28F23363DC7006E9165 /* Push.iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.iOS.swift; sourceTree = "<group>"; };
@@ -857,6 +861,7 @@
 				C11418812319358E0004C813 /* SizeProvider.swift */,
 				C185E18C2375AE3C008DD09C /* SpoilerFilter.swift */,
 				C14BCD4D2317FC8900F33A48 /* Stream.swift */,
+				C1BF599128E9C3C5003C50C9 /* Streamable.swift */,
 				C11B670E23226C7C004576A6 /* TwitchDataItem.swift */,
 				C126959D28E5CC9D00422F43 /* TwitchSecrets.swift */,
 				C15DD8532329235B00EC8EFB /* Video.swift */,
@@ -865,13 +870,13 @@
 				C109BCF428E73A3D00BB83E8 /* YoutubeDataItem.swift */,
 				C12695A928E5D1DB00422F43 /* YoutubeOAuth.swift */,
 				C16A7E0428E8077F00509FFF /* YoutubePerson.swift */,
+				C1B2994128E95FD700C0D6A8 /* YoutubePlaylist.swift */,
 				C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */,
 				C12695A128E5CCA900422F43 /* YoutubeSecrets.swift */,
 				C16A7E0828E8140800509FFF /* YoutubeSubscription.swift */,
 				C1A647C728E72B3F00699B5B /* YoutubeUserAuth.swift */,
 				C1B2993D28E9546B00C0D6A8 /* YoutubeVideo.swift */,
 				C1E9427F231E70A6006B7A71 /* Stores */,
-				C1B2994128E95FD700C0D6A8 /* YoutubePlaylist.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1280,6 +1285,7 @@
 				C1B5AC67232E2874001A502F /* StreamView.swift in Sources */,
 				C109CFB8231D1EDE00C35AD8 /* SignInView.swift in Sources */,
 				C1020D922317E9AE00FBFE16 /* StreamList.swift in Sources */,
+				C1BF599328E9C3C5003C50C9 /* Streamable.swift in Sources */,
 				C1EF0BA6276B19F000E311C8 /* PlayerLayer.swift in Sources */,
 				C14BCD4F2317FC8900F33A48 /* Stream.swift in Sources */,
 				C1020D642317E8E200FBFE16 /* AppDelegate.swift in Sources */,
@@ -1372,6 +1378,7 @@
 				C1B2994028E9546B00C0D6A8 /* YoutubeVideo.swift in Sources */,
 				C1E94287231E70CE006B7A71 /* ChannelStore.swift in Sources */,
 				C19FE9B0246E5A7D004EB60C /* Favourite.swift in Sources */,
+				C1BF599428E9C3C5003C50C9 /* Streamable.swift in Sources */,
 				C1020DCE2317EB0800FBFE16 /* Color+Extensions.swift in Sources */,
 				C1D32D81232E695600BE3A4C /* Strings+Extensions.swift in Sources */,
 				C12695B028E5D22E00422F43 /* YoutubeError.swift in Sources */,
@@ -1448,6 +1455,7 @@
 				C114187A2319345E0004C813 /* WatermarkedContainer.swift in Sources */,
 				C1E94289231E70D9006B7A71 /* GameStore.swift in Sources */,
 				C16A7E0528E8077F00509FFF /* YoutubePerson.swift in Sources */,
+				C1BF599228E9C3C5003C50C9 /* Streamable.swift in Sources */,
 				C16A7E0D28E8199900509FFF /* YoutubeBroadcast.swift in Sources */,
 				C1E94285231E70CE006B7A71 /* ChannelStore.swift in Sources */,
 				C15DD8542329235B00EC8EFB /* Video.swift in Sources */,
