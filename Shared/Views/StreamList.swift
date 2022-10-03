@@ -10,8 +10,8 @@ import SwiftUI
 
 struct StreamList: View {
     private class StreamViewModel: ObservableObject {
-        @Published var streams = Set<Stream>()
-        @Published var stream: Stream?
+        @Published var streams = [any Streamable]()
+        @Published var stream: (any Streamable)?
     }
 
     @EnvironmentObject private var sessionStore: SessionStore
@@ -24,7 +24,7 @@ struct StreamList: View {
 
     @State private var sessionDidChange = false
     @State private var isRefreshing = false
-    @State private var selectedStreams = Set<Stream>()
+    @State private var selectedStreams = [any Streamable]()
     @State private var showYoutubeAuthScreen = false
     @State private var showSpoilerMenu = false
     @State private var showVideoPlayer = false
@@ -61,28 +61,30 @@ struct StreamList: View {
                 LazyVGrid(columns: columns) {
                     ForEach(store.uniquedItems) { uniqueItem in
                         let stream = uniqueItem.stream
-                        StreamView(stream: stream, isSelected: selectedStreams.contains(stream), hasFocusEffect: false)
+                        StreamView(stream: stream, isSelected: selectedStreams.contains(where: { $0.id == stream.id }), hasFocusEffect: false)
                             .navigationBarTitle(store.fetchType.navBarTitle)
                             .buttonWrap {
-                                if selectedStreams.contains(stream) == false {
-                                    selectedStreams.insert(stream)
+                                if selectedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }) == false {
+                                    selectedStreams.append(stream)
                                 }
 
                                 streamViewModel.streams = selectedStreams
                                 streamViewModel.stream = stream
                                 showVideoPlayer = true
                             } longPress: {
-                                streamViewModel.stream = stream
-                                showSpoilerMenu = true
+                                if stream is Stream {
+                                    streamViewModel.stream = stream
+                                    showSpoilerMenu = true
+                                }
                             }
                             .onPlayPauseCommand {
                                 // Multi-select streams.
-                                if selectedStreams.contains(stream) {
+                                if let index = selectedStreams.firstIndex(where: { equalsStreamable(lhs: $0, rhs: stream) }) {
                                     // Remove
-                                    selectedStreams.remove(stream)
+                                    selectedStreams.remove(at: index)
                                 } else {
                                     // Add
-                                    selectedStreams.insert(stream)
+                                    selectedStreams.append(stream)
                                 }
                             }
                     }
@@ -106,12 +108,16 @@ struct StreamList: View {
             .edgesIgnoringSafeArea([.leading, .trailing])
         }
         .actionSheet(isPresented: $showSpoilerMenu) {
-            return ActionSheet(title: Text("Spoiler Filter"), message: nil, buttons: [
-                .default(Text(spoilerFilter.isSpoiler(gameID: streamViewModel.stream!.gameId) ? "Show Game Thumbnail" : "Hide Game Thumbnail")) {
-                    spoilerFilter.toggle(gameID: streamViewModel.stream!.gameId)
-                },
-                .cancel()
-            ])
+            if let stream = streamViewModel.stream as? Stream {
+                return ActionSheet(title: Text("Spoiler Filter"), message: nil, buttons: [
+                    .default(Text(spoilerFilter.isSpoiler(gameID: stream.gameId) ? "Show Game Thumbnail" : "Hide Game Thumbnail")) {
+                        spoilerFilter.toggle(gameID: stream.gameId)
+                    },
+                    .cancel()
+                ])
+            } else {
+                return ActionSheet(title: Text("None"), message: nil, buttons: [.cancel()])
+            }
         }
         .fullScreenCover(
             isPresented: $showVideoPlayer,

@@ -9,7 +9,7 @@
 import Foundation
 
 // https://developers.google.com/youtube/v3/docs/subscriptions#resource-representation
-struct YoutubeSubscription: Hashable, Decodable {
+struct YoutubeSubscription: Decodable {
     struct Snippet: Hashable, Decodable {
         struct ResourceID: Hashable, Decodable {
             let kind: String
@@ -57,4 +57,8 @@ extension YoutubeSubscription: Streamable {
     var viewerCount: Int? { nil }
     var startedAt: Date? { nil }
     var duration: String? { nil }
+
+    func thumbnail(width: Int, height: Int) -> String {
+        snippet.thumbnails.high.url
+    }
 }

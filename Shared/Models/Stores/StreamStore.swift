@@ -15,7 +15,11 @@ final class StreamStore: FetchingObject {
     }
 
     struct UniqueStream: Identifiable, Hashable {
-        let stream: Stream
+        static func == (lhs: StreamStore.UniqueStream, rhs: StreamStore.UniqueStream) -> Bool {
+            return lhs.id == rhs.id
+        }
+
+        let stream: any Streamable
 
         // Force this instance to never be the same, so that the stream view can be updated to show
         // changes in static data.
@@ -24,6 +28,11 @@ final class StreamStore: FetchingObject {
         // Because of this, the views displaying the stream will be showing outdated data even if none
         // of the properties on the Stream model have changed.
         let id = UUID()
+
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(stream)
+            hasher.combine(id)
+        }
     }
 
     private(set) var lastFetched: Date?
@@ -37,12 +46,12 @@ final class StreamStore: FetchingObject {
         }
     }
 
-    @Published private(set) var originalItems = [Stream]() {
+    @Published private(set) var originalItems = [any Streamable]() {
         didSet {
             applyFilter()
         }
     }
-    @Published private(set) var items = [Stream]()
+    @Published private(set) var items = [any Streamable]()
     @Published private(set) var uniquedItems = [UniqueStream]()
 
     init(twitchAPI: TwitchAPI, fetch: Fetch) {
@@ -63,6 +72,8 @@ final class StreamStore: FetchingObject {
 
             Task {
                 // We got all the Twitch results, now get the Youtube results (if applicable for the fetch type).
+                var liveYoutubeChannels = [YoutubeSubscription]()
+
                 if let youtubeAPI = self.youtubeAPI, case .followed(userID: _) = self.fetchType {
                     print("Getting Youtube live streams...")
 
@@ -80,11 +91,6 @@ final class StreamStore: FetchingObject {
                             decoding: YoutubeDataItem<YoutubeSubscription>.self
                         )
 
-                        print("Got \(subscriptions.count) subscriptions.")
-
-                        // Get all currently live channels.
-                        var liveChannels = [YoutubeSubscription]()
-
                         do {
                             // Running in parallel, check which channels are live.
                             try await withThrowingTaskGroup(of: (subscription: YoutubeSubscription, isLive: Bool).self) { group in
@@ -96,16 +102,12 @@ final class StreamStore: FetchingObject {
                                 }
 
                                 for try await result in group where result.isLive {
-                                    liveChannels.append(result.subscription)
+                                    liveYoutubeChannels.append(result.subscription)
                                 }
                             }
                         } catch {
                             print("Failed to check if channels are live. \(error.localizedDescription)")
                         }
-
-                        print("live channels = \(liveChannels.map(\.snippet.title))")
-
-                        #warning("TODO: Add live youtube subscriptions to fetch results.")
                     } catch {
                         print("Failed to fetch Youtube live streams. \(error.localizedDescription)")
                     }
@@ -115,7 +117,10 @@ final class StreamStore: FetchingObject {
 
                 switch result {
                 case .success(let data):
-                    self.originalItems = Set(data.data).sorted(by: >)
+                    var streams = [any Streamable]()
+                    streams.append(contentsOf: data.data)
+                    streams.append(contentsOf: liveYoutubeChannels)
+                    self.originalItems = streams.sorted(by: compareStreamable)
                 case .failure(let error):
                     print("Fetching '\(self.fetchType)' streams failed. \(error.localizedDescription)")
                 }

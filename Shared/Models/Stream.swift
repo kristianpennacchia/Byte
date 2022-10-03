@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Stream: Identifiable, Hashable, Decodable, Streamable {
+struct Stream: Decodable, Streamable {
     enum Live: String, Decodable {
         case live
     }
@@ -40,18 +40,6 @@ struct Stream: Identifiable, Hashable, Decodable, Streamable {
 }
 
 extension Stream {
-    static let preview = Stream(
-        id: App.previewUsername,
-        userId: App.previewUsername,
-        userName: App.previewUsername,
-        gameId: "23124",
-        type: .live,
-        title: "Some stream",
-        viewerCount: .random(in: .min ... .max),
-        startedAt: Date(),
-        thumbnailUrl: ""
-    )
-
     func thumbnail(width: Int, height: Int) -> String {
         thumbnailUrl
             .replacingOccurrences(of: "{width}", with: "\(width)")

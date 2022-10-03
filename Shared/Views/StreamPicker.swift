@@ -16,7 +16,7 @@ struct StreamPicker: View {
 
     @State private var isRefreshing = false
 
-    let onSelectedStream: (Stream) -> Void
+    let onSelectedStream: (any Streamable) -> Void
 
     var body: some View {
         ZStack {
@@ -28,7 +28,7 @@ struct StreamPicker: View {
 
                     let columns = Array(repeating: GridItem(.flexible()), count: 4)
                     LazyVGrid(columns: columns) {
-                        ForEach(store.items) { stream in
+                        ForEach(store.items, id: \.id) { stream in
                             StreamView(stream: stream, isSelected: false, hasFocusEffect: false)
                                 .buttonWrap {
                                     onSelectedStream(stream)

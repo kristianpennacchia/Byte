@@ -34,7 +34,20 @@ class LiveVideoFetcher: NSObject {
     }
 
     enum VideoMode: Equatable {
-        case live(Stream), vod(Video)
+        static func == (lhs: LiveVideoFetcher.VideoMode, rhs: LiveVideoFetcher.VideoMode) -> Bool {
+            switch (lhs, rhs) {
+            case (.live(_), .vod(_)):
+                return false
+            case (.vod(_), .live(_)):
+                return false
+            case (.live(let a), .live(let b)):
+                return a.id == b.id
+            case (.vod(let a), .vod(let b)):
+                return a.id == b.id
+            }
+        }
+
+        case live(any Streamable), vod(Video)
     }
 
     enum VideoStream {
