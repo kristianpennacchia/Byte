@@ -115,6 +115,9 @@
 		C14BCD4E2317FC8900F33A48 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14BCD4D2317FC8900F33A48 /* Stream.swift */; };
 		C14BCD4F2317FC8900F33A48 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14BCD4D2317FC8900F33A48 /* Stream.swift */; };
 		C14BCD502317FC8900F33A48 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14BCD4D2317FC8900F33A48 /* Stream.swift */; };
+		C14D5B9728EA723E00351AC5 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D5B9628EA723E00351AC5 /* AppError.swift */; };
+		C14D5B9828EA723E00351AC5 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D5B9628EA723E00351AC5 /* AppError.swift */; };
+		C14D5B9928EA723E00351AC5 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D5B9628EA723E00351AC5 /* AppError.swift */; };
 		C1557C4D23449BB7002387BE /* ThirdDimensionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1557C4C23449BB7002387BE /* ThirdDimensionEffect.swift */; };
 		C1557C4E23449BB7002387BE /* ThirdDimensionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1557C4C23449BB7002387BE /* ThirdDimensionEffect.swift */; };
 		C1557C4F23449BB7002387BE /* ThirdDimensionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1557C4C23449BB7002387BE /* ThirdDimensionEffect.swift */; };
@@ -393,6 +396,7 @@
 		C133D58123227626005015C8 /* LocalizedDecodingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedDecodingError.swift; sourceTree = "<group>"; };
 		C13F8847233B6B32008649F6 /* Push.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
 		C14BCD4D2317FC8900F33A48 /* Stream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
+		C14D5B9628EA723E00351AC5 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		C1557C4C23449BB7002387BE /* ThirdDimensionEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdDimensionEffect.swift; sourceTree = "<group>"; };
 		C15DD8532329235B00EC8EFB /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
 		C1605F6D2317DE6300F98BEE /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
@@ -837,6 +841,7 @@
 		C1FB01DF2317DAAD00130981 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				C14D5B9628EA723E00351AC5 /* AppError.swift */,
 				C117E4FE233F672D0056811D /* AppState.swift */,
 				C1141885231936A60004C813 /* AvatarSize.swift */,
 				C1605F6F2317DF3500F98BEE /* BrandColor.swift */,
@@ -1199,6 +1204,7 @@
 			files = (
 				C1A647C528E7230800699B5B /* Task+Extensions.swift in Sources */,
 				C109CFB4231D1D0600C35AD8 /* SessionStore.swift in Sources */,
+				C14D5B9828EA723E00351AC5 /* AppError.swift in Sources */,
 				C1E9428E231E70E6006B7A71 /* StreamStore.swift in Sources */,
 				C1B2993028E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */,
 				C187790323195C3F008CA61E /* CovertArtSize.iOS.swift in Sources */,
@@ -1349,6 +1355,7 @@
 				C1D5CA33231E931400663FD8 /* AppFactory.swift in Sources */,
 				C129B70F232B88C500FDDA99 /* M3U8.swift in Sources */,
 				C1CEB90A231E85A2007C3812 /* OnFirstAppear.swift in Sources */,
+				C14D5B9928EA723E00351AC5 /* AppError.swift in Sources */,
 				C1B5AC70232E29EF001A502F /* GameView.swift in Sources */,
 				C1EF0BA7276B19F000E311C8 /* PlayerLayer.swift in Sources */,
 				C1D2F9C82322801000657A67 /* Pagination.swift in Sources */,
@@ -1461,6 +1468,7 @@
 				C109CFB3231D1D0600C35AD8 /* SessionStore.swift in Sources */,
 				C19D480C2321426900A53AB3 /* App.swift in Sources */,
 				C1729BC62326889D005D0A99 /* Dictionary+Extensions.swift in Sources */,
+				C14D5B9728EA723E00351AC5 /* AppError.swift in Sources */,
 				C109CFB7231D1EDE00C35AD8 /* SignInView.swift in Sources */,
 				C114188D231937920004C813 /* AvatarSize.tvOS.swift in Sources */,
 				C109BCF528E73A3D00BB83E8 /* YoutubeDataItem.swift in Sources */,
