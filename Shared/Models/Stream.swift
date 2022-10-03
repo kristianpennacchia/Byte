@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Stream: Identifiable, Hashable, Decodable {
+struct Stream: Identifiable, Hashable, Decodable, Streamable {
     enum Live: String, Decodable {
         case live
     }
@@ -20,18 +20,20 @@ struct Stream: Identifiable, Hashable, Decodable {
         return $0
     }(DateComponentsFormatter())
 
+    static let platform = StreamablePlatform.twitch
+
     let id: String
     let userId: String
     let userName: String
     let gameId: String
     let type: Live
     let title: String
-    let viewerCount: Int
-    let startedAt: Date
+    let viewerCount: Int?
+    let startedAt: Date?
     let thumbnailUrl: String
-    var duration: String {
+    var duration: String? {
         Self.formatter
-            .string(from: startedAt, to: Date())?
+            .string(from: startedAt!, to: Date())?
             .replacingOccurrences(of: "min.", with: "m")
             ?? ""
     }
@@ -70,11 +72,5 @@ extension Stream {
                 completion(.failure(error))
             }
         }
-    }
-}
-
-extension Stream: Comparable {
-    static func < (lhs: Stream, rhs: Stream) -> Bool {
-        lhs.viewerCount < rhs.viewerCount
     }
 }

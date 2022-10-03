@@ -20,7 +20,7 @@ struct Thumbnail: View {
     
     var body: some View {
         let url: URL?
-        let duration: String
+        let duration: String?
         switch videoStream {
         case .stream(let stream):
             url = URL(string: stream.thumbnail(width: 300, height: 200))
@@ -54,14 +54,15 @@ struct Thumbnail: View {
                     .resizable()
                     .aspectRatio(1.5, contentMode: .fill)
             }
-            Text("  \(duration)  ")
-                .font(.caption)
-                .bold()
-                .foregroundColor(.white)
-                .background(Color.accentColor)
-                .cornerRadius(8)
-                .padding([.leading, .bottom], 8)
-
+            if let duration {
+                Text("  \(duration)  ")
+                    .font(.caption)
+                    .bold()
+                    .foregroundColor(.white)
+                    .background(Color.accentColor)
+                    .cornerRadius(8)
+                    .padding([.leading, .bottom], 8)
+            }
         }
     }
 }

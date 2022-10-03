@@ -79,17 +79,20 @@ struct StreamView: View {
                             .bold()
                             .foregroundColor(isFocused ? .brand.purple : .white)
                             .lineLimit(1)
-                        Spacer(minLength: 4)
-                        HStack(alignment: .center, spacing: 4) {
-                            Text(Self.viewCountFormatter.string(from: NSNumber(integerLiteral: stream.viewerCount)) ?? "")
-                                .font(.caption)
-                                .bold()
-                                .foregroundColor(.brand.live)
-                            Image(systemName: "person.fill")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: 18)
-                                .foregroundColor(.brand.live)
+                        if let viewerCount = stream.viewerCount,
+                           let number = Self.viewCountFormatter.string(from: NSNumber(integerLiteral: viewerCount)) {
+                            Spacer(minLength: 4)
+                            HStack(alignment: .center, spacing: 4) {
+                                Text(number)
+                                    .font(.caption)
+                                    .bold()
+                                    .foregroundColor(.brand.live)
+                                Image(systemName: "person.fill")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: 18)
+                                    .foregroundColor(.brand.live)
+                            }
                         }
                     }
                     Text(stream.title)

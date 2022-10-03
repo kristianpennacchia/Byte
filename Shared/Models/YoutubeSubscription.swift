@@ -9,15 +9,15 @@
 import Foundation
 
 // https://developers.google.com/youtube/v3/docs/subscriptions#resource-representation
-struct YoutubeSubscription: Decodable {
-    struct Snippet: Decodable {
-        struct ResourceID: Decodable {
+struct YoutubeSubscription: Hashable, Decodable {
+    struct Snippet: Hashable, Decodable {
+        struct ResourceID: Hashable, Decodable {
             let kind: String
             let channelId: String
         }
 
-        struct Thumbnails: Decodable {
-            struct URL: Decodable {
+        struct Thumbnails: Hashable, Decodable {
+            struct URL: Hashable, Decodable {
                 let url: String
             }
 
@@ -34,12 +34,13 @@ struct YoutubeSubscription: Decodable {
         let thumbnails: Thumbnails
     }
 
-    struct ContentDetail: Decodable {
+    struct ContentDetail: Hashable, Decodable {
         let totalItemCount: Int
         let newItemCount: Int
         let activityType: String
     }
 
+    static let platform = StreamablePlatform.youtube
     static let part = "snippet,contentDetails"
 
     let kind: String
@@ -47,4 +48,13 @@ struct YoutubeSubscription: Decodable {
     let id: String
     let snippet: Snippet
     let contentDetails: ContentDetail
+}
+
+extension YoutubeSubscription: Streamable {
+    var userId: String { snippet.resourceId.channelId }
+    var userName: String { snippet.title }
+    var title: String { "" }
+    var viewerCount: Int? { nil }
+    var startedAt: Date? { nil }
+    var duration: String? { nil }
 }

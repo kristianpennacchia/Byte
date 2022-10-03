@@ -77,7 +77,7 @@ struct MultiStreamVideoPlayer: View {
             let isAudioOnly = audioOnlyStreams.contains(stream)
             let isFlipped = flippedStreams.contains(stream)
 
-            return ActionSheet(title: Text("\(stream.userName)\n\(stream.duration)"), message: Text(stream.title), buttons: [
+            return ActionSheet(title: Text("\(stream.userName)\n\(stream.duration ?? "")"), message: Text(stream.title), buttons: [
                 .default(Text("Add New Stream")) {
                     showStreamPicker = true
                 },
