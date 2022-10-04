@@ -34,6 +34,7 @@ struct StreamPicker: View {
                                     onSelectedStream(stream)
                                 }
                         }
+                        .padding(14)
                     }
                 }
                 .onAppear {
