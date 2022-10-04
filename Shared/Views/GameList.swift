@@ -37,7 +37,7 @@ struct GameList: View {
                             .padding(.bottom, 8)
                     }
 
-                    let columns = Array(repeating: GridItem(.flexible()), count: 6)
+                    let columns = Array(repeating: GridItem(.flexible()), count: 4)
                     LazyVGrid(columns: columns) {
                         ForEach(store.items) { game in
                             GameView(game: game, hasFocusEffect: false)

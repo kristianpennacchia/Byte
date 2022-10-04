@@ -34,7 +34,7 @@ struct ChannelList: View {
                         Refresh(isAnimating: $isRefreshing, action: refresh)
                     }
                     
-                    let columns = Array(repeating: GridItem(.flexible()), count: 6)
+                    let columns = Array(repeating: GridItem(.flexible()), count: 5)
                     LazyVGrid(columns: columns) {
                         ForEach(store.items) { channel in
                             ChannelView(channel: channel, hasFocusEffect: false)

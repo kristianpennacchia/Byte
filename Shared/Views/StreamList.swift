@@ -40,7 +40,7 @@ struct StreamList: View {
                             .padding(.bottom, 8)
                     }
 
-                    let columns = Array(repeating: GridItem(.flexible()), count: 4)
+                    let columns = Array(repeating: GridItem(.flexible()), count: 3)
                     LazyVGrid(columns: columns) {
                         ForEach(store.uniquedItems) { uniqueItem in
                             let stream = uniqueItem.stream
