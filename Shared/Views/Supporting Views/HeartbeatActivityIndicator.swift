@@ -26,6 +26,9 @@ struct HeartbeatActivityIndicator: View {
                 .animation(.spring(response: 0.3, dampingFraction: 0.3, blendDuration: 0.3))
         }
         .animation(.default)
+        .onFirstAppear {
+            heartbeatChanged.toggle()
+        }
         .onReceive(heartbeatTimer) { _ in
             heartbeatChanged.toggle()
         }
