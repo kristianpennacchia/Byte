@@ -17,10 +17,10 @@ struct HeartbeatActivityIndicator: View {
         ZStack {
             Circle()
                 .frame(width: 200, height: 200)
-                .foregroundColor(heartbeatChanged ? .white.opacity(0.8) : .brand.youtube)
+                .foregroundColor(heartbeatChanged ? .white.opacity(0.8) : .brand.brand)
                 .animation(.spring(response: 0.3, dampingFraction: 0.3, blendDuration: 0.3))
             Image(systemName: "heart.fill")
-                .foregroundColor(heartbeatChanged ? .brand.youtube : .white)
+                .foregroundColor(heartbeatChanged ? .brand.brand : .white)
                 .font(.system(size: 100))
                 .scaleEffect(heartbeatChanged ? 1.0 : 0.5)
                 .animation(.spring(response: 0.3, dampingFraction: 0.3, blendDuration: 0.3))

@@ -162,7 +162,7 @@ struct StreamVideoPlayer: View {
                     .background(.regularMaterial)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            SwimplyPlayIndicator(state: $indicatorState, color: .brand.purple.opacity(0.5), style: .legacy)
+            SwimplyPlayIndicator(state: $indicatorState, color: .brand.brand.opacity(0.5), style: .legacy)
                 .frame(width: 18, height: 18)
                 .position(x: 30, y: 30)
         }

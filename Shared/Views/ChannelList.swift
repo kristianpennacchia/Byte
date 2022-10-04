@@ -24,7 +24,7 @@ struct ChannelList: View {
 
     var body: some View {
         ZStack {
-            Color.brand.purpleDarkDark.ignoresSafeArea()
+            Color.brand.brandDarkDark.ignoresSafeArea()
             if isRefreshing, store.items.isEmpty {
                 HeartbeatActivityIndicator()
                     .frame(alignment: .center)

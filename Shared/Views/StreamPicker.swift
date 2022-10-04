@@ -51,7 +51,7 @@ struct StreamPicker: View {
             .padding(25)
             .background(
                 ZStack {
-                    Color.brand.purple
+                    Color.brand.brand
                     Color.black.opacity(0.7)
                 }
             )

@@ -78,7 +78,7 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            Color.brand.purpleDarkDark.ignoresSafeArea()
+            Color.brand.brandDarkDark.ignoresSafeArea()
             if twitchUser == nil {
                 HeartbeatActivityIndicator()
                     .frame(alignment: .center)
@@ -119,7 +119,7 @@ struct ContentView: View {
                         .padding([.leading, .trailing], 30)
                         .padding([.top, .bottom], 50)
                     }
-                    .background(Color.brand.purpleDark)
+                    .background(Color.brand.brandDark)
                     .frame(width: 400)
                     .edgesIgnoringSafeArea(.all)
                     Group {
@@ -154,7 +154,7 @@ struct ContentView: View {
                 }
             }
         }
-        .accentColor(Color.brand.purple)
+        .accentColor(Color.brand.brand)
         .edgesIgnoringSafeArea(.all)
         .onFirstAppear {
             sessionStore.signInTwitch()

@@ -25,7 +25,7 @@ struct VideoList: View {
 
     var body: some View {
         ZStack {
-            Color.brand.purpleDarkDark.ignoresSafeArea()
+            Color.brand.brandDarkDark.ignoresSafeArea()
             ScrollView {
                 if store.items.isEmpty == false {
                     Refresh(isAnimating: $isRefreshing, action: refresh)
