@@ -31,80 +31,85 @@ struct StreamList: View {
     var body: some View {
         ZStack {
             Color.brand.purpleDarkDark.ignoresSafeArea()
-            ScrollView {
-                HStack(alignment: .center, spacing: 16) {
-                    if sessionStore.youtubeAPI != nil, sessionStore.youtubeUser == nil {
-                        Spacer()
-                        Button("Youtube") {
-                            showYoutubeAuthScreen = true
-                        }
-                        .foregroundColor(.white)
-                        .tint(.red)
-                        Spacer()
-                        if store.uniquedItems.isEmpty == false {
-                            Refresh(isAnimating: $isRefreshing, action: refresh)
-                        }
-                        Spacer()
-                        Spacer()
-                        Spacer()
-                        Spacer()
-                    } else {
-                        if store.uniquedItems.isEmpty == false {
-                            Refresh(isAnimating: $isRefreshing, action: refresh)
+            if isRefreshing, store.items.isEmpty {
+                HeartbeatActivityIndicator()
+                    .frame(alignment: .center)
+            } else {
+                ScrollView {
+                    HStack(alignment: .center, spacing: 16) {
+                        if sessionStore.youtubeAPI != nil, sessionStore.youtubeUser == nil {
+                            Spacer()
+                            Button("Youtube") {
+                                showYoutubeAuthScreen = true
+                            }
+                            .foregroundColor(.white)
+                            .tint(.red)
+                            Spacer()
+                            if store.uniquedItems.isEmpty == false {
+                                Refresh(isAnimating: $isRefreshing, action: refresh)
+                            }
+                            Spacer()
+                            Spacer()
+                            Spacer()
+                            Spacer()
+                        } else {
+                            if store.uniquedItems.isEmpty == false {
+                                Refresh(isAnimating: $isRefreshing, action: refresh)
+                            }
                         }
                     }
-                }
-                .padding(.bottom, 8)
+                    .padding(.bottom, 8)
 
-                let columns = Array(repeating: GridItem(.flexible()), count: 4)
-                LazyVGrid(columns: columns) {
-                    ForEach(store.uniquedItems) { uniqueItem in
-                        let stream = uniqueItem.stream
-                        StreamView(stream: stream, isSelected: selectedStreams.contains(where: { $0.id == stream.id }), hasFocusEffect: false)
-                            .navigationBarTitle(store.fetchType.navBarTitle)
-                            .buttonWrap {
-                                if selectedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }) == false {
-                                    selectedStreams.append(stream)
-                                }
+                    let columns = Array(repeating: GridItem(.flexible()), count: 4)
+                    LazyVGrid(columns: columns) {
+                        ForEach(store.uniquedItems) { uniqueItem in
+                            let stream = uniqueItem.stream
+                            StreamView(stream: stream, isSelected: selectedStreams.contains(where: { $0.id == stream.id }), hasFocusEffect: false)
+                                .navigationBarTitle(store.fetchType.navBarTitle)
+                                .buttonWrap {
+                                    if selectedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }) == false {
+                                        selectedStreams.append(stream)
+                                    }
 
-                                streamViewModel.streams = selectedStreams
-                                streamViewModel.stream = stream
-                                showVideoPlayer = true
-                            } longPress: {
-                                if stream is Stream {
+                                    streamViewModel.streams = selectedStreams
                                     streamViewModel.stream = stream
-                                    showSpoilerMenu = true
+                                    showVideoPlayer = true
+                                } longPress: {
+                                    if stream is Stream {
+                                        streamViewModel.stream = stream
+                                        showSpoilerMenu = true
+                                    }
                                 }
-                            }
-                            .onPlayPauseCommand {
-                                // Multi-select streams.
-                                if let index = selectedStreams.firstIndex(where: { equalsStreamable(lhs: $0, rhs: stream) }) {
-                                    // Remove
-                                    selectedStreams.remove(at: index)
-                                } else {
-                                    // Add
-                                    selectedStreams.append(stream)
+                                .onPlayPauseCommand {
+                                    // Multi-select streams.
+                                    if let index = selectedStreams.firstIndex(where: { equalsStreamable(lhs: $0, rhs: stream) }) {
+                                        // Remove
+                                        selectedStreams.remove(at: index)
+                                    } else {
+                                        // Add
+                                        selectedStreams.append(stream)
+                                    }
                                 }
-                            }
+                        }
+                        .padding([.leading, .trailing], 14)
                     }
-                    .padding([.leading, .trailing], 14)
                 }
-            }
-            .onAppear {
-                if store.isStale {
+                .onAppear {
+                    if store.isStale {
+                        refresh()
+                    }
+                }
+                .onReceive(sessionStore) { store in
                     refresh()
                 }
-            }
-            .onReceive(sessionStore) { store in
-                refresh()
-            }
-            .onReceive(AppState()) { state in
-                if store.isStale, state == .willEnterForeground {
-                    refresh()
+                .onReceive(AppState()) { state in
+                    if store.isStale, state == .willEnterForeground {
+                        refresh()
+                    }
                 }
+                .padding([.leading, .trailing], 14)
+                .edgesIgnoringSafeArea([.leading, .trailing])
             }
-            .padding([.leading, .trailing], 14)
-            .edgesIgnoringSafeArea([.leading, .trailing])
         }
         .actionSheet(isPresented: $showSpoilerMenu) {
             if let stream = streamViewModel.stream as? Stream {

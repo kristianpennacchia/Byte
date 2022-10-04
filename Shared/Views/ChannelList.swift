@@ -23,31 +23,37 @@ struct ChannelList: View {
     @State private var showChannel = false
 
     var body: some View {
-        VStack {
-            ScrollView {
-                if store.items.isEmpty == false {
-                    Refresh(isAnimating: $isRefreshing, action: refresh)
-                }
-
-                let columns = Array(repeating: GridItem(.flexible()), count: 6)
-                LazyVGrid(columns: columns) {
-                    ForEach(store.items) { channel in
-                        ChannelView(channel: channel, hasFocusEffect: false)
-                            .buttonWrap {
-                                channelViewModel.channel = channel
-                                showChannel = true
-                            }
+        ZStack {
+            Color.brand.purpleDarkDark.ignoresSafeArea()
+            if isRefreshing, store.items.isEmpty {
+                HeartbeatActivityIndicator()
+                    .frame(alignment: .center)
+            } else {
+                ScrollView {
+                    if store.items.isEmpty == false {
+                        Refresh(isAnimating: $isRefreshing, action: refresh)
+                    }
+                    
+                    let columns = Array(repeating: GridItem(.flexible()), count: 6)
+                    LazyVGrid(columns: columns) {
+                        ForEach(store.items) { channel in
+                            ChannelView(channel: channel, hasFocusEffect: false)
+                                .buttonWrap {
+                                    channelViewModel.channel = channel
+                                    showChannel = true
+                                }
+                        }
                     }
                 }
-            }
-            .onAppear {
-                if self.store.isStale {
-                    self.refresh()
+                .onAppear {
+                    if self.store.isStale {
+                        self.refresh()
+                    }
                 }
-            }
-            .onReceive(AppState()) { state in
-                if self.store.isStale, state == .willEnterForeground {
-                    self.refresh()
+                .onReceive(AppState()) { state in
+                    if self.store.isStale, state == .willEnterForeground {
+                        self.refresh()
+                    }
                 }
             }
         }
