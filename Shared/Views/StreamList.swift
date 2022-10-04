@@ -24,7 +24,6 @@ struct StreamList: View {
 
     @State private var isRefreshing = false
     @State private var selectedStreams = [any Streamable]()
-    @State private var showYoutubeAuthScreen = false
     @State private var showSpoilerMenu = false
     @State private var showVideoPlayer = false
 
@@ -36,29 +35,10 @@ struct StreamList: View {
                     .frame(alignment: .center)
             } else {
                 ScrollView {
-                    HStack(alignment: .center, spacing: 16) {
-                        if sessionStore.youtubeAPI != nil, sessionStore.youtubeUser == nil {
-                            Spacer()
-                            Button("Youtube") {
-                                showYoutubeAuthScreen = true
-                            }
-                            .foregroundColor(.white)
-                            .tint(.red)
-                            Spacer()
-                            if store.uniquedItems.isEmpty == false {
-                                Refresh(isAnimating: $isRefreshing, action: refresh)
-                            }
-                            Spacer()
-                            Spacer()
-                            Spacer()
-                            Spacer()
-                        } else {
-                            if store.uniquedItems.isEmpty == false {
-                                Refresh(isAnimating: $isRefreshing, action: refresh)
-                            }
-                        }
+                    if store.uniquedItems.isEmpty == false {
+                        Refresh(isAnimating: $isRefreshing, action: refresh)
+                            .padding(.bottom, 8)
                     }
-                    .padding(.bottom, 8)
 
                     let columns = Array(repeating: GridItem(.flexible()), count: 4)
                     LazyVGrid(columns: columns) {
@@ -135,13 +115,6 @@ struct StreamList: View {
             },
             content: {
                 MultiStreamVideoPlayer(store: store, streams: streamViewModel.streams, isPresented: $showVideoPlayer)
-            }
-        )
-        .fullScreenCover(
-            isPresented: $showYoutubeAuthScreen,
-            onDismiss: {},
-            content: {
-                OAuthView()
             }
         )
     }
