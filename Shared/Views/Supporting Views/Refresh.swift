@@ -31,7 +31,7 @@ struct Refresh: View {
                     .frame(width: 430)
             }
         }
-        .background(Color.brand.purple.cornerRadius(10))
+        .background(Color.brand.brand.cornerRadius(10))
     }
 }
 

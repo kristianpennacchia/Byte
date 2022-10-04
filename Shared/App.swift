@@ -8,12 +8,15 @@
 
 import Foundation
 import KeychainAccess
+import SwiftUI
 
 enum App {
     private struct ServiceSecrets: Decodable {
         let twitch: TwitchSecrets
         let youtube: YoutubeSecrets?
     }
+
+    @AppStorage("launchCount") private static var launchCount = 0
 
     private(set) static var previewUsername: String!
 
@@ -25,6 +28,13 @@ enum App {
         previewUsername = serviceSecrets.twitch.previewUsername
 
         let twitchKeychain = Keychain(service: "twitch")
+        let youtubeKeychain = Keychain(service: "youtube")
+
+        if launchCount == 0 {
+            try? twitchKeychain.removeAll()
+            try? youtubeKeychain.removeAll()
+        }
+        launchCount += 1
 
         if twitchKeychain[KeychainKey.accessToken] == nil {
             twitchKeychain[KeychainKey.accessToken] = serviceSecrets.twitch.oAuthToken.byteUserAccessToken

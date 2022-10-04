@@ -15,7 +15,7 @@ final class ChannelStore: FetchingObject {
 
     private(set) var lastFetched: Date?
 
-    let twitchAPI: TwitchAPI
+    let twitchAPI: TwitchAPI?
     let fetchType: Fetch
     var filter = "" {
         didSet {
@@ -59,7 +59,7 @@ final class ChannelStore: FetchingObject {
                 "from_id": userID,
             ]
 
-            twitchAPI.executeFetchAll(endpoint: "users/follows", query: query, decoding: [Channel.Stub].self) { [weak self] result in
+            twitchAPI!.executeFetchAll(endpoint: "users/follows", query: query, decoding: [Channel.Stub].self) { [weak self] result in
                 guard let self = self else { return }
 
                 switch result {
@@ -77,7 +77,7 @@ final class ChannelStore: FetchingObject {
                                 "id": stubs.map { $0.toId },
                             ]
 
-                            self.twitchAPI.executeFetchAll(endpoint: "users", query: query, decoding: [Channel].self) { result in
+                            self.twitchAPI!.executeFetchAll(endpoint: "users", query: query, decoding: [Channel].self) { result in
                                 switch result {
                                 case .success(let data):
                                     followedChannels += data.data

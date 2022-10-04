@@ -296,6 +296,9 @@
 		C1EF0BA5276B19F000E311C8 /* PlayerLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EF0BA4276B19F000E311C8 /* PlayerLayer.swift */; };
 		C1EF0BA6276B19F000E311C8 /* PlayerLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EF0BA4276B19F000E311C8 /* PlayerLayer.swift */; };
 		C1EF0BA7276B19F000E311C8 /* PlayerLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EF0BA4276B19F000E311C8 /* PlayerLayer.swift */; };
+		C1EF5E0928EC2A1C00F710FA /* MenuItemButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EF5E0828EC2A1C00F710FA /* MenuItemButton.swift */; };
+		C1EF5E0A28EC2A1C00F710FA /* MenuItemButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EF5E0828EC2A1C00F710FA /* MenuItemButton.swift */; };
+		C1EF5E0B28EC2A1C00F710FA /* MenuItemButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EF5E0828EC2A1C00F710FA /* MenuItemButton.swift */; };
 		C1F6C4DB232A776A006EA1D5 /* LiveVideoFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F6C4DA232A776A006EA1D5 /* LiveVideoFetcher.swift */; };
 		C1F6C4DC232A776A006EA1D5 /* LiveVideoFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F6C4DA232A776A006EA1D5 /* LiveVideoFetcher.swift */; };
 		C1F6C4DD232A776A006EA1D5 /* LiveVideoFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F6C4DA232A776A006EA1D5 /* LiveVideoFetcher.swift */; };
@@ -473,6 +476,7 @@
 		C1E94288231E70D9006B7A71 /* GameStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStore.swift; sourceTree = "<group>"; };
 		C1E9428C231E70E6006B7A71 /* StreamStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamStore.swift; sourceTree = "<group>"; };
 		C1EF0BA4276B19F000E311C8 /* PlayerLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerLayer.swift; sourceTree = "<group>"; };
+		C1EF5E0828EC2A1C00F710FA /* MenuItemButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemButton.swift; sourceTree = "<group>"; };
 		C1F6C4DA232A776A006EA1D5 /* LiveVideoFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoFetcher.swift; sourceTree = "<group>"; };
 		C1FB01A82317D1B000130981 /* Byte.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Byte.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1FB01AB2317D1B000130981 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -702,6 +706,7 @@
 				C1B5AC6D232E29EF001A502F /* GameView.swift */,
 				C16A7E0028E7FE0600509FFF /* HeartbeatActivityIndicator.swift */,
 				C1278A2623190BE600400D35 /* Logo.swift */,
+				C1EF5E0828EC2A1C00F710FA /* MenuItemButton.swift */,
 				C10FECC226949CE600D48F8D /* MultiStreamVideoPlayer.swift */,
 				C1EF0BA4276B19F000E311C8 /* PlayerLayer.swift */,
 				C1E67AB92333A5F30024B25C /* PlayerViewController.swift */,
@@ -1258,6 +1263,7 @@
 				C1141887231936A60004C813 /* AvatarSize.swift in Sources */,
 				C1CEB909231E85A2007C3812 /* OnFirstAppear.swift in Sources */,
 				C16A7E0A28E8140800509FFF /* YoutubeSubscription.swift in Sources */,
+				C1EF5E0A28EC2A1C00F710FA /* MenuItemButton.swift in Sources */,
 				C10FECC426949CE600D48F8D /* MultiStreamVideoPlayer.swift in Sources */,
 				C1C1D29023363DC7006E9165 /* Push.iOS.swift in Sources */,
 				C114187F231934E90004C813 /* LogoSize.swift in Sources */,
@@ -1388,6 +1394,7 @@
 				C17766EF26C65EA80085E848 /* VideoList.swift in Sources */,
 				C182429E2317FF4900595E76 /* ChannelList.swift in Sources */,
 				C11B671123226C7C004576A6 /* TwitchDataItem.swift in Sources */,
+				C1EF5E0B28EC2A1C00F710FA /* MenuItemButton.swift in Sources */,
 				C1B2994028E9546B00C0D6A8 /* YoutubeVideo.swift in Sources */,
 				C1E94287231E70CE006B7A71 /* ChannelStore.swift in Sources */,
 				C19FE9B0246E5A7D004EB60C /* Favourite.swift in Sources */,
@@ -1461,6 +1468,7 @@
 				C1FB01AC2317D1B000130981 /* AppDelegate.swift in Sources */,
 				C17766F126C66DEA0085E848 /* Functions.swift in Sources */,
 				C180244F28DEC5F900E8AB42 /* KeychainKey.swift in Sources */,
+				C1EF5E0928EC2A1C00F710FA /* MenuItemButton.swift in Sources */,
 				C1CEB908231E85A2007C3812 /* OnFirstAppear.swift in Sources */,
 				C17766ED26C65EA80085E848 /* VideoList.swift in Sources */,
 				C18778FE23195C23008CA61E /* CovertArtSize.swift in Sources */,

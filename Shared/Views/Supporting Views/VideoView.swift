@@ -52,7 +52,7 @@ struct VideoView: View {
                     }
                     Text(video.title)
                         .font(.caption)
-                        .foregroundColor(isFocused ? .brand.purple : .white)
+                        .foregroundColor(isFocused ? .brand.brand : .white)
                         .lineLimit(2)
                         .frame(height: 70, alignment: .top)
                 }

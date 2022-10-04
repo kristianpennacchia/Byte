@@ -9,63 +9,192 @@
 import SwiftUI
 
 struct ContentView: View {
+    private enum AllMenuItem: Int, Identifiable, CaseIterable {
+        case followedStreams
+
+        var id: Int { rawValue }
+        var title: String {
+            switch self {
+            case .followedStreams:
+                return "Followed Streams"
+            }
+        }
+        var icon: String {
+            switch self {
+            case .followedStreams:
+                return "person.2.wave.2"
+            }
+        }
+    }
+
+    private enum TwitchMenuItem: Int, Identifiable, CaseIterable {
+        case followedStreams
+        case topStreams
+        case topGames
+        case followedChannels
+
+        var id: Int { rawValue }
+        var title: String {
+            switch self {
+            case .followedStreams:
+                return "Followed Streams"
+            case .topStreams:
+                return "Top Streams"
+            case .topGames:
+                return "Top Games"
+            case .followedChannels:
+                return "Followed Channels"
+            }
+        }
+        var icon: String {
+            switch self {
+            case .followedStreams:
+                return "person.2.wave.2"
+            case .topStreams:
+                return "crown"
+            case .topGames:
+                return "gamecontroller"
+            case .followedChannels:
+                return "person.2"
+            }
+        }
+    }
+
+    private enum YoutubeMenuItem: Int, Identifiable, CaseIterable {
+        case followedStreams
+
+        var id: Int { rawValue }
+        var title: String {
+            switch self {
+            case .followedStreams:
+                return "Followed Streams"
+            }
+        }
+        var icon: String {
+            switch self {
+            case .followedStreams:
+                return "person.2.wave.2"
+            }
+        }
+    }
+
+    private enum SelectionMenuItem {
+        case all(AllMenuItem)
+        case twitch(TwitchMenuItem)
+        case youtube(YoutubeMenuItem)
+    }
+
     @EnvironmentObject private var sessionStore: SessionStore
     @EnvironmentObject private var twitchAPI: TwitchAPI
     @EnvironmentObject private var youtubeAPI: YoutubeAPI
 
-    // When this value changes, the entire view is reloaded
-    @State private var user: Channel?
-    @State private var isSigningIn = false
+    @State private var twitchUser: Channel?
+    @State private var youtubeUser: YoutubePerson?
+    @State private var showYoutubeAuthScreen = false
+    @State private var selectedMenuItem = SelectionMenuItem.all(.followedStreams)
 
     init() {
-#if !os(tvOS)
+        #if !os(tvOS)
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor(named: "Brand")!]
-#endif
+        #endif
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor(named: "Brand")!]
     }
 
     var body: some View {
         ZStack {
-            Color.brand.purpleDarkDark.ignoresSafeArea()
-            if user == nil {
-                VStack {
-                    Spacer()
-                    SignInView(isSigningIn: $isSigningIn)
-                    Spacer()
-                }
+            Color.brand.brandDarkDark.ignoresSafeArea()
+            if twitchUser == nil {
+                HeartbeatActivityIndicator()
+                    .frame(alignment: .center)
             } else {
-                TabView {
-                    StreamList(store: StreamStore(twitchAPI: twitchAPI, youtubeAPI: youtubeAPI, fetch: .followed(userID: user!.id)))
-                        .tabItem {
-                            Text("Followed Streams")
+                HStack(alignment: .top, spacing: 0) {
+                    VStack(alignment: .center, spacing: 16) {
+                        List {
+                            ForEach(AllMenuItem.allCases) { menuItem in
+                                MenuItemButton(title: menuItem.title, icon: menuItem.icon) {
+                                    selectedMenuItem = .all(menuItem)
+                                }
+                            }
+                            Spacer(minLength: 24)
+                            Section("Twitch") {
+                                ForEach(TwitchMenuItem.allCases) { menuItem in
+                                    MenuItemButton(title: menuItem.title, icon: menuItem.icon) {
+                                        selectedMenuItem = .twitch(menuItem)
+                                    }
+                                }
+                            }
+                            if YoutubeAPI.isAvailable {
+                                Spacer(minLength: 24)
+                                Section("Youtube") {
+                                    if youtubeUser == nil {
+                                        Button("Sign In") {
+                                            showYoutubeAuthScreen = true
+                                        }
+                                    } else {
+                                        ForEach(YoutubeMenuItem.allCases) { menuItem in
+                                            MenuItemButton(title: menuItem.title, icon: menuItem.icon) {
+                                                selectedMenuItem = .youtube(menuItem)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
-                    StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .top))
-                        .tabItem {
-                            Text("Streams")
+                        .padding([.leading, .trailing], 30)
+                        .padding([.top, .bottom], 50)
+                    }
+                    .background(Color.brand.brandDark)
+                    .frame(width: 440)
+                    .edgesIgnoringSafeArea(.all)
+                    Group {
+                        switch selectedMenuItem {
+                        case .all(let menuItem):
+                            switch menuItem {
+                            case .followedStreams:
+                                StreamList(store: StreamStore(twitchAPI: twitchAPI, youtubeAPI: youtubeAPI, fetch: .followed(userID: twitchUser!.id)))
+                            }
+                        case .twitch(let menuItem):
+                            switch menuItem {
+                            case .followedStreams:
+                                StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .followed(userID: twitchUser!.id)))
+                            case .topStreams:
+                                StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .top))
+                            case .topGames:
+                                GameList(store: GameStore(twitchAPI: twitchAPI, fetch: .top))
+                            case .followedChannels:
+                                ChannelList(store: ChannelStore(twitchAPI: twitchAPI, fetch: .followed(userID: twitchUser!.id)))
+                            }
+                        case .youtube(let menuItem):
+                            switch menuItem {
+                            case .followedStreams:
+                                StreamList(store: StreamStore(youtubeAPI: youtubeAPI, fetch: .followed(userID: twitchUser!.id)))
+                            }
                         }
-                    GameList(store: GameStore(twitchAPI: twitchAPI, fetch: .top))
-                        .tabItem {
-                            Text("Games")
-                        }
-                    ChannelList(store: ChannelStore(twitchAPI: twitchAPI, fetch: .followed(userID: user!.id)))
-                        .tabItem {
-                            Text("Followed Channels")
-                        }
+                    }
+                    .padding([.leading, .trailing])
+                    .padding([.top, .bottom], 50)
+                    .frame(alignment: .center)
+                    .edgesIgnoringSafeArea(.all)
                 }
-                .padding(.bottom, 50)
             }
         }
-        .accentColor(Color.brand.purple)
+        .accentColor(Color.brand.brand)
+        .edgesIgnoringSafeArea(.all)
         .onFirstAppear {
-            isSigningIn = true
             sessionStore.signInTwitch()
             sessionStore.signInYoutube()
-
         }
         .onReceive(sessionStore) { store in
-            user = store.twitchUser
+            twitchUser = store.twitchUser
+            youtubeUser = store.youtubeUser
         }
-        .edgesIgnoringSafeArea(.bottom)
+        .fullScreenCover(
+            isPresented: $showYoutubeAuthScreen,
+            onDismiss: {},
+            content: {
+                OAuthView()
+            }
+        )
     }
 }
 

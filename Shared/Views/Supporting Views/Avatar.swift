@@ -17,7 +17,7 @@ struct Avatar: View {
             .placeholder {
                 Placeholder(channel: channel)
             }
-            .background(Color.brand.purple)
+            .background(Color.brand.brand)
             .frame(width: AvatarSize.medium.width, height: AvatarSize.medium.height)
             .clipShape(Circle())
     }
@@ -29,7 +29,7 @@ extension Avatar {
 
         var body: some View {
             Circle()
-                .fill(Color.brand.purple)
+                .fill(Color.brand.brand)
                 .frame(width: AvatarSize.medium.width, height: AvatarSize.medium.height)
                 .overlay(
                     Text(String(channel.displayName.first!.uppercased()))

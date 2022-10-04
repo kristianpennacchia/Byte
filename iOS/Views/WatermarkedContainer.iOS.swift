@@ -19,7 +19,7 @@ extension WatermarkedContainer {
                             .padding([.top, .bottom])
                     }
                     .frame(width: geometry.size.width)
-                    .background(Color.brand.purple)
+                    .background(Color.brand.brand)
                     self.content()
                 }
                 .edgesIgnoringSafeArea(.top)

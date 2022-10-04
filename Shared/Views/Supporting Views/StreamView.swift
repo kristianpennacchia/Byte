@@ -58,7 +58,7 @@ struct StreamView: View {
                 if isSelected {
                     ZStack {
                         Circle()
-                            .foregroundColor(Color.brand.purple)
+                            .foregroundColor(Color.brand.brand)
                             .padding(4)
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundColor(.white)
@@ -79,7 +79,7 @@ struct StreamView: View {
                         Text(stream.userName)
                             .font(.caption)
                             .bold()
-                            .foregroundColor(isFocused ? .brand.purple : .white)
+                            .foregroundColor(isFocused ? .brand.brand : .white)
                             .lineLimit(1)
                         if let viewerCount = stream.viewerCount,
                            let number = Self.viewCountFormatter.string(from: NSNumber(integerLiteral: viewerCount)) {
@@ -99,7 +99,7 @@ struct StreamView: View {
                     }
                     Text(stream.title)
                         .font(.caption)
-                        .foregroundColor(isFocused ? .brand.purple : .white)
+                        .foregroundColor(isFocused ? .brand.brand : .white)
                         .lineLimit(2)
                         .multilineTextAlignment(.center)
                         .frame(height: 70, alignment: .top)
