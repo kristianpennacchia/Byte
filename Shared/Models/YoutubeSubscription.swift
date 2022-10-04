@@ -61,6 +61,9 @@ extension YoutubeSubscription: Streamable {
     var duration: String? { nil }
 
     func thumbnail(width: Int, height: Int) -> String {
-        snippet.thumbnails.high.url
+        if let live {
+            return "https://i1.ytimg.com/vi/\(live.videoID)/mqdefault.jpg"
+        }
+        return snippet.thumbnails.high.url
     }
 }
