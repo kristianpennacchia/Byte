@@ -37,7 +37,7 @@ final class StreamStore: FetchingObject {
 
     private(set) var lastFetched: Date?
 
-    let twitchAPI: TwitchAPI
+    let twitchAPI: TwitchAPI?
     let youtubeAPI: YoutubeAPI?
     let fetchType: Fetch
     var filter = "" {
@@ -57,6 +57,12 @@ final class StreamStore: FetchingObject {
     init(twitchAPI: TwitchAPI, fetch: Fetch) {
         self.twitchAPI = twitchAPI
         self.youtubeAPI = nil
+        self.fetchType = fetch
+    }
+
+    init(youtubeAPI: YoutubeAPI, fetch: Fetch) {
+        self.twitchAPI = nil
+        self.youtubeAPI = youtubeAPI
         self.fetchType = fetch
     }
 
@@ -130,6 +136,11 @@ final class StreamStore: FetchingObject {
             }
         }
 
+        guard let twitchAPI else {
+            continueFetch(.success(TwitchDataItem<[Stream]>(data: [], pagination: nil)))
+            return
+        }
+
         switch fetchType {
         case .followed(let userID):
             let query: [String: Any] = [
@@ -137,9 +148,7 @@ final class StreamStore: FetchingObject {
                 "from_id": userID,
             ]
 
-            twitchAPI.executeFetchAll(endpoint: "users/follows", query: query, decoding: [Channel.Stub].self) { [weak self] result in
-                guard let self = self else { return }
-
+            twitchAPI.executeFetchAll(endpoint: "users/follows", query: query, decoding: [Channel.Stub].self) { result in
                 switch result {
                 case .success(let followedUserData):
                     // Now get the stream data for each followed channel
@@ -155,7 +164,7 @@ final class StreamStore: FetchingObject {
                                 "user_id": stubs.map { $0.toId },
                             ]
 
-                            self.twitchAPI.executeFetchAll(endpoint: "streams", query: query, decoding: [Stream].self) { result in
+                            twitchAPI.executeFetchAll(endpoint: "streams", query: query, decoding: [Stream].self) { result in
                                 switch result {
                                 case .success(let data):
                                     liveStreams += data.data

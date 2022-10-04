@@ -9,7 +9,19 @@
 import SwiftUI
 
 struct ContentView: View {
-    private enum MenuItem: Int, Identifiable, CaseIterable {
+    private enum AllMenuItem: Int, Identifiable, CaseIterable {
+        case followedStreams
+
+        var id: Int { rawValue }
+        var title: String {
+            switch self {
+            case .followedStreams:
+                return "Followed Streams"
+            }
+        }
+    }
+
+    private enum TwitchMenuItem: Int, Identifiable, CaseIterable {
         case followedStreams
         case topStreams
         case topGames
@@ -30,74 +42,109 @@ struct ContentView: View {
         }
     }
 
+    private enum YoutubeMenuItem: Int, Identifiable, CaseIterable {
+        case followedStreams
+
+        var id: Int { rawValue }
+        var title: String {
+            switch self {
+            case .followedStreams:
+                return "Followed Streams"
+            }
+        }
+    }
+
+    private enum SelectionMenuItem {
+        case all(AllMenuItem)
+        case twitch(TwitchMenuItem)
+        case youtube(YoutubeMenuItem)
+    }
+
     @EnvironmentObject private var sessionStore: SessionStore
     @EnvironmentObject private var twitchAPI: TwitchAPI
     @EnvironmentObject private var youtubeAPI: YoutubeAPI
 
-    @State private var user: Channel?
-    @State private var isSigningIn = false
+    @State private var twitchUser: Channel?
+    @State private var youtubeUser: YoutubePerson?
     @State private var showYoutubeAuthScreen = false
-    @State private var selectedMenuItem = MenuItem.followedStreams
+    @State private var selectedMenuItem = SelectionMenuItem.all(.followedStreams)
 
     init() {
-#if !os(tvOS)
+        #if !os(tvOS)
         UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor(named: "Brand")!]
-#endif
+        #endif
         UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor(named: "Brand")!]
     }
 
     var body: some View {
         ZStack {
             Color.brand.purpleDarkDark.ignoresSafeArea()
-            if user == nil {
-                VStack {
-                    Spacer()
-                    SignInView(isSigningIn: $isSigningIn)
-                    Spacer()
-                }
+            if twitchUser == nil {
+                HeartbeatActivityIndicator()
+                    .frame(alignment: .center)
             } else {
                 HStack(alignment: .top) {
                     VStack(alignment: .center, spacing: 16) {
-                        List(MenuItem.allCases) { menuItem in
-                            Button {
-                                selectedMenuItem = menuItem
-                            } label: {
-                                HStack {
-                                    Text(menuItem.title)
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
+                        List {
+                            ForEach(AllMenuItem.allCases) { menuItem in
+                                MenuItemButton(title: menuItem.title) {
+                                    selectedMenuItem = .all(menuItem)
+                                }
+                            }
+                            Spacer(minLength: 24)
+                            Section("Twitch") {
+                                ForEach(TwitchMenuItem.allCases) { menuItem in
+                                    MenuItemButton(title: menuItem.title) {
+                                        selectedMenuItem = .twitch(menuItem)
+                                    }
+                                }
+                            }
+                            if YoutubeAPI.isAvailable {
+                                Spacer(minLength: 24)
+                                Section("Youtube") {
+                                    if youtubeUser == nil {
+                                        Button("Sign In") {
+                                            showYoutubeAuthScreen = true
+                                        }
+                                    } else {
+                                        ForEach(YoutubeMenuItem.allCases) { menuItem in
+                                            MenuItemButton(title: menuItem.title) {
+                                                selectedMenuItem = .youtube(menuItem)
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
-                        .padding([.leading, .trailing], 50)
-                        .padding([.top, .bottom], 50)
-                        Button {
-                            showYoutubeAuthScreen = true
-                        } label: {
-                            VStack {
-                                Text("Youtube")
-                                    .foregroundColor(.black)
-                                Text("Sign in")
-                                    .foregroundColor(.black.opacity(0.8))
-                                    .font(.caption)
-                            }
-                        }
-                        .tint(.red)
+                        .padding([.leading, .trailing], 30)
                         .padding([.top, .bottom], 50)
                     }
                     .background(Color.brand.purpleDark)
-                    .frame(width: 350)
+                    .frame(width: 400)
                     .edgesIgnoringSafeArea(.all)
                     Group {
                         switch selectedMenuItem {
-                        case .followedStreams:
-                            StreamList(store: StreamStore(twitchAPI: twitchAPI, youtubeAPI: youtubeAPI, fetch: .followed(userID: user!.id)))
-                        case .topStreams:
-                            StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .top))
-                        case .topGames:
-                            GameList(store: GameStore(twitchAPI: twitchAPI, fetch: .top))
-                        case .followedChannels:
-                            ChannelList(store: ChannelStore(twitchAPI: twitchAPI, fetch: .followed(userID: user!.id)))
+                        case .all(let menuItem):
+                            switch menuItem {
+                            case .followedStreams:
+                                StreamList(store: StreamStore(twitchAPI: twitchAPI, youtubeAPI: youtubeAPI, fetch: .followed(userID: twitchUser!.id)))
+                            }
+                        case .twitch(let menuItem):
+                            switch menuItem {
+                            case .followedStreams:
+                                StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .followed(userID: twitchUser!.id)))
+                            case .topStreams:
+                                StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .top))
+                            case .topGames:
+                                GameList(store: GameStore(twitchAPI: twitchAPI, fetch: .top))
+                            case .followedChannels:
+                                ChannelList(store: ChannelStore(twitchAPI: twitchAPI, fetch: .followed(userID: twitchUser!.id)))
+                            }
+                        case .youtube(let menuItem):
+                            switch menuItem {
+                            case .followedStreams:
+                                StreamList(store: StreamStore(youtubeAPI: youtubeAPI, fetch: .followed(userID: twitchUser!.id)))
+                            }
                         }
                     }
                     .padding([.top, .bottom], 50)
@@ -109,13 +156,12 @@ struct ContentView: View {
         .accentColor(Color.brand.purple)
         .edgesIgnoringSafeArea(.bottom)
         .onFirstAppear {
-            isSigningIn = true
             sessionStore.signInTwitch()
             sessionStore.signInYoutube()
-
         }
         .onReceive(sessionStore) { store in
-            user = store.twitchUser
+            twitchUser = store.twitchUser
+            youtubeUser = store.youtubeUser
         }
         .fullScreenCover(
             isPresented: $showYoutubeAuthScreen,

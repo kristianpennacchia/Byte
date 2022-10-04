@@ -14,7 +14,7 @@ protocol FetchingObject: ObservableObject {
     associatedtype Item
     associatedtype Key: FetchingKey
 
-    var twitchAPI: TwitchAPI { get }
+    var twitchAPI: TwitchAPI? { get }
     var originalItems: [Item] { get }
     var items: [Item] { get }
     var fetchType: Key { get }
