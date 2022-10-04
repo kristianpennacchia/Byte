@@ -19,6 +19,12 @@ struct ContentView: View {
                 return "Followed Streams"
             }
         }
+        var icon: String {
+            switch self {
+            case .followedStreams:
+                return "person.2.wave.2"
+            }
+        }
     }
 
     private enum TwitchMenuItem: Int, Identifiable, CaseIterable {
@@ -40,6 +46,18 @@ struct ContentView: View {
                 return "Followed Channels"
             }
         }
+        var icon: String {
+            switch self {
+            case .followedStreams:
+                return "person.2.wave.2"
+            case .topStreams:
+                return "crown"
+            case .topGames:
+                return "gamecontroller"
+            case .followedChannels:
+                return "person.2"
+            }
+        }
     }
 
     private enum YoutubeMenuItem: Int, Identifiable, CaseIterable {
@@ -50,6 +68,12 @@ struct ContentView: View {
             switch self {
             case .followedStreams:
                 return "Followed Streams"
+            }
+        }
+        var icon: String {
+            switch self {
+            case .followedStreams:
+                return "person.2.wave.2"
             }
         }
     }
@@ -87,14 +111,14 @@ struct ContentView: View {
                     VStack(alignment: .center, spacing: 16) {
                         List {
                             ForEach(AllMenuItem.allCases) { menuItem in
-                                MenuItemButton(title: menuItem.title) {
+                                MenuItemButton(title: menuItem.title, icon: menuItem.icon) {
                                     selectedMenuItem = .all(menuItem)
                                 }
                             }
                             Spacer(minLength: 24)
                             Section("Twitch") {
                                 ForEach(TwitchMenuItem.allCases) { menuItem in
-                                    MenuItemButton(title: menuItem.title) {
+                                    MenuItemButton(title: menuItem.title, icon: menuItem.icon) {
                                         selectedMenuItem = .twitch(menuItem)
                                     }
                                 }
@@ -108,7 +132,7 @@ struct ContentView: View {
                                         }
                                     } else {
                                         ForEach(YoutubeMenuItem.allCases) { menuItem in
-                                            MenuItemButton(title: menuItem.title) {
+                                            MenuItemButton(title: menuItem.title, icon: menuItem.icon) {
                                                 selectedMenuItem = .youtube(menuItem)
                                             }
                                         }
@@ -120,7 +144,7 @@ struct ContentView: View {
                         .padding([.top, .bottom], 50)
                     }
                     .background(Color.brand.brandDark)
-                    .frame(width: 400)
+                    .frame(width: 440)
                     .edgesIgnoringSafeArea(.all)
                     Group {
                         switch selectedMenuItem {
