@@ -83,7 +83,7 @@ struct ContentView: View {
                 HeartbeatActivityIndicator()
                     .frame(alignment: .center)
             } else {
-                HStack(alignment: .top) {
+                HStack(alignment: .top, spacing: 0) {
                     VStack(alignment: .center, spacing: 16) {
                         List {
                             ForEach(AllMenuItem.allCases) { menuItem in
@@ -147,14 +147,15 @@ struct ContentView: View {
                             }
                         }
                     }
+                    .padding([.leading, .trailing])
                     .padding([.top, .bottom], 50)
-                    .frame(maxWidth: .infinity)
+                    .frame(alignment: .center)
                     .edgesIgnoringSafeArea(.all)
                 }
             }
         }
         .accentColor(Color.brand.purple)
-        .edgesIgnoringSafeArea(.bottom)
+        .edgesIgnoringSafeArea(.all)
         .onFirstAppear {
             sessionStore.signInTwitch()
             sessionStore.signInYoutube()

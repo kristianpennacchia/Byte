@@ -43,6 +43,7 @@ struct ChannelList: View {
                                     showChannel = true
                                 }
                         }
+                        .padding([.leading, .trailing], 14)
                     }
                 }
                 .onAppear {
