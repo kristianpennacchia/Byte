@@ -14,5 +14,6 @@ enum BrandColor {
     static let brandDarkDark = Color("BrandDarkDark")
     static let live = Color("Live")
     static let highlight = Color("Highlight")
+    static let twitch = Color("Twitch")
     static let youtube = Color("Youtube")
 }
