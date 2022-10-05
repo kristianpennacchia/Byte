@@ -23,7 +23,6 @@ struct StreamView: View {
 
     let stream: any Streamable
     let isSelected: Bool
-    let hasFocusEffect: Bool
 
     var body: some View {
         if let stream = stream as? Stream, game?.id != stream.gameId {
@@ -42,7 +41,7 @@ struct StreamView: View {
                 ZStack(alignment: .bottomTrailing) {
                     Thumbnail(videoStream: .stream(stream))
                         .frame(minWidth: 0, maxWidth: .infinity)
-                        .cornerRadius(hasFocusEffect ? 0 : 8)
+                        .cornerRadius(8)
                     if stream is Stream {
                         Group {
                             if self.game != nil {
@@ -67,13 +66,8 @@ struct StreamView: View {
                     .position(x: 24, y: 24)
                 }
             }
-            .thirdDimensionEffect(isExtended: hasFocusEffect ? isFocused : false)
 
             HStack(alignment: .top) {
-                if isFocused, hasFocusEffect {
-                    Spacer()
-                        .frame(width: 10)
-                }
                 VStack(alignment: .center) {
                     HStack(alignment: .top) {
                         Text(stream.userName)
@@ -104,38 +98,17 @@ struct StreamView: View {
                         .multilineTextAlignment(.center)
                         .frame(height: 70, alignment: .top)
                 }
-                if isFocused, hasFocusEffect {
-                    Spacer()
-                        .frame(width: 10)
-                }
             }
-            .background(
-                Group {
-                    if hasFocusEffect {
-                        if isFocused {
-                            RoundedRectangle(cornerRadius: 10)
-                                .foregroundColor(.white)
-                        } else {
-                            RoundedRectangle(cornerRadius: 0)
-                                .foregroundColor(.clear)
-                        }
-                    } else {
-                        EmptyView()
-                    }
-                }
-            )
         }
         .focusable(true) {
             self.isFocused = $0
         }
         .ignoresSafeArea()
-        .padding(.top, hasFocusEffect ? 6 : 0)
-        .padding(.trailing, hasFocusEffect ? 6 : 0)
     }
 }
 
 struct StreamView_Previews: PreviewProvider {
     static var previews: some View {
-        StreamView(stream: streamablePreview, isSelected: false, hasFocusEffect: true)
+        StreamView(stream: streamablePreview, isSelected: false)
     }
 }

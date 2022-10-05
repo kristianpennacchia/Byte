@@ -37,7 +37,7 @@ struct ChannelList: View {
                     let columns = Array(repeating: GridItem(.flexible()), count: 5)
                     LazyVGrid(columns: columns) {
                         ForEach(store.items) { channel in
-                            ChannelView(channel: channel, hasFocusEffect: false)
+                            ChannelView(channel: channel)
                                 .buttonWrap {
                                     channelViewModel.channel = channel
                                     showChannel = true

@@ -44,7 +44,7 @@ struct StreamList: View {
                     LazyVGrid(columns: columns) {
                         ForEach(store.uniquedItems) { uniqueItem in
                             let stream = uniqueItem.stream
-                            StreamView(stream: stream, isSelected: selectedStreams.contains(where: { $0.id == stream.id }), hasFocusEffect: false)
+                            StreamView(stream: stream, isSelected: selectedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }))
                                 .navigationBarTitle(store.fetchType.navBarTitle)
                                 .buttonWrap {
                                     if selectedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }) == false {

@@ -118,9 +118,6 @@
 		C14D5B9728EA723E00351AC5 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D5B9628EA723E00351AC5 /* AppError.swift */; };
 		C14D5B9828EA723E00351AC5 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D5B9628EA723E00351AC5 /* AppError.swift */; };
 		C14D5B9928EA723E00351AC5 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D5B9628EA723E00351AC5 /* AppError.swift */; };
-		C1557C4D23449BB7002387BE /* ThirdDimensionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1557C4C23449BB7002387BE /* ThirdDimensionEffect.swift */; };
-		C1557C4E23449BB7002387BE /* ThirdDimensionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1557C4C23449BB7002387BE /* ThirdDimensionEffect.swift */; };
-		C1557C4F23449BB7002387BE /* ThirdDimensionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1557C4C23449BB7002387BE /* ThirdDimensionEffect.swift */; };
 		C15DD8542329235B00EC8EFB /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15DD8532329235B00EC8EFB /* Video.swift */; };
 		C15DD8552329235B00EC8EFB /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15DD8532329235B00EC8EFB /* Video.swift */; };
 		C15DD8562329235B00EC8EFB /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15DD8532329235B00EC8EFB /* Video.swift */; };
@@ -409,7 +406,6 @@
 		C13F8847233B6B32008649F6 /* Push.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
 		C14BCD4D2317FC8900F33A48 /* Stream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
 		C14D5B9628EA723E00351AC5 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
-		C1557C4C23449BB7002387BE /* ThirdDimensionEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdDimensionEffect.swift; sourceTree = "<group>"; };
 		C15DD8532329235B00EC8EFB /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
 		C15ECCF128EB875A00234CAF /* YoutubePlayerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubePlayerResponse.swift; sourceTree = "<group>"; };
 		C1605F6D2317DE6300F98BEE /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
@@ -757,7 +753,6 @@
 				C1BC16C22394EB0B008234EE /* ButtonWrap.swift */,
 				C1CEB907231E85A2007C3812 /* OnFirstAppear.swift */,
 				C13F8847233B6B32008649F6 /* Push.swift */,
-				C1557C4C23449BB7002387BE /* ThirdDimensionEffect.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -1282,7 +1277,6 @@
 				C1B2994328E95FD700C0D6A8 /* YoutubePlaylist.swift in Sources */,
 				C1E94282231E70B6006B7A71 /* FetchingObject.swift in Sources */,
 				C10FECC026949C9300D48F8D /* StreamVideoPlayer.swift in Sources */,
-				C1557C4E23449BB7002387BE /* ThirdDimensionEffect.swift in Sources */,
 				C18778FF23195C23008CA61E /* CovertArtSize.swift in Sources */,
 				C126959F28E5CC9D00422F43 /* TwitchSecrets.swift in Sources */,
 				C1D5CA32231E931400663FD8 /* AppFactory.swift in Sources */,
@@ -1389,7 +1383,6 @@
 				C193E33728DE7C020064639A /* TwitchError.swift in Sources */,
 				C1729BC82326889D005D0A99 /* Dictionary+Extensions.swift in Sources */,
 				C1C85AB3233654A600E8AB19 /* PresenterViewControllerKey.swift in Sources */,
-				C1557C4F23449BB7002387BE /* ThirdDimensionEffect.swift in Sources */,
 				C1E94283231E70B6006B7A71 /* FetchingObject.swift in Sources */,
 				C17766EF26C65EA80085E848 /* VideoList.swift in Sources */,
 				C182429E2317FF4900595E76 /* ChannelList.swift in Sources */,
@@ -1518,7 +1511,6 @@
 				C133D57E23227617005015C8 /* APIError.swift in Sources */,
 				C1E9428D231E70E6006B7A71 /* StreamStore.swift in Sources */,
 				C1B2992F28E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */,
-				C1557C4D23449BB7002387BE /* ThirdDimensionEffect.swift in Sources */,
 				C12695AE28E5D22E00422F43 /* YoutubeError.swift in Sources */,
 				C1605F762317E5E100F98BEE /* CoverArt.swift in Sources */,
 				C193E33528DE7C020064639A /* TwitchError.swift in Sources */,

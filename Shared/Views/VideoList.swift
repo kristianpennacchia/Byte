@@ -35,7 +35,7 @@ struct VideoList: View {
                 let columns = Array(repeating: GridItem(.flexible()), count: 4)
                 LazyVGrid(columns: columns) {
                     ForEach(store.items) { video in
-                        VideoView(video: video, hasFocusEffect: false)
+                        VideoView(video: video)
                             .buttonWrap {
                                 videoViewModel.video = video
                                 showVideoPlayer = true

@@ -9,16 +9,12 @@
 import SwiftUI
 
 struct GameView: View {
-    @State private var isFocused = false
-
     let game: Game
-    let hasFocusEffect: Bool
 
     var body: some View {
         VStack(alignment: .center) {
             CoverArt(game: game, artSize: CovertArtSize.medium)
-                .cornerRadius(hasFocusEffect ? 0 : 8)
-                .thirdDimensionEffect(isExtended: hasFocusEffect ? isFocused : false)
+                .cornerRadius(8)
             Spacer()
                 .frame(height: 16)
             Text(game.name)
@@ -27,13 +23,12 @@ struct GameView: View {
                 .lineLimit(0)
                 .multilineTextAlignment(.center)
         }
-        .focusable(true) { self.isFocused = $0 }
         .padding(.top, 6)
     }
 }
 
 struct GameView_Previews: PreviewProvider {
     static var previews: some View {
-        GameView(game: .preview, hasFocusEffect: true)
+        GameView(game: .preview)
     }
 }
