@@ -12,6 +12,7 @@ An unofficial Twitch and Youtube app for tvOS built with SwiftUI.
 
 ### 🕹 Controls and Tips
 - On the stream listing screen, press the ⏯ button on your Apple TV remote to select multiple streams at once, upto four. Press the clickpad to start watching them all.
+- On the stream or game listing screens, long press the clickpad to bring up the spoiler filter.
 - While watching a stream, press the clickpad to bring up some options.
 - While watching a stream, long press the clickpad to refresh the stream (useful if the stream buffered and is behind live).
 
