@@ -1,7 +1,23 @@
+![Byte Logo](https://user-images.githubusercontent.com/767677/194289325-e962390d-10b5-40cc-a006-2002050fa8c2.png)
+
 # Byte
-An unofficial Twitch app for tvOS built with SwiftUI.
+An unofficial Twitch and Youtube app for tvOS built with SwiftUI.
+
+### ⭐️ Highlights
+- Watch live streams from both Twitch and Youtube, and VODs from Twitch.
+- Seamlessly lists together your follows/subscriptions from both video streaming services.
+- Multistream support - Watch upto four streams simultaneously so you don't miss anybody's POV!
+- Spoiler filtering - Hide the thumbnails of games you haven't yet finished to avoid seeing spoilers (Twitch only).
+- No ads! Yep, no Twitch ads, no Youtube ads. Heaven.
+
+### 🕹 Controls and Tips
+- On the stream listing screen, press the ⏯ button on your Apple TV remote to select multiple streams at once, upto four. Press the clickpad to start watching them all.
+- While watching a stream, press the clickpad to bring up some options.
+- While watching a stream, long press the clickpad to refresh the stream (useful if the stream buffered and is behind live).
 
 ### 🛠 Project setup
+This project must be built from source, I do not currently provide a compiled app.
+
 In order for this project to run and work, it requires you to create a `Secrets.json` file in the 'Shared' directory. This JSON file holds all of the sensitive keys used to login, get followed channels and watch streams. You will have to provide all of this information yourself. The contents of the JSON file should look as follows:
 
 ```json
