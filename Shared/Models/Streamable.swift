@@ -13,11 +13,7 @@ func equalsStreamable(lhs: any Streamable, rhs: any Streamable) -> Bool {
 }
 
 func compareStreamable(lhs: any Streamable, rhs: any Streamable) -> Bool {
-    if type(of: lhs).platform == type(of: rhs).platform {
-        return (lhs.viewerCount ?? 0) == (rhs.viewerCount ?? 0) ? lhs.userName < rhs.userName : (lhs.viewerCount ?? 0) > (rhs.viewerCount ?? 0)
-    } else {
-        return type(of: lhs).platform.displayPriority < type(of: rhs).platform.displayPriority
-    }
+    return (lhs.viewerCount ?? 0) == (rhs.viewerCount ?? 0) ? lhs.userName < rhs.userName : (lhs.viewerCount ?? 0) > (rhs.viewerCount ?? 0)
 }
 
 let streamablePreview = Stream(

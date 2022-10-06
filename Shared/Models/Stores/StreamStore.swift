@@ -78,7 +78,7 @@ final class StreamStore: FetchingObject {
 
             Task {
                 // We got all the Twitch results, now get the Youtube results (if applicable for the fetch type).
-                var liveYoutubeChannels = [YoutubeSubscription]()
+                var liveYoutubeChannels = [YoutubeVideo]()
 
                 if let youtubeAPI = self.youtubeAPI, case .followed(userID: _) = self.fetchType {
                     print("Getting Youtube live streams...")
@@ -97,6 +97,8 @@ final class StreamStore: FetchingObject {
                             decoding: YoutubeDataItem<YoutubeSubscription>.self
                         )
 
+                        var liveVideoIDs = [String]()
+
                         do {
                             // Running in parallel, check which channels are live.
                             try await withThrowingTaskGroup(of: YoutubeSubscription.self) { group in
@@ -109,12 +111,25 @@ final class StreamStore: FetchingObject {
                                 }
 
                                 for try await subscription in group where subscription.live != nil {
-                                    liveYoutubeChannels.append(subscription)
+                                    liveVideoIDs.append(subscription.live!.videoID)
                                 }
                             }
                         } catch {
                             print("Failed to check if channels are live. \(error.localizedDescription)")
                         }
+
+                        // https://developers.google.com/youtube/v3/docs/videos/list
+                        liveYoutubeChannels = try await youtubeAPI.executeFetchAll(
+                            method: .get,
+                            base: .youtube,
+                            endpoint: "videos",
+                            query: [
+                                "part": YoutubeVideo.part,
+                                "maxResults": 50,
+                                "id": liveVideoIDs.joined(separator: ","),
+                            ],
+                            decoding: YoutubeDataItem<YoutubeVideo>.self
+                        )
                     } catch {
                         print("Failed to fetch Youtube live streams. \(error.localizedDescription)")
                     }

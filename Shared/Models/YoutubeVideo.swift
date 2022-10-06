@@ -10,15 +10,16 @@ import Foundation
 
 /// https://developers.google.com/youtube/v3/docs/videos#resource-representation
 struct YoutubeVideo: Decodable {
-    struct Snippet: Decodable {
-        struct Thumbnails: Decodable {
-            struct URL: Decodable {
+    struct Snippet: Hashable, Decodable {
+        struct Thumbnails: Hashable, Decodable {
+            struct URL: Hashable, Decodable {
                 let url: String
             }
 
             let `default`: URL
             let medium: URL
             let high: URL
+            let maxres: URL
         }
 
         let publishedAt: Date
@@ -32,7 +33,7 @@ struct YoutubeVideo: Decodable {
         let liveBroadcastContent: String
     }
 
-    struct ContentDetails: Decodable {
+    struct ContentDetails: Hashable, Decodable {
         let duration: String
         let dimension: String
         let definition: String
@@ -41,28 +42,35 @@ struct YoutubeVideo: Decodable {
         let projection: String
     }
 
-    struct Statistics: Decodable {
+    struct Statistics: Hashable, Decodable {
         let viewCount: String
         let likeCount: String?
         let commentCount: String?
     }
 
-    struct Player: Decodable {
+    struct Player: Hashable, Decodable {
         let embedHtml: String
         let embedHeight: UInt?
         let embedWidth: UInt?
     }
 
-    struct LiveStreamingDetails: Decodable {
+    struct LiveStreamingDetails: Hashable, Decodable {
         let actualStartTime: Date?
         let actualEndTime: Date?
         let scheduledStartTime: Date?
         let scheduledEndTime: Date?
-        let concurrentViewers: UInt?
+        let concurrentViewers: String?
         let activeLiveChatId: String?
     }
 
-    static let part = "snippet,contentDetails,statistics,player,recordingDetails,liveStreamingDetails"
+    private static let formatter: DateComponentsFormatter = {
+        $0.allowedUnits = [.hour, .minute]
+        $0.unitsStyle = .abbreviated
+        $0.zeroFormattingBehavior = .dropLeading
+        return $0
+    }(DateComponentsFormatter())
+
+    static let part = "snippet,contentDetails,statistics,liveStreamingDetails"
 
     let kind: String
     let etag: String
@@ -70,8 +78,33 @@ struct YoutubeVideo: Decodable {
     let snippet: Snippet
     let contentDetails: ContentDetails
     let statistics: Statistics
-    let player: Player
     let liveStreamingDetails: LiveStreamingDetails?
 
     var isCurrentlyLive: Bool { liveStreamingDetails?.actualStartTime != nil && liveStreamingDetails?.actualEndTime == nil }
+}
+
+extension YoutubeVideo: Streamable {
+    static let platform = StreamablePlatform.youtube
+
+    var userId: String { snippet.channelId }
+    var userName: String { snippet.channelTitle }
+    var title: String { snippet.title }
+    var viewerCount: Int? {
+        if let concurrentViewers = liveStreamingDetails?.concurrentViewers {
+            return Int(concurrentViewers)
+        } else {
+            return nil
+        }
+    }
+    var startedAt: Date? { liveStreamingDetails?.actualStartTime }
+    var duration: String? {
+        Self.formatter
+            .string(from: startedAt!, to: Date())?
+            .replacingOccurrences(of: "min.", with: "m")
+        ?? ""
+    }
+
+    func thumbnail(width: Int, height: Int) -> String {
+        snippet.thumbnails.maxres.url
+    }
 }
