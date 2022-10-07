@@ -9,7 +9,7 @@
 import Foundation
 
 func equalsChannelable(lhs: any Channelable, rhs: any Channelable) -> Bool {
-    return lhs.id == rhs.id
+    return lhs.channelId == rhs.channelId
 }
 
 func compareChannelable(lhs: any Channelable, rhs: any Channelable) -> Bool {
@@ -24,7 +24,9 @@ let channelPreview = Channel(
 )
 
 protocol Channelable: Identifiable, Equatable, Hashable, Comparable {
-    var id: String { get }
+    static var platform: VideoPlatform { get }
+
+    var channelId: String { get }
     var displayName: String { get }
     var profileImageUrl: String { get }
 }

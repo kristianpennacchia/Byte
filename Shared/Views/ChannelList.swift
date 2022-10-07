@@ -13,7 +13,8 @@ struct ChannelList: View {
         @Published var channel: (any Channelable)?
     }
 
-    @EnvironmentObject private var api: TwitchAPI
+    @EnvironmentObject private var twitchAPI: TwitchAPI
+    @EnvironmentObject private var youtubeAPI: YoutubeAPI
 
     @ObservedObject var store: ChannelStore
 
@@ -36,7 +37,7 @@ struct ChannelList: View {
                     
                     let columns = Array(repeating: GridItem(.flexible()), count: 5)
                     LazyVGrid(columns: columns) {
-                        ForEach(store.items, id: \.id) { channel in
+                        ForEach(store.items, id: \.channelId) { channel in
                             ChannelView(channel: channel)
                                 .buttonWrap {
                                     channelViewModel.channel = channel
@@ -68,8 +69,14 @@ struct ChannelList: View {
                 }
             },
             content: {
-                VideoList(store: VideoStore(twitchAPI: self.api, fetch: .user(userID: channelViewModel.channel!.id)))
-                    .environmentObject(self.api)
+                switch type(of: channelViewModel.channel!).platform {
+                case .twitch:
+                    VideoList(store: VideoStore(twitchAPI: twitchAPI, fetch: .user(userID: channelViewModel.channel!.channelId)))
+                        .environmentObject(twitchAPI)
+                case .youtube:
+                    VideoList(store: VideoStore(youtubeAPI: youtubeAPI, fetch: .user(userID: channelViewModel.channel!.channelId)))
+                        .environmentObject(youtubeAPI)
+                }
             }
         )
     }

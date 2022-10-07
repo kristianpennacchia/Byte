@@ -28,29 +28,16 @@ let streamablePreview = Stream(
     thumbnailUrl: ""
 )
 
-enum StreamablePlatform {
-    case twitch, youtube
-
-    var displayPriority: Int {
-        switch self {
-        case .twitch:
-            return 1
-        case .youtube:
-            return 0
-        }
-    }
-}
-
 protocol Streamable: Identifiable, Equatable, Hashable, Comparable {
-    static var platform: StreamablePlatform { get }
+    static var platform: VideoPlatform { get }
 
     var id: String { get }
     var userId: String { get }
     var userName: String { get }
     var title: String { get }
     var viewerCount: Int? { get }
-    var startedAt: Date? { get }
-    var duration: String? { get }
+    var startedAt: Date { get }
+    var duration: String { get }
 
     func thumbnail(width: Int, height: Int) -> String
 }

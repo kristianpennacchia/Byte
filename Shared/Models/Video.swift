@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Video: Identifiable, Hashable, Decodable {
+struct Video: Videoable, Decodable {
     enum VideoType: String, Decodable {
         case upload, archive, highlight
     }
@@ -16,6 +16,8 @@ struct Video: Identifiable, Hashable, Decodable {
     enum Viewable: String, Decodable {
         case `public`, `private`
     }
+
+    static let platform = VideoPlatform.twitch
 
     let id: String
     let type: VideoType
@@ -30,19 +32,6 @@ struct Video: Identifiable, Hashable, Decodable {
 }
 
 extension Video {
-    static let preview = Video(
-        id: App.previewUsername,
-        type: .archive,
-        title: "My Amazing Stream!!?!?",
-        description: "Wow I'm so fucking good",
-        createdAt: .init(),
-        duration: "1hr 30m",
-        thumbnailUrl: "",
-        url: "",
-        viewable: .public,
-        viewCount: 696969
-    )
-
     func thumbnail(size: Int) -> String {
         thumbnailUrl
             .replacingOccurrences(of: "{width}", with: "\(size)")

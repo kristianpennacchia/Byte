@@ -10,7 +10,7 @@ import SwiftUI
 
 struct VideoList: View {
     private class VideoViewModel: ObservableObject {
-        @Published var video: Video?
+        @Published var video: (any Videoable)?
     }
 
     @EnvironmentObject private var api: TwitchAPI
@@ -34,7 +34,7 @@ struct VideoList: View {
 
                 let columns = Array(repeating: GridItem(.flexible()), count: 4)
                 LazyVGrid(columns: columns) {
-                    ForEach(store.items) { video in
+                    ForEach(store.items, id: \.id) { video in
                         VideoView(video: video)
                             .buttonWrap {
                                 videoViewModel.video = video

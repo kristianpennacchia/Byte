@@ -9,10 +9,14 @@
 import Foundation
 
 struct Channel: Decodable, Channelable {
+    static var platform = VideoPlatform.twitch
+
     let id: String
     let login: String
     let displayName: String
     let profileImageUrl: String
+
+    var channelId: String { id }
 }
 
 extension Channel {

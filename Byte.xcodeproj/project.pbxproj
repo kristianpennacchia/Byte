@@ -165,6 +165,12 @@
 		C17A83EF28EFF5AC00FCD74F /* Channelable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17A83EE28EFF5AC00FCD74F /* Channelable.swift */; };
 		C17A83F028EFF5AC00FCD74F /* Channelable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17A83EE28EFF5AC00FCD74F /* Channelable.swift */; };
 		C17A83F128EFF5AC00FCD74F /* Channelable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17A83EE28EFF5AC00FCD74F /* Channelable.swift */; };
+		C17A83F328EFFD4E00FCD74F /* Videoable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17A83F228EFFD4E00FCD74F /* Videoable.swift */; };
+		C17A83F428EFFD4E00FCD74F /* Videoable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17A83F228EFFD4E00FCD74F /* Videoable.swift */; };
+		C17A83F528EFFD4E00FCD74F /* Videoable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17A83F228EFFD4E00FCD74F /* Videoable.swift */; };
+		C17A83F728F0040000FCD74F /* VideoPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17A83F628F0040000FCD74F /* VideoPlatform.swift */; };
+		C17A83F828F0040000FCD74F /* VideoPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17A83F628F0040000FCD74F /* VideoPlatform.swift */; };
+		C17A83F928F0040000FCD74F /* VideoPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = C17A83F628F0040000FCD74F /* VideoPlatform.swift */; };
 		C180244F28DEC5F900E8AB42 /* KeychainKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C180244E28DEC5F900E8AB42 /* KeychainKey.swift */; };
 		C180245028DEC5F900E8AB42 /* KeychainKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C180244E28DEC5F900E8AB42 /* KeychainKey.swift */; };
 		C180245128DEC5F900E8AB42 /* KeychainKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C180244E28DEC5F900E8AB42 /* KeychainKey.swift */; };
@@ -226,9 +232,9 @@
 		C1B2993E28E9546B00C0D6A8 /* YoutubeVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993D28E9546B00C0D6A8 /* YoutubeVideo.swift */; };
 		C1B2993F28E9546B00C0D6A8 /* YoutubeVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993D28E9546B00C0D6A8 /* YoutubeVideo.swift */; };
 		C1B2994028E9546B00C0D6A8 /* YoutubeVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2993D28E9546B00C0D6A8 /* YoutubeVideo.swift */; };
-		C1B2994228E95FD700C0D6A8 /* YoutubePlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2994128E95FD700C0D6A8 /* YoutubePlaylist.swift */; };
-		C1B2994328E95FD700C0D6A8 /* YoutubePlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2994128E95FD700C0D6A8 /* YoutubePlaylist.swift */; };
-		C1B2994428E95FD700C0D6A8 /* YoutubePlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2994128E95FD700C0D6A8 /* YoutubePlaylist.swift */; };
+		C1B2994228E95FD700C0D6A8 /* YoutubePlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2994128E95FD700C0D6A8 /* YoutubePlaylistItem.swift */; };
+		C1B2994328E95FD700C0D6A8 /* YoutubePlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2994128E95FD700C0D6A8 /* YoutubePlaylistItem.swift */; };
+		C1B2994428E95FD700C0D6A8 /* YoutubePlaylistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B2994128E95FD700C0D6A8 /* YoutubePlaylistItem.swift */; };
 		C1B5AC66232E2874001A502F /* StreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B5AC65232E2874001A502F /* StreamView.swift */; };
 		C1B5AC67232E2874001A502F /* StreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B5AC65232E2874001A502F /* StreamView.swift */; };
 		C1B5AC68232E2874001A502F /* StreamView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B5AC65232E2874001A502F /* StreamView.swift */; };
@@ -429,6 +435,8 @@
 		C17766EC26C65EA80085E848 /* VideoList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoList.swift; sourceTree = "<group>"; };
 		C17766F026C66DEA0085E848 /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		C17A83EE28EFF5AC00FCD74F /* Channelable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channelable.swift; sourceTree = "<group>"; };
+		C17A83F228EFFD4E00FCD74F /* Videoable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Videoable.swift; sourceTree = "<group>"; };
+		C17A83F628F0040000FCD74F /* VideoPlatform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlatform.swift; sourceTree = "<group>"; };
 		C180244E28DEC5F900E8AB42 /* KeychainKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainKey.swift; sourceTree = "<group>"; };
 		C182429D2317FF4900595E76 /* ChannelList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelList.swift; sourceTree = "<group>"; };
 		C18242A12318007A00595E76 /* Thumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Thumbnail.swift; sourceTree = "<group>"; };
@@ -450,7 +458,7 @@
 		C1B2993528E92C9700C0D6A8 /* YoutubeError2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeError2.swift; sourceTree = "<group>"; };
 		C1B2993928E9526B00C0D6A8 /* YoutubeChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeChannel.swift; sourceTree = "<group>"; };
 		C1B2993D28E9546B00C0D6A8 /* YoutubeVideo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeVideo.swift; sourceTree = "<group>"; };
-		C1B2994128E95FD700C0D6A8 /* YoutubePlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubePlaylist.swift; sourceTree = "<group>"; };
+		C1B2994128E95FD700C0D6A8 /* YoutubePlaylistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubePlaylistItem.swift; sourceTree = "<group>"; };
 		C1B5AC65232E2874001A502F /* StreamView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamView.swift; sourceTree = "<group>"; };
 		C1B5AC69232E299F001A502F /* ChannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelView.swift; sourceTree = "<group>"; };
 		C1B5AC6D232E29EF001A502F /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
@@ -879,13 +887,15 @@
 				C11B670E23226C7C004576A6 /* TwitchDataItem.swift */,
 				C126959D28E5CC9D00422F43 /* TwitchSecrets.swift */,
 				C15DD8532329235B00EC8EFB /* Video.swift */,
+				C17A83F228EFFD4E00FCD74F /* Videoable.swift */,
+				C17A83F628F0040000FCD74F /* VideoPlatform.swift */,
 				C16A7E0C28E8199900509FFF /* YoutubeBroadcast.swift */,
 				C1B2993928E9526B00C0D6A8 /* YoutubeChannel.swift */,
 				C109BCF428E73A3D00BB83E8 /* YoutubeDataItem.swift */,
 				C12695A928E5D1DB00422F43 /* YoutubeOAuth.swift */,
 				C16A7E0428E8077F00509FFF /* YoutubePerson.swift */,
 				C15ECCF128EB875A00234CAF /* YoutubePlayerResponse.swift */,
-				C1B2994128E95FD700C0D6A8 /* YoutubePlaylist.swift */,
+				C1B2994128E95FD700C0D6A8 /* YoutubePlaylistItem.swift */,
 				C1B2992E28E91ACD00C0D6A8 /* YoutubeSearchResult.swift */,
 				C12695A128E5CCA900422F43 /* YoutubeSecrets.swift */,
 				C16A7E0828E8140800509FFF /* YoutubeSubscription.swift */,
@@ -1264,6 +1274,7 @@
 				C1141887231936A60004C813 /* AvatarSize.swift in Sources */,
 				C1CEB909231E85A2007C3812 /* OnFirstAppear.swift in Sources */,
 				C16A7E0A28E8140800509FFF /* YoutubeSubscription.swift in Sources */,
+				C17A83F828F0040000FCD74F /* VideoPlatform.swift in Sources */,
 				C1EF5E0A28EC2A1C00F710FA /* MenuItemButton.swift in Sources */,
 				C10FECC426949CE600D48F8D /* MultiStreamVideoPlayer.swift in Sources */,
 				C1C1D29023363DC7006E9165 /* Push.iOS.swift in Sources */,
@@ -1280,7 +1291,8 @@
 				C1020D932317E9AE00FBFE16 /* ContentView.swift in Sources */,
 				C1B2993728E92C9700C0D6A8 /* YoutubeError2.swift in Sources */,
 				C15DD8552329235B00EC8EFB /* Video.swift in Sources */,
-				C1B2994328E95FD700C0D6A8 /* YoutubePlaylist.swift in Sources */,
+				C17A83F428EFFD4E00FCD74F /* Videoable.swift in Sources */,
+				C1B2994328E95FD700C0D6A8 /* YoutubePlaylistItem.swift in Sources */,
 				C1E94282231E70B6006B7A71 /* FetchingObject.swift in Sources */,
 				C10FECC026949C9300D48F8D /* StreamVideoPlayer.swift in Sources */,
 				C18778FF23195C23008CA61E /* CovertArtSize.swift in Sources */,
@@ -1373,6 +1385,7 @@
 				C16A7E0328E7FE0600509FFF /* HeartbeatActivityIndicator.swift in Sources */,
 				C1020DC72317EB0800FBFE16 /* StreamList.swift in Sources */,
 				C1020DCA2317EB0800FBFE16 /* GameList.swift in Sources */,
+				C17A83F928F0040000FCD74F /* VideoPlatform.swift in Sources */,
 				C109CFB9231D1EDE00C35AD8 /* SignInView.swift in Sources */,
 				C109BCF728E73A3D00BB83E8 /* YoutubeDataItem.swift in Sources */,
 				C15ECCF428EB875A00234CAF /* YoutubePlayerResponse.swift in Sources */,
@@ -1428,6 +1441,7 @@
 				C187790723195C80008CA61E /* CoverArtSize.tvOS.swift in Sources */,
 				C1B5AC68232E2874001A502F /* StreamView.swift in Sources */,
 				C187790423195C3F008CA61E /* CovertArtSize.iOS.swift in Sources */,
+				C17A83F528EFFD4E00FCD74F /* Videoable.swift in Sources */,
 				C1C79E782696EC1B00E653E7 /* StreamPicker.swift in Sources */,
 				C16A7E0B28E8140800509FFF /* YoutubeSubscription.swift in Sources */,
 				C1E67ABC2333A5F30024B25C /* PlayerViewController.swift in Sources */,
@@ -1437,7 +1451,7 @@
 				C14BCD502317FC8900F33A48 /* Stream.swift in Sources */,
 				C1C85AAF2336523F00E8AB19 /* RootViewControllerKey.swift in Sources */,
 				C1B0BCB128EAF2220016089B /* CodableIgnored.swift in Sources */,
-				C1B2994428E95FD700C0D6A8 /* YoutubePlaylist.swift in Sources */,
+				C1B2994428E95FD700C0D6A8 /* YoutubePlaylistItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1477,6 +1491,7 @@
 				C126959E28E5CC9D00422F43 /* TwitchSecrets.swift in Sources */,
 				C114187A2319345E0004C813 /* WatermarkedContainer.swift in Sources */,
 				C1E94289231E70D9006B7A71 /* GameStore.swift in Sources */,
+				C17A83F728F0040000FCD74F /* VideoPlatform.swift in Sources */,
 				C16A7E0528E8077F00509FFF /* YoutubePerson.swift in Sources */,
 				C17A83EF28EFF5AC00FCD74F /* Channelable.swift in Sources */,
 				C1BF599228E9C3C5003C50C9 /* Streamable.swift in Sources */,
@@ -1500,6 +1515,7 @@
 				C1C85AAD2336523F00E8AB19 /* RootViewControllerKey.swift in Sources */,
 				C109CFB3231D1D0600C35AD8 /* SessionStore.swift in Sources */,
 				C19D480C2321426900A53AB3 /* App.swift in Sources */,
+				C17A83F328EFFD4E00FCD74F /* Videoable.swift in Sources */,
 				C1729BC62326889D005D0A99 /* Dictionary+Extensions.swift in Sources */,
 				C14D5B9728EA723E00351AC5 /* AppError.swift in Sources */,
 				C109CFB7231D1EDE00C35AD8 /* SignInView.swift in Sources */,
@@ -1537,7 +1553,7 @@
 				C187790623195C80008CA61E /* CoverArtSize.tvOS.swift in Sources */,
 				C114187E231934E90004C813 /* LogoSize.swift in Sources */,
 				C1C1D29223363E87006E9165 /* Push.tvOS.swift in Sources */,
-				C1B2994228E95FD700C0D6A8 /* YoutubePlaylist.swift in Sources */,
+				C1B2994228E95FD700C0D6A8 /* YoutubePlaylistItem.swift in Sources */,
 				C1605F722317E31E00F98BEE /* Game.swift in Sources */,
 				C129B711232B8F5900FDDA99 /* M3U8Meta.swift in Sources */,
 				C1C85AB1233654A600E8AB19 /* PresenterViewControllerKey.swift in Sources */,

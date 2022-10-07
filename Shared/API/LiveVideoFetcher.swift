@@ -42,7 +42,7 @@ class LiveVideoFetcher: NSObject {
             }
         }
 
-        case live(any Streamable), vod(Video)
+        case live(any Streamable), vod(any Videoable)
     }
 
     enum VideoStream {
@@ -136,7 +136,12 @@ extension LiveVideoFetcher {
                 }
             }
         case .vod(let video):
-            getVideo(.vod(vodID: video.id), completion: completion)
+            switch type(of: video).platform {
+            case .twitch:
+                getVideo(.vod(vodID: video.id), completion: completion)
+            case .youtube:
+                #warning("TODO: Get video M3U8 URL.")
+            }
         }
     }
 }

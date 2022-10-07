@@ -40,7 +40,7 @@ struct YoutubeSubscription: Decodable {
         let activityType: String
     }
 
-    static let platform = StreamablePlatform.youtube
+    static let platform = VideoPlatform.youtube
     static let part = "snippet,contentDetails"
 
     let kind: String
@@ -53,6 +53,7 @@ struct YoutubeSubscription: Decodable {
 }
 
 extension YoutubeSubscription: Channelable {
+    var channelId: String { snippet.resourceId.channelId }
     var displayName: String { snippet.title }
     var profileImageUrl: String { snippet.thumbnails.default.url }
 }

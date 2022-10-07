@@ -13,7 +13,7 @@ struct Thumbnail: View {
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     enum VideoStream {
-        case stream(any Streamable), vod(Video)
+        case stream(any Streamable), vod(any Videoable)
     }
 
     let videoStream: VideoStream
