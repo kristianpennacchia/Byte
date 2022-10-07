@@ -62,18 +62,23 @@ struct ContentView: View {
 
     private enum YoutubeMenuItem: Int, Identifiable, CaseIterable {
         case followedStreams
+        case followedChannels
 
         var id: Int { rawValue }
         var title: String {
             switch self {
             case .followedStreams:
                 return "Followed Streams"
+            case .followedChannels:
+                return "Followed Channels"
             }
         }
         var icon: String {
             switch self {
             case .followedStreams:
                 return "person.2.wave.2"
+            case .followedChannels:
+                return "person.2"
             }
         }
     }
@@ -151,12 +156,12 @@ struct ContentView: View {
                         case .all(let menuItem):
                             switch menuItem {
                             case .followedStreams:
-                                StreamList(store: StreamStore(twitchAPI: twitchAPI, youtubeAPI: youtubeAPI, fetch: .followed(userID: twitchUser!.id)))
+                                StreamList(store: StreamStore(twitchAPI: twitchAPI, youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: twitchUser!.id)))
                             }
                         case .twitch(let menuItem):
                             switch menuItem {
                             case .followedStreams:
-                                StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .followed(userID: twitchUser!.id)))
+                                StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .followed(twitchUserID: twitchUser!.id)))
                             case .topStreams:
                                 StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .top))
                             case .topGames:
@@ -167,7 +172,9 @@ struct ContentView: View {
                         case .youtube(let menuItem):
                             switch menuItem {
                             case .followedStreams:
-                                StreamList(store: StreamStore(youtubeAPI: youtubeAPI, fetch: .followed(userID: twitchUser!.id)))
+                                StreamList(store: StreamStore(youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: nil)))
+                            case .followedChannels:
+                                ChannelList(store: ChannelStore(youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: nil)))
                             }
                         }
                     }
