@@ -10,10 +10,11 @@ import SwiftUI
 import Kingfisher
 
 struct Avatar: View {
-    let channel: Channel
+    let channel: any Channelable
 
     var body: some View {
         KFImage(URL(string: channel.profileImageUrl))
+            .resizing(referenceSize: AvatarSize.medium, mode: .aspectFill)
             .placeholder {
                 Placeholder(channel: channel)
             }
@@ -25,7 +26,7 @@ struct Avatar: View {
 
 extension Avatar {
     struct Placeholder: View {
-        let channel: Channel
+        let channel: any Channelable
 
         var body: some View {
             Circle()

@@ -144,6 +144,6 @@ private extension StreamStore.Fetch {
 
 struct StreamList_Previews: PreviewProvider {
     static var previews: some View {
-        StreamList(store: StreamStore(twitchAPI: .shared, fetch: .followed(userID: App.previewUsername)))
+        StreamList(store: StreamStore(twitchAPI: .shared, fetch: .followed(twitchUserID: App.previewUsername)))
     }
 }

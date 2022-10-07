@@ -81,10 +81,14 @@ struct YoutubeVideo: Decodable {
     let liveStreamingDetails: LiveStreamingDetails?
 
     var isCurrentlyLive: Bool { liveStreamingDetails?.actualStartTime != nil && liveStreamingDetails?.actualEndTime == nil }
+
+    static func < (lhs: Self, rhs: Self) -> Bool {
+        lhs.snippet.publishedAt < rhs.snippet.publishedAt
+    }
 }
 
 extension YoutubeVideo: Streamable {
-    static let platform = StreamablePlatform.youtube
+    static let platform = VideoPlatform.youtube
 
     var userId: String { snippet.channelId }
     var userName: String { snippet.channelTitle }
@@ -96,12 +100,12 @@ extension YoutubeVideo: Streamable {
             return nil
         }
     }
-    var startedAt: Date? { liveStreamingDetails?.actualStartTime }
-    var duration: String? {
+    var startedAt: Date { liveStreamingDetails?.actualStartTime ?? snippet.publishedAt }
+    var duration: String {
         Self.formatter
-            .string(from: startedAt!, to: Date())?
+            .string(from: startedAt, to: Date())?
             .replacingOccurrences(of: "min.", with: "m")
-        ?? ""
+            ?? ""
     }
 
     func thumbnail(width: Int, height: Int) -> String {

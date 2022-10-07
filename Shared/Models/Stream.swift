@@ -20,7 +20,7 @@ struct Stream: Decodable, Streamable {
         return $0
     }(DateComponentsFormatter())
 
-    static let platform = StreamablePlatform.twitch
+    static let platform = VideoPlatform.twitch
 
     let id: String
     let userId: String
@@ -29,11 +29,11 @@ struct Stream: Decodable, Streamable {
     let type: Live
     let title: String
     let viewerCount: Int?
-    let startedAt: Date?
+    let startedAt: Date
     let thumbnailUrl: String
-    var duration: String? {
+    var duration: String {
         Self.formatter
-            .string(from: startedAt!, to: Date())?
+            .string(from: startedAt, to: Date())?
             .replacingOccurrences(of: "min.", with: "m")
             ?? ""
     }

@@ -17,6 +17,7 @@ final class VideoStore: FetchingObject {
     private(set) var lastFetched: Date?
 
     let twitchAPI: TwitchAPI?
+    let youtubeAPI: YoutubeAPI?
     let fetchType: Fetch
     var filter = "" {
         didSet {
@@ -24,27 +25,43 @@ final class VideoStore: FetchingObject {
         }
     }
 
-    @Published private(set) var originalItems = [Video]() {
+    @Published private(set) var originalItems = [any Videoable]() {
         didSet {
             applyFilter()
         }
     }
-    @Published private(set) var items = [Video]()
+    @Published private(set) var items = [any Videoable]()
 
     init(twitchAPI: TwitchAPI, fetch: Fetch) {
         self.twitchAPI = twitchAPI
+        self.youtubeAPI = nil
+        self.fetchType = fetch
+    }
+
+    init(youtubeAPI: YoutubeAPI, fetch: Fetch) {
+        self.twitchAPI = nil
+        self.youtubeAPI = youtubeAPI
+        self.fetchType = fetch
+    }
+
+    init(twitchAPI: TwitchAPI, youtubeAPI: YoutubeAPI, fetch: Fetch) {
+        self.twitchAPI = twitchAPI
+        self.youtubeAPI = youtubeAPI
         self.fetchType = fetch
     }
 
     func fetch(completion: @escaping () -> Void) {
-        let continueFetch = { [weak self] (result: Result<TwitchDataItem<[Video]>, Error>) in
+        let continueFetch = { [weak self] (result: Result<(twitch: TwitchDataItem<[Video]>?, youtube: [YoutubePlaylistItem]?), Error>) in
             guard let self = self else { return }
 
             self.lastFetched = Date()
 
             switch result {
             case .success(let data):
-                self.originalItems = Set(data.data).sorted(by: >)
+                var videos = [any Videoable]()
+                videos.append(contentsOf: data.twitch?.data ?? [])
+                videos.append(contentsOf: data.youtube ?? [])
+                self.originalItems = videos.sorted(by: compareVideoable)
             case .failure(let error):
                 print("Fetching '\(self.fetchType)' videos failed. \(error.localizedDescription)")
             }
@@ -59,7 +76,51 @@ final class VideoStore: FetchingObject {
                 "user_id": userID,
             ]
 
-            twitchAPI!.execute(endpoint: "videos", query: query, decoding: [Video].self, completion: continueFetch)
+            @Sendable
+            func getYoutubeVideos(userID: String) async throws -> [YoutubePlaylistItem] {
+                // https://developers.google.com/youtube/v3/docs/playlistItems/list
+                let uploadPlaylistID = "UU" + userID.dropFirst(2)
+
+                // Only get the latest 50, otherwise we could be downloading thousands of videos.
+                return try await youtubeAPI?.execute(
+                    method: .get,
+                    base: .youtube,
+                    endpoint: "playlistItems",
+                    query: [
+                        "part": YoutubePlaylistItem.part,
+                        "maxResults": 50,
+                        "playlistId": uploadPlaylistID,
+                    ],
+                    decoding: YoutubeDataItem<YoutubePlaylistItem>.self
+                ).items ?? []
+            }
+
+            if let twitchAPI = twitchAPI {
+                twitchAPI.execute(endpoint: "videos", query: query, decoding: [Video].self) { result in
+                    switch result {
+                    case .success(let twitchData):
+                        Task {
+                            do {
+                                let videos = try await getYoutubeVideos(userID: userID)
+                                continueFetch(.success((twitchData, videos)))
+                            } catch {
+                                continueFetch(.failure(error))
+                            }
+                        }
+                    case .failure(let error):
+                        continueFetch(.failure(error))
+                    }
+                }
+            } else {
+                Task {
+                    do {
+                        let videos = try await getYoutubeVideos(userID: userID)
+                        continueFetch(.success((nil, videos)))
+                    } catch {
+                        continueFetch(.failure(error))
+                    }
+                }
+            }
         }
     }
 }

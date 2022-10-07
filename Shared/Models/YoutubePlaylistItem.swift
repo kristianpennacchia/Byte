@@ -1,5 +1,5 @@
 //
-//  YoutubePlaylist.swift
+//  YoutubePlaylistItem.swift
 //  Byte
 //
 //  Created by Kristian Pennacchia on 2/10/2022.
@@ -9,15 +9,15 @@
 import Foundation
 
 /// https://developers.google.com/youtube/v3/docs/playlistItems#resource
-struct YoutubePlaylist: Decodable {
-    struct Snippet: Decodable {
-        struct ResourceID: Decodable {
+struct YoutubePlaylistItem: Decodable {
+    struct Snippet: Hashable, Decodable {
+        struct ResourceID: Hashable, Decodable {
             let kind: String
             let videoId: String
         }
 
-        struct Thumbnails: Decodable {
-            struct URL: Decodable {
+        struct Thumbnails: Hashable, Decodable {
+            struct URL: Hashable, Decodable {
                 let url: String
             }
 
@@ -39,11 +39,19 @@ struct YoutubePlaylist: Decodable {
         let resourceId: ResourceID
     }
 
-    struct ContentDetails: Decodable {
+    struct ContentDetails: Hashable, Decodable {
         let videoId: String
-        let videoPublishedAt: String
+        let videoPublishedAt: Date
     }
 
+    private static let formatter: DateComponentsFormatter = {
+        $0.allowedUnits = [.hour, .minute]
+        $0.unitsStyle = .abbreviated
+        $0.zeroFormattingBehavior = .dropLeading
+        return $0
+    }(DateComponentsFormatter())
+
+    static var platform = VideoPlatform.youtube
     static let part = "snippet,id,contentDetails,status"
 
     let kind: String
@@ -51,4 +59,15 @@ struct YoutubePlaylist: Decodable {
     let id: String
     let snippet: Snippet
     let contentDetails: ContentDetails
+}
+
+extension YoutubePlaylistItem: Videoable {
+    var videoId: String { contentDetails.videoId }
+    var title: String { snippet.title }
+    var createdAt: Date { contentDetails.videoPublishedAt }
+    var duration: String? { nil }
+
+    func thumbnail(size: Int) -> String {
+        snippet.thumbnails.high.url
+    }
 }

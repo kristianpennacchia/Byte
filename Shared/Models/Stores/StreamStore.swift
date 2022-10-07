@@ -11,7 +11,7 @@ import SwiftUI
 
 final class StreamStore: FetchingObject {
     enum Fetch: FetchingKey {
-        case top, followed(userID: String), game(Game)
+        case top, followed(twitchUserID: String?), game(Game)
     }
 
     struct UniqueStream: Identifiable, Hashable {
@@ -80,7 +80,7 @@ final class StreamStore: FetchingObject {
                 // We got all the Twitch results, now get the Youtube results (if applicable for the fetch type).
                 var liveYoutubeChannels = [YoutubeVideo]()
 
-                if let youtubeAPI = self.youtubeAPI, case .followed(userID: _) = self.fetchType {
+                if let youtubeAPI = self.youtubeAPI, case .followed(twitchUserID: _) = self.fetchType {
                     print("Getting Youtube live streams...")
 
                     do {
@@ -157,10 +157,10 @@ final class StreamStore: FetchingObject {
         }
 
         switch fetchType {
-        case .followed(let userID):
+        case .followed(let twitchUserID):
             let query: [String: Any] = [
                 "first": 100,
-                "from_id": userID,
+                "from_id": twitchUserID!,
             ]
 
             twitchAPI.executeFetchAll(endpoint: "users/follows", query: query, decoding: [Channel.Stub].self) { result in

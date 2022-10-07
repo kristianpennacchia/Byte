@@ -8,11 +8,15 @@
 
 import Foundation
 
-struct Channel: Identifiable, Hashable, Decodable {
+struct Channel: Decodable, Channelable {
+    static var platform = VideoPlatform.twitch
+
     let id: String
     let login: String
     let displayName: String
     let profileImageUrl: String
+
+    var channelId: String { id }
 }
 
 extension Channel {
@@ -28,13 +32,4 @@ extension Channel: Comparable {
     static func < (lhs: Channel, rhs: Channel) -> Bool {
         lhs.displayName.caseInsensitiveCompare(rhs.displayName) == .orderedAscending
     }
-}
-
-extension Channel {
-    static let preview = Channel(
-        id: App.previewUsername,
-        login: App.previewUsername,
-        displayName: App.previewUsername,
-        profileImageUrl: ""
-    )
 }

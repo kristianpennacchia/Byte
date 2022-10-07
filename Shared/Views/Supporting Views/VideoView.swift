@@ -21,7 +21,7 @@ struct VideoView: View {
 
     @State private var isFocused = false
 
-    let video: Video
+    let video: any Videoable
 
     var body: some View {
         return VStack(alignment: .leading, spacing: 8) {
@@ -60,6 +60,6 @@ struct VideoView: View {
 
 struct VideoView_Previews: PreviewProvider {
     static var previews: some View {
-        VideoView(video: .preview)
+        VideoView(video: videoPreview)
     }
 }
