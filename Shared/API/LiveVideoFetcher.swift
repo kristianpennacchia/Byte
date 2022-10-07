@@ -160,16 +160,7 @@ extension LiveVideoFetcher {
                         }
 
                         let playerResponse = try JSONDecoder().decode(YoutubePlayerResponse.self, from: playerResponseJSONData)
-
-                        playerResponse.streamingData.formats?.forEach { format in
-                            print("format = \(format)")
-                        }
-                        playerResponse.streamingData.adaptiveFormats?.forEach { format in
-                            print("adaptive format = \(format)")
-                        }
-
-                        let allFormats = (playerResponse.streamingData.formats ?? []) + (playerResponse.streamingData.adaptiveFormats ?? [])
-                        completion(.success(.formats(allFormats)))
+                        completion(.success(.formats(playerResponse.streamingData.formats ?? [])))
                     } catch let error as DecodingError {
                         completion(.failure(AppError(message: "Fetching channel for video ID '\(video.videoId)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")))
                     } catch {
