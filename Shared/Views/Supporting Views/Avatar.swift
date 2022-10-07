@@ -14,6 +14,7 @@ struct Avatar: View {
 
     var body: some View {
         KFImage(URL(string: channel.profileImageUrl))
+            .resizing(referenceSize: AvatarSize.medium, mode: .aspectFill)
             .placeholder {
                 Placeholder(channel: channel)
             }
