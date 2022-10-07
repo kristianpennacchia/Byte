@@ -50,7 +50,6 @@ struct StreamVideoPlayer: View {
 
     var body: some View {
         if playerViewModel.isConfigured == false {
-            playerViewModel.player.automaticallyWaitsToMinimizeStalling = true
             playerViewModel.player.isMuted = muteNotFocused
         }
 
@@ -192,6 +191,7 @@ private extension StreamVideoPlayer {
                            let url = URL(string: urlString) {
                             currentStreamURL = url
 
+                            playerViewModel.player.automaticallyWaitsToMinimizeStalling = true
                             playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: url))
                             playerViewModel.player.playImmediately(atRate: 1.0)
 
@@ -217,8 +217,9 @@ private extension StreamVideoPlayer {
 
                         currentStreamURL = url
 
+                        playerViewModel.player.automaticallyWaitsToMinimizeStalling = false
                         playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: url))
-                        playerViewModel.player.play()
+                        playerViewModel.player.playImmediately(atRate: 1.0)
 
                         if muteNotFocused {
                             playerViewModel.player.isMuted = isFocused == false
