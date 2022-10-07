@@ -162,7 +162,7 @@ struct ContentView: View {
                             case .topGames:
                                 GameList(store: GameStore(twitchAPI: twitchAPI, fetch: .top))
                             case .followedChannels:
-                                ChannelList(store: ChannelStore(twitchAPI: twitchAPI, fetch: .followed(userID: twitchUser!.id)))
+                                ChannelList(store: ChannelStore(twitchAPI: twitchAPI, fetch: .followed(twitchUserID: twitchUser!.id)))
                             }
                         case .youtube(let menuItem):
                             switch menuItem {

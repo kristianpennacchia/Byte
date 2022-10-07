@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ChannelList: View {
     private class ChannelViewModel: ObservableObject {
-        @Published var channel: Channel?
+        @Published var channel: (any Channelable)?
     }
 
     @EnvironmentObject private var api: TwitchAPI
@@ -36,7 +36,7 @@ struct ChannelList: View {
                     
                     let columns = Array(repeating: GridItem(.flexible()), count: 5)
                     LazyVGrid(columns: columns) {
-                        ForEach(store.items) { channel in
+                        ForEach(store.items, id: \.id) { channel in
                             ChannelView(channel: channel)
                                 .buttonWrap {
                                     channelViewModel.channel = channel
@@ -86,6 +86,6 @@ private extension ChannelList {
 
 struct ChannelList_Previews: PreviewProvider {
     static var previews: some View {
-        ChannelList(store: ChannelStore(twitchAPI: .shared, fetch: .followed(userID: "1")))
+        ChannelList(store: ChannelStore(twitchAPI: .shared, fetch: .followed(twitchUserID: "1")))
     }
 }

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ChannelView: View {
-    let channel: Channel
+    let channel: any Channelable
 
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
@@ -23,6 +23,6 @@ struct ChannelView: View {
 
 struct ChannelView_Previews: PreviewProvider {
     static var previews: some View {
-        ChannelView(channel: .preview)
+        ChannelView(channel: channelPreview)
     }
 }
