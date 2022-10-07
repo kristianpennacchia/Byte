@@ -13,7 +13,7 @@ func equalsVideoable(lhs: any Videoable, rhs: any Videoable) -> Bool {
 }
 
 func compareVideoable(lhs: any Videoable, rhs: any Videoable) -> Bool {
-    return lhs.createdAt < rhs.createdAt
+    return lhs.createdAt > rhs.createdAt
 }
 
 let videoPreview = Video(
@@ -35,7 +35,7 @@ protocol Videoable: Identifiable, Hashable, Decodable {
     var id: String { get }
     var title: String { get }
     var createdAt: Date { get }
-    var duration: String { get }
+    var duration: String? { get }
 
     func thumbnail(size: Int) -> String
 }

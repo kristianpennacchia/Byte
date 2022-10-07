@@ -64,12 +64,7 @@ struct YoutubePlaylistItem: Decodable {
 extension YoutubePlaylistItem: Videoable {
     var title: String { snippet.title }
     var createdAt: Date { contentDetails.videoPublishedAt }
-    var duration: String {
-        Self.formatter
-            .string(from: createdAt, to: Date())?
-            .replacingOccurrences(of: "min.", with: "m")
-            ?? ""
-    }
+    var duration: String? { nil }
 
     func thumbnail(size: Int) -> String {
         snippet.thumbnails.high.url

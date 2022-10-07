@@ -24,7 +24,7 @@ struct Video: Videoable, Decodable {
     let title: String
     let description: String
     let createdAt: Date
-    let duration: String
+    let duration: String?
     let thumbnailUrl: String
     let url: String
     let viewable: Viewable
