@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Channel: Identifiable, Hashable, Decodable {
+struct Channel: Decodable, Channelable {
     let id: String
     let login: String
     let displayName: String
@@ -28,13 +28,4 @@ extension Channel: Comparable {
     static func < (lhs: Channel, rhs: Channel) -> Bool {
         lhs.displayName.caseInsensitiveCompare(rhs.displayName) == .orderedAscending
     }
-}
-
-extension Channel {
-    static let preview = Channel(
-        id: App.previewUsername,
-        login: App.previewUsername,
-        displayName: App.previewUsername,
-        profileImageUrl: ""
-    )
 }

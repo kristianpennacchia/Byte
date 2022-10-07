@@ -52,18 +52,7 @@ struct YoutubeSubscription: Decodable {
     @CodableIgnored var live: YoutubeAPI.LiveResult?
 }
 
-extension YoutubeSubscription: Streamable {
-    var userId: String { snippet.resourceId.channelId }
-    var userName: String { snippet.title }
-    var title: String { "" }
-    var viewerCount: Int? { nil }
-    var startedAt: Date? { nil }
-    var duration: String? { nil }
-
-    func thumbnail(width: Int, height: Int) -> String {
-        if let live {
-            return "https://i1.ytimg.com/vi/\(live.videoID)/mqdefault.jpg"
-        }
-        return snippet.thumbnails.high.url
-    }
+extension YoutubeSubscription: Channelable {
+    var displayName: String { snippet.title }
+    var profileImageUrl: String { snippet.thumbnails.default.url }
 }
