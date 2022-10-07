@@ -112,11 +112,3 @@ extension YoutubeVideo: Streamable {
         snippet.thumbnails.maxres.url
     }
 }
-
-extension YoutubeVideo: Videoable {
-    var createdAt: Date { snippet.publishedAt }
-
-    func thumbnail(size: Int) -> String {
-        snippet.thumbnails.maxres.url
-    }
-}
