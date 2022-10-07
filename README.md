@@ -4,7 +4,7 @@
 An unofficial Twitch and Youtube app for tvOS built with SwiftUI.
 
 ### ⭐️ Highlights
-- Watch live streams from both Twitch and Youtube, and VODs from Twitch.
+- Watch live streams and VODs from both Twitch and Youtube.
 - Seamlessly lists together your follows/subscriptions from both video streaming services.
 - Multistream support - Watch upto four streams simultaneously so you don't miss anybody's POV!
 - Spoiler filtering - Hide the thumbnails of games you haven't yet finished to avoid seeing spoilers (Twitch only).
