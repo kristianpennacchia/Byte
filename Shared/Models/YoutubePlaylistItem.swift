@@ -62,6 +62,7 @@ struct YoutubePlaylistItem: Decodable {
 }
 
 extension YoutubePlaylistItem: Videoable {
+    var videoId: String { contentDetails.videoId }
     var title: String { snippet.title }
     var createdAt: Date { contentDetails.videoPublishedAt }
     var duration: String? { nil }

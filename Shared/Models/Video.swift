@@ -29,6 +29,8 @@ struct Video: Videoable, Decodable {
     let url: String
     let viewable: Viewable
     let viewCount: Int
+
+    var videoId: String { id }
 }
 
 extension Video {

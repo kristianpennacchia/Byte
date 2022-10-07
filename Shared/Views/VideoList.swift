@@ -26,36 +26,41 @@ struct VideoList: View {
     var body: some View {
         ZStack {
             Color.brand.brandDarkDark.ignoresSafeArea()
-            ScrollView {
-                if store.items.isEmpty == false {
-                    Refresh(isAnimating: $isRefreshing, action: refresh)
-                        .padding(.bottom, 8)
-                }
-
-                let columns = Array(repeating: GridItem(.flexible()), count: 4)
-                LazyVGrid(columns: columns) {
-                    ForEach(store.items, id: \.id) { video in
-                        VideoView(video: video)
-                            .buttonWrap {
-                                videoViewModel.video = video
-                                showVideoPlayer = true
-                            }
+            if isRefreshing, store.items.isEmpty {
+                HeartbeatActivityIndicator()
+                    .frame(alignment: .center)
+            } else {
+                ScrollView {
+                    if store.items.isEmpty == false {
+                        Refresh(isAnimating: $isRefreshing, action: refresh)
+                            .padding(.bottom, 8)
                     }
-                    .padding([.leading, .trailing], 14)
+
+                    let columns = Array(repeating: GridItem(.flexible()), count: 4)
+                    LazyVGrid(columns: columns) {
+                        ForEach(store.items, id: \.videoId) { video in
+                            VideoView(video: video)
+                                .buttonWrap {
+                                    videoViewModel.video = video
+                                    showVideoPlayer = true
+                                }
+                        }
+                        .padding([.leading, .trailing], 14)
+                    }
                 }
-            }
-            .onAppear {
-                if store.isStale {
-                    refresh()
+                .onAppear {
+                    if store.isStale {
+                        refresh()
+                    }
                 }
-            }
-            .onReceive(AppState()) { state in
-                if store.isStale, state == .willEnterForeground {
-                    refresh()
+                .onReceive(AppState()) { state in
+                    if store.isStale, state == .willEnterForeground {
+                        refresh()
+                    }
                 }
+                .padding([.leading, .trailing], 14)
+                .edgesIgnoringSafeArea([.leading, .trailing])
             }
-            .padding([.leading, .trailing], 14)
-            .edgesIgnoringSafeArea([.leading, .trailing])
         }
         .fullScreenCover(
             isPresented: $showVideoPlayer,

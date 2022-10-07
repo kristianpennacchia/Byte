@@ -38,7 +38,7 @@ class LiveVideoFetcher: NSObject {
             case (.live(let a), .live(let b)):
                 return a.id == b.id
             case (.vod(let a), .vod(let b)):
-                return a.id == b.id
+                return a.videoId == b.videoId
             }
         }
 
@@ -73,6 +73,10 @@ class LiveVideoFetcher: NSObject {
         }
     }
 
+    enum VideoDataResponse {
+        case playlist(M3U8), formats([YoutubePlayerResponse.StreamingData.Format])
+    }
+
     private(set) lazy var session: URLSession = {
         return URLSession(configuration: .default, delegate: self, delegateQueue: .main)
     }()
@@ -89,7 +93,7 @@ class LiveVideoFetcher: NSObject {
 }
 
 extension LiveVideoFetcher {
-    func fetch(completion: @escaping (Result<M3U8, Error>) -> Void) {
+    func fetch(completion: @escaping (Result<VideoDataResponse, Error>) -> Void) {
         switch videoMode {
         case .live(let stream):
             switch type(of: stream).platform {
@@ -127,7 +131,7 @@ extension LiveVideoFetcher {
 
                         let m3u8Data = try await session.data(from: URL(string: playerResponse.streamingData.hlsManifestUrl!)!).0
                         let m3u8 = try M3U8(data: m3u8Data)
-                        completion(.success(m3u8))
+                        completion(.success(.playlist(m3u8)))
                     } catch let error as DecodingError {
                         completion(.failure(AppError(message: "Fetching channel for user ID '\(stream.userId)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")))
                     } catch {
@@ -138,9 +142,40 @@ extension LiveVideoFetcher {
         case .vod(let video):
             switch type(of: video).platform {
             case .twitch:
-                getVideo(.vod(vodID: video.id), completion: completion)
+                getVideo(.vod(vodID: video.videoId), completion: completion)
             case .youtube:
-                #warning("TODO: Get video M3U8 URL.")
+                print("video.id = \(video.videoId)")
+                Task {
+                    do {
+                        var request = URLRequest(url: URL(string: "https://www.youtube.com/watch?v=\(video.videoId)")!)
+                        request.httpMethod = "GET"
+                        request.setValue("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36", forHTTPHeaderField: "User-Agent")
+                        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                        let htmlPageData = try await session.data(for: request).0
+                        let htmlPageString = String(data: htmlPageData, encoding: .utf8)!
+                        let playerResponseJSON = try /var\s+ytInitialPlayerResponse\s*=\s*({.*?});\s*var\s+\w+\s*=/.firstMatch(in: htmlPageString)?.output.1
+
+                        guard let playerResponseJSONData = playerResponseJSON?.data(using: .utf8) else {
+                            throw AppError(message: "Could not get player response JSON data.")
+                        }
+
+                        let playerResponse = try JSONDecoder().decode(YoutubePlayerResponse.self, from: playerResponseJSONData)
+
+                        playerResponse.streamingData.formats?.forEach { format in
+                            print("format = \(format)")
+                        }
+                        playerResponse.streamingData.adaptiveFormats?.forEach { format in
+                            print("adaptive format = \(format)")
+                        }
+
+                        let allFormats = (playerResponse.streamingData.formats ?? []) + (playerResponse.streamingData.adaptiveFormats ?? [])
+                        completion(.success(.formats(allFormats)))
+                    } catch let error as DecodingError {
+                        completion(.failure(AppError(message: "Fetching channel for video ID '\(video.videoId)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")))
+                    } catch {
+                        completion(.failure(AppError(message: "Fetching channel for video ID '\(video.videoId)' failed. \(error.localizedDescription)")))
+                    }
+                }
             }
         }
     }
@@ -223,7 +258,7 @@ private extension LiveVideoFetcher {
         task.resume()
     }
 
-    func getVideo(_ video: VideoStream, completion: @escaping (Result<M3U8, Error>) -> Void) {
+    func getVideo(_ video: VideoStream, completion: @escaping (Result<VideoDataResponse, Error>) -> Void) {
         getTokenAndSignature(video: video) { [weak self] result in
             guard let self = self else { return }
 
@@ -234,7 +269,7 @@ private extension LiveVideoFetcher {
                     if let data = data {
                         do {
                             let m3u8 = try M3U8(data: data)
-                            completion(.success(m3u8))
+                            completion(.success(.playlist(m3u8)))
                         } catch {
                             completion(.failure(AppError(message: "Failed to decode m3u8 data. \(error.localizedDescription)")))
                         }

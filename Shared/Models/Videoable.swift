@@ -9,7 +9,7 @@
 import Foundation
 
 func equalsVideoable(lhs: any Videoable, rhs: any Videoable) -> Bool {
-    return lhs.id == rhs.id
+    return lhs.videoId == rhs.videoId
 }
 
 func compareVideoable(lhs: any Videoable, rhs: any Videoable) -> Bool {
@@ -32,7 +32,7 @@ let videoPreview = Video(
 protocol Videoable: Identifiable, Hashable, Decodable {
     static var platform: VideoPlatform { get }
 
-    var id: String { get }
+    var videoId: String { get }
     var title: String { get }
     var createdAt: Date { get }
     var duration: String? { get }

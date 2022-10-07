@@ -12,20 +12,16 @@ struct YoutubePlayerResponse: Decodable {
     struct StreamingData: Decodable {
         struct Format: Decodable {
             let itag: Int
-            let qualityLabel: String
-            let url: String?
-        }
-
-        struct AdaptiveFormat: Decodable {
-            let itag: Int
-//            let mimeType: []
             let qualityLabel: String?
-            let url: String?
+            let url: URL
+            let mimeType: String
+            let bitrate: Int
+            let quality: String
         }
 
         let hlsManifestUrl: String?
         let formats: [Format]?
-        let adaptiveFormats: [AdaptiveFormat]?
+        let adaptiveFormats: [Format]?
     }
 
     struct VideoDetails: Decodable {

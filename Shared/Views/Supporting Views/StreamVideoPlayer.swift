@@ -184,20 +184,42 @@ private extension StreamVideoPlayer {
 
         fetcher.fetch { result in
             switch result {
-            case .success(let playlist):
-                if let urlString = playlist.meta.isEmpty ? playlist.rawURLs.last : playlist.meta.sorted(by: >).first?.url,
-                   let url = URL(string: urlString)
-                {
-                    currentStreamURL = url
+            case .success(let response):
+                let url: URL?
 
-                    playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: url))
-                    playerViewModel.player.playImmediately(atRate: 1.0)
-
-                    if muteNotFocused {
-                        playerViewModel.player.isMuted = !isFocused
+                switch response {
+                case .playlist(let playlist):
+                    if let urlString = playlist.meta.isEmpty ? playlist.rawURLs.last : playlist.meta.sorted(by: >).first?.url {
+                        url = URL(string: urlString)
+                    } else {
+                        url = nil
                     }
-                } else {
-                    isPresented = false
+                case .formats(let formats):
+                    let format = formats
+                        .filter { $0.mimeType.contains("video/mp4") }
+                        .sorted { $0.bitrate > $1.bitrate }
+                        .first
+
+                    print("playing format = \(format)")
+
+                    url = format?.url
+                }
+
+                print("playing url = \(url)")
+
+                DispatchQueue.main.async {
+                    if url != nil {
+                        currentStreamURL = url!
+
+                        playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: url!))
+                        playerViewModel.player.playImmediately(atRate: 1.0)
+
+                        if muteNotFocused {
+                            playerViewModel.player.isMuted = isFocused == false
+                        }
+                    } else {
+                        isPresented = false
+                    }
                 }
             case .failure(let error):
                 print("Failed fetching live video data. \(error.localizedDescription)")

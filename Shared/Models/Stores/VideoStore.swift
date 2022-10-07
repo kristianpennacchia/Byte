@@ -80,7 +80,9 @@ final class VideoStore: FetchingObject {
             func getYoutubeVideos(userID: String) async throws -> [YoutubePlaylistItem] {
                 // https://developers.google.com/youtube/v3/docs/playlistItems/list
                 let uploadPlaylistID = "UU" + userID.dropFirst(2)
-                return try await youtubeAPI?.executeFetchAll(
+
+                // Only get the latest 50, otherwise we could be downloading thousands of videos.
+                return try await youtubeAPI?.execute(
                     method: .get,
                     base: .youtube,
                     endpoint: "playlistItems",
@@ -90,7 +92,7 @@ final class VideoStore: FetchingObject {
                         "playlistId": uploadPlaylistID,
                     ],
                     decoding: YoutubeDataItem<YoutubePlaylistItem>.self
-                ) ?? []
+                ).items ?? []
             }
 
             if let twitchAPI = twitchAPI {
