@@ -150,6 +150,8 @@ extension YoutubeAPI {
                         "client_secret": authentication.secret,
                         "device_code": data.deviceCode,
                         "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
+                        "access_type": "offline",
+                        "prompt": "consent",
                     ]
 
                     repeat {
