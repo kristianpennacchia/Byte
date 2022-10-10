@@ -83,10 +83,23 @@ struct ContentView: View {
         }
     }
 
-    private enum SelectionMenuItem {
+    private enum SelectionMenuItem: Equatable {
         case all(AllMenuItem)
         case twitch(TwitchMenuItem)
         case youtube(YoutubeMenuItem)
+
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            switch (lhs, rhs) {
+            case (.all(let lhsItem), .all(let rhsItem)):
+                return lhsItem == rhsItem
+            case (.twitch(let lhsItem), .twitch(let rhsItem)):
+                return lhsItem == rhsItem
+            case (.youtube(let lhsItem), .youtube(let rhsItem)):
+                return lhsItem == rhsItem
+            default:
+                return false
+            }
+        }
     }
 
     @EnvironmentObject private var sessionStore: SessionStore
@@ -116,14 +129,14 @@ struct ContentView: View {
                     VStack(alignment: .center, spacing: 16) {
                         List {
                             ForEach(AllMenuItem.allCases) { menuItem in
-                                MenuItemButton(title: menuItem.title, icon: menuItem.icon) {
+                                MenuItemButton(title: menuItem.title, icon: menuItem.icon, isSelected: .all(menuItem) == selectedMenuItem) {
                                     selectedMenuItem = .all(menuItem)
                                 }
                             }
                             Spacer(minLength: 24)
                             Section("Twitch") {
                                 ForEach(TwitchMenuItem.allCases) { menuItem in
-                                    MenuItemButton(title: menuItem.title, icon: menuItem.icon) {
+                                    MenuItemButton(title: menuItem.title, icon: menuItem.icon, isSelected: .twitch(menuItem) == selectedMenuItem) {
                                         selectedMenuItem = .twitch(menuItem)
                                     }
                                 }
@@ -137,7 +150,7 @@ struct ContentView: View {
                                         }
                                     } else {
                                         ForEach(YoutubeMenuItem.allCases) { menuItem in
-                                            MenuItemButton(title: menuItem.title, icon: menuItem.icon) {
+                                            MenuItemButton(title: menuItem.title, icon: menuItem.icon, isSelected: .youtube(menuItem) == selectedMenuItem) {
                                                 selectedMenuItem = .youtube(menuItem)
                                             }
                                         }
