@@ -46,12 +46,13 @@ final class StreamStore: FetchingObject {
         }
     }
 
-    @Published private(set) var originalItems = [any Streamable]() {
+    private(set) var originalItems = [any Streamable]() {
         didSet {
             applyFilter()
         }
     }
-    @Published private(set) var items = [any Streamable]()
+    private(set) var items = [any Streamable]()
+
     @Published private(set) var uniquedItems = [UniqueStream]()
 
     init(twitchAPI: TwitchAPI, fetch: Fetch) {
