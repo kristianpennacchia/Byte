@@ -286,7 +286,7 @@ extension YoutubeAPI {
                 return try decoder.decode(T.self, from: data)
             }
         } catch let error as YoutubeError {
-            if error.errorCode == "UNAUTHENTICATED" {
+            if error.errorCode?.uppercased() == "UNAUTHENTICATED" {
                 // Authentication failure. The access token has become invalid, try to refresh it.
                 try await refreshAccessToken()
 
@@ -296,7 +296,7 @@ extension YoutubeAPI {
                 throw error
             }
         } catch let error as YoutubeError2 {
-            if error.error.status == "UNAUTHENTICATED" {
+            if error.error.status?.uppercased() == "UNAUTHENTICATED" {
                 // Authentication failure. The access token has become invalid, try to refresh it.
                 try await refreshAccessToken()
 
