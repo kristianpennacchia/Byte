@@ -11,35 +11,33 @@ import SwiftUI
 struct GameList: View {
     private class GameViewModel: ObservableObject {
         @Published var game: Game?
+
+        var isRefreshing = false
     }
 
+    @EnvironmentObject private var sessionStore: SessionStore
     @EnvironmentObject private var api: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
-    @ObservedObject var store: GameStore
-
     @StateObject private var gameViewModel = GameViewModel()
 
-    @State private var isRefreshing = false
+    @StateObject var store: GameStore
+    @State private var items = [Game]()
     @State private var showSpoilerMenu = false
     @State private var showGame = false
+    @Binding var shouldRefresh: Bool
 
     var body: some View {
         ZStack {
             Color.brand.brandDarkDark.ignoresSafeArea()
-            if isRefreshing, store.items.isEmpty {
+            if items.isEmpty {
                 HeartbeatActivityIndicator()
                     .frame(alignment: .center)
             } else {
                 ScrollView {
-                    if store.items.isEmpty == false {
-                        Refresh(isAnimating: $isRefreshing, action: refresh)
-                            .padding(.bottom, 8)
-                    }
-
                     let columns = Array(repeating: GridItem(.flexible()), count: 4)
                     LazyVGrid(columns: columns) {
-                        ForEach(store.items) { game in
+                        ForEach(items) { game in
                             GameView(game: game)
                                 .buttonWrap {
                                     gameViewModel.game = game
@@ -52,18 +50,30 @@ struct GameList: View {
                     }
                     .padding([.leading, .trailing], 14)
                 }
-                .onAppear {
-                    if self.store.isStale {
-                        self.refresh()
-                    }
-                }
-                .onReceive(AppState()) { state in
-                    if self.store.isStale, state == .willEnterForeground {
-                        self.refresh()
-                    }
-                }
                 .padding([.leading, .trailing], 14)
                 .edgesIgnoringSafeArea([.leading, .trailing])
+            }
+        }
+        .onReceive(sessionStore) { _ in
+            refresh()
+        }
+        .onReceive(store.$items) { items in
+            self.items = items
+        }
+        .onReceive(AppState()) { state in
+            if store.isStale, state == .willEnterForeground {
+                refresh()
+            }
+        }
+        .onChange(of: shouldRefresh) { newValue in
+            if newValue {
+                shouldRefresh = false
+                refresh()
+            }
+        }
+        .onAppear {
+            if store.isStale {
+                refresh()
             }
         }
         .actionSheet(isPresented: $showSpoilerMenu) {
@@ -84,7 +94,7 @@ struct GameList: View {
                 }
             },
             content: {
-                StreamList(store: StreamStore(twitchAPI: self.api, fetch: .game(gameViewModel.game!)))
+                StreamList(store: StreamStore(twitchAPI: self.api, fetch: .game(gameViewModel.game!)), shouldRefresh: .constant(false))
                     .environmentObject(self.api)
             }
         )
@@ -93,15 +103,18 @@ struct GameList: View {
 
 private extension GameList {
     func refresh() {
-        isRefreshing = true
+        guard gameViewModel.isRefreshing == false else { return }
+
+        gameViewModel.isRefreshing = true
+
         store.fetch {
-            self.isRefreshing = false
+            gameViewModel.isRefreshing = false
         }
     }
 }
 
 struct GameList_Previews: PreviewProvider {
     static var previews: some View {
-        GameList(store: GameStore(twitchAPI: .shared, fetch: .top))
+        GameList(store: GameStore(twitchAPI: .shared, fetch: .top), shouldRefresh: .constant(false))
     }
 }

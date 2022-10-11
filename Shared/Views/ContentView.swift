@@ -109,7 +109,15 @@ struct ContentView: View {
     @State private var twitchUser: Channel?
     @State private var youtubeUser: YoutubePerson?
     @State private var showYoutubeAuthScreen = false
-    @State private var selectedMenuItem = SelectionMenuItem.all(.followedStreams)
+    @State private var selectedMenuItem = SelectionMenuItem.all(.followedStreams) {
+        didSet {
+            if selectedMenuItem == oldValue {
+                // The user has re-selected the currently selected menu item. Initiate refresh.
+                isRefreshing = true
+            }
+        }
+    }
+    @State private var isRefreshing = false
 
     init() {
         #if !os(tvOS)
@@ -169,25 +177,25 @@ struct ContentView: View {
                         case .all(let menuItem):
                             switch menuItem {
                             case .followedStreams:
-                                StreamList(store: StreamStore(twitchAPI: twitchAPI, youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: twitchUser!.id)))
+                                StreamList(store: StreamStore(twitchAPI: twitchAPI, youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: twitchUser!.id)), shouldRefresh: $isRefreshing)
                             }
                         case .twitch(let menuItem):
                             switch menuItem {
                             case .followedStreams:
-                                StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .followed(twitchUserID: twitchUser!.id)))
+                                StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .followed(twitchUserID: twitchUser!.id)), shouldRefresh: $isRefreshing)
                             case .topStreams:
-                                StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .top))
+                                StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .top), shouldRefresh: $isRefreshing)
                             case .topGames:
-                                GameList(store: GameStore(twitchAPI: twitchAPI, fetch: .top))
+                                GameList(store: GameStore(twitchAPI: twitchAPI, fetch: .top), shouldRefresh: $isRefreshing)
                             case .followedChannels:
-                                ChannelList(store: ChannelStore(twitchAPI: twitchAPI, fetch: .followed(twitchUserID: twitchUser!.id)))
+                                ChannelList(store: ChannelStore(twitchAPI: twitchAPI, fetch: .followed(twitchUserID: twitchUser!.id)), shouldRefresh: $isRefreshing)
                             }
                         case .youtube(let menuItem):
                             switch menuItem {
                             case .followedStreams:
-                                StreamList(store: StreamStore(youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: nil)))
+                                StreamList(store: StreamStore(youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: nil)), shouldRefresh: $isRefreshing)
                             case .followedChannels:
-                                ChannelList(store: ChannelStore(youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: nil)))
+                                ChannelList(store: ChannelStore(youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: nil)), shouldRefresh: $isRefreshing)
                             }
                         }
                     }
