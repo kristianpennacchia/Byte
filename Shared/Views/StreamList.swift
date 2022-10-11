@@ -12,37 +12,35 @@ struct StreamList: View {
     private class StreamViewModel: ObservableObject {
         @Published var streams = [any Streamable]()
         @Published var stream: (any Streamable)?
+
+        var isRefreshing = false
     }
 
     @EnvironmentObject private var sessionStore: SessionStore
     @EnvironmentObject private var api: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
-    @ObservedObject var store: StreamStore
-
     @StateObject private var streamViewModel = StreamViewModel()
 
-    @State private var isRefreshing = false
+    @State private var streams = [StreamStore.UniqueStream]()
     @State private var selectedStreams = [any Streamable]()
     @State private var showSpoilerMenu = false
     @State private var showVideoPlayer = false
 
+    @StateObject var store: StreamStore
+    @Binding var shouldRefresh: Bool
+
     var body: some View {
         ZStack {
             Color.brand.brandDarkDark.ignoresSafeArea()
-            if isRefreshing, store.items.isEmpty {
+            if streams.isEmpty {
                 HeartbeatActivityIndicator()
                     .frame(alignment: .center)
             } else {
                 ScrollView {
-                    if store.uniquedItems.isEmpty == false {
-                        Refresh(isAnimating: $isRefreshing, action: refresh)
-                            .padding(.bottom, 8)
-                    }
-
                     let columns = Array(repeating: GridItem(.flexible()), count: 3)
                     LazyVGrid(columns: columns) {
-                        ForEach(store.uniquedItems) { uniqueItem in
+                        ForEach(streams) { uniqueItem in
                             let stream = uniqueItem.stream
                             StreamView(stream: stream, isSelected: selectedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }))
                                 .navigationBarTitle(store.fetchType.navBarTitle)
@@ -74,21 +72,30 @@ struct StreamList: View {
                         .padding([.leading, .trailing], 14)
                     }
                 }
-                .onAppear {
-                    if store.isStale {
-                        refresh()
-                    }
-                }
-                .onReceive(sessionStore) { store in
-                    refresh()
-                }
-                .onReceive(AppState()) { state in
-                    if store.isStale, state == .willEnterForeground {
-                        refresh()
-                    }
-                }
                 .padding([.leading, .trailing], 14)
                 .edgesIgnoringSafeArea([.leading, .trailing])
+            }
+        }
+        .onReceive(sessionStore) { _ in
+            refresh()
+        }
+        .onReceive(store.$uniquedItems) { items in
+            streams = items
+        }
+        .onReceive(AppState()) { state in
+            if store.isStale, state == .willEnterForeground {
+                refresh()
+            }
+        }
+        .onChange(of: shouldRefresh) { newValue in
+            if newValue {
+                shouldRefresh = false
+                refresh()
+            }
+        }
+        .onAppear {
+            if store.isStale {
+                refresh()
             }
         }
         .actionSheet(isPresented: $showSpoilerMenu) {
@@ -122,9 +129,12 @@ struct StreamList: View {
 
 private extension StreamList {
     func refresh() {
-        isRefreshing = true
+        guard streamViewModel.isRefreshing == false else { return }
+
+        streamViewModel.isRefreshing = true
+
         store.fetch {
-            self.isRefreshing = false
+            streamViewModel.isRefreshing = false
         }
     }
 }
@@ -144,6 +154,6 @@ private extension StreamStore.Fetch {
 
 struct StreamList_Previews: PreviewProvider {
     static var previews: some View {
-        StreamList(store: StreamStore(twitchAPI: .shared, fetch: .followed(twitchUserID: App.previewUsername)))
+        StreamList(store: StreamStore(twitchAPI: .shared, fetch: .followed(twitchUserID: App.previewUsername)), shouldRefresh: .constant(false))
     }
 }

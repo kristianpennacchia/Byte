@@ -25,11 +25,12 @@ final class ChannelStore: FetchingObject {
     }
     var staleTimeoutMinutes: Int { 15 }
 
-    @Published private(set) var originalItems = [any Channelable]() {
+    private(set) var originalItems = [any Channelable]() {
         didSet {
             applyFilter()
         }
     }
+
     @Published private(set) var items = [any Channelable]()
 
     init(twitchAPI: TwitchAPI, fetch: Fetch) {
@@ -81,17 +82,21 @@ final class ChannelStore: FetchingObject {
 
                 self.lastFetched = Date()
 
-                switch result {
-                case .success(let data):
-                    var channels = [any Channelable]()
-                    channels.append(contentsOf: data.data)
-                    channels.append(contentsOf: youtubeChannels)
-                    self.originalItems = channels.sorted(by: compareChannelable)
-                case .failure(let error):
-                    print("Fetching '\(self.fetchType)' channels failed. \(error.localizedDescription)")
-                }
+                let stableYoutubeChannels = youtubeChannels
 
-                completion()
+                await MainActor.run {
+                    switch result {
+                    case .success(let data):
+                        var channels = [any Channelable]()
+                        channels.append(contentsOf: data.data)
+                        channels.append(contentsOf: stableYoutubeChannels)
+                        self.originalItems = channels.sorted(by: compareChannelable)
+                    case .failure(let error):
+                        print("Fetching '\(self.fetchType)' channels failed. \(error.localizedDescription)")
+                    }
+
+                    completion()
+                }
             }
         }
 

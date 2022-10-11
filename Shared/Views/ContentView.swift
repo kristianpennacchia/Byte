@@ -83,10 +83,23 @@ struct ContentView: View {
         }
     }
 
-    private enum SelectionMenuItem {
+    private enum SelectionMenuItem: Equatable {
         case all(AllMenuItem)
         case twitch(TwitchMenuItem)
         case youtube(YoutubeMenuItem)
+
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            switch (lhs, rhs) {
+            case (.all(let lhsItem), .all(let rhsItem)):
+                return lhsItem == rhsItem
+            case (.twitch(let lhsItem), .twitch(let rhsItem)):
+                return lhsItem == rhsItem
+            case (.youtube(let lhsItem), .youtube(let rhsItem)):
+                return lhsItem == rhsItem
+            default:
+                return false
+            }
+        }
     }
 
     @EnvironmentObject private var sessionStore: SessionStore
@@ -96,7 +109,15 @@ struct ContentView: View {
     @State private var twitchUser: Channel?
     @State private var youtubeUser: YoutubePerson?
     @State private var showYoutubeAuthScreen = false
-    @State private var selectedMenuItem = SelectionMenuItem.all(.followedStreams)
+    @State private var selectedMenuItem = SelectionMenuItem.all(.followedStreams) {
+        didSet {
+            if selectedMenuItem == oldValue {
+                // The user has re-selected the currently selected menu item. Initiate refresh.
+                isRefreshing = true
+            }
+        }
+    }
+    @State private var isRefreshing = false
 
     init() {
         #if !os(tvOS)
@@ -116,14 +137,14 @@ struct ContentView: View {
                     VStack(alignment: .center, spacing: 16) {
                         List {
                             ForEach(AllMenuItem.allCases) { menuItem in
-                                MenuItemButton(title: menuItem.title, icon: menuItem.icon) {
+                                MenuItemButton(title: menuItem.title, icon: menuItem.icon, isSelected: .all(menuItem) == selectedMenuItem) {
                                     selectedMenuItem = .all(menuItem)
                                 }
                             }
                             Spacer(minLength: 24)
                             Section("Twitch") {
                                 ForEach(TwitchMenuItem.allCases) { menuItem in
-                                    MenuItemButton(title: menuItem.title, icon: menuItem.icon) {
+                                    MenuItemButton(title: menuItem.title, icon: menuItem.icon, isSelected: .twitch(menuItem) == selectedMenuItem) {
                                         selectedMenuItem = .twitch(menuItem)
                                     }
                                 }
@@ -137,7 +158,7 @@ struct ContentView: View {
                                         }
                                     } else {
                                         ForEach(YoutubeMenuItem.allCases) { menuItem in
-                                            MenuItemButton(title: menuItem.title, icon: menuItem.icon) {
+                                            MenuItemButton(title: menuItem.title, icon: menuItem.icon, isSelected: .youtube(menuItem) == selectedMenuItem) {
                                                 selectedMenuItem = .youtube(menuItem)
                                             }
                                         }
@@ -156,25 +177,25 @@ struct ContentView: View {
                         case .all(let menuItem):
                             switch menuItem {
                             case .followedStreams:
-                                StreamList(store: StreamStore(twitchAPI: twitchAPI, youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: twitchUser!.id)))
+                                StreamList(store: StreamStore(twitchAPI: twitchAPI, youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: twitchUser!.id)), shouldRefresh: $isRefreshing)
                             }
                         case .twitch(let menuItem):
                             switch menuItem {
                             case .followedStreams:
-                                StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .followed(twitchUserID: twitchUser!.id)))
+                                StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .followed(twitchUserID: twitchUser!.id)), shouldRefresh: $isRefreshing)
                             case .topStreams:
-                                StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .top))
+                                StreamList(store: StreamStore(twitchAPI: twitchAPI, fetch: .top), shouldRefresh: $isRefreshing)
                             case .topGames:
-                                GameList(store: GameStore(twitchAPI: twitchAPI, fetch: .top))
+                                GameList(store: GameStore(twitchAPI: twitchAPI, fetch: .top), shouldRefresh: $isRefreshing)
                             case .followedChannels:
-                                ChannelList(store: ChannelStore(twitchAPI: twitchAPI, fetch: .followed(twitchUserID: twitchUser!.id)))
+                                ChannelList(store: ChannelStore(twitchAPI: twitchAPI, fetch: .followed(twitchUserID: twitchUser!.id)), shouldRefresh: $isRefreshing)
                             }
                         case .youtube(let menuItem):
                             switch menuItem {
                             case .followedStreams:
-                                StreamList(store: StreamStore(youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: nil)))
+                                StreamList(store: StreamStore(youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: nil)), shouldRefresh: $isRefreshing)
                             case .followedChannels:
-                                ChannelList(store: ChannelStore(youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: nil)))
+                                ChannelList(store: ChannelStore(youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: nil)), shouldRefresh: $isRefreshing)
                             }
                         }
                     }

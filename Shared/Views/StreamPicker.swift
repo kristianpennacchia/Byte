@@ -22,13 +22,14 @@ struct StreamPicker: View {
         ZStack {
             ZStack {
                 ScrollView {
-                    if store.items.isEmpty == false {
+                    if store.uniquedItems.isEmpty == false {
                         Refresh(isAnimating: $isRefreshing, action: refresh)
                     }
 
                     let columns = Array(repeating: GridItem(.flexible()), count: 4)
                     LazyVGrid(columns: columns) {
-                        ForEach(store.items, id: \.id) { stream in
+                        ForEach(store.uniquedItems) { uniqueItem in
+                            let stream = uniqueItem.stream
                             StreamView(stream: stream, isSelected: false)
                                 .buttonWrap {
                                     onSelectedStream(stream)

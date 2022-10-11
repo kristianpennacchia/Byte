@@ -46,12 +46,13 @@ final class StreamStore: FetchingObject {
         }
     }
 
-    @Published private(set) var originalItems = [any Streamable]() {
+    private(set) var originalItems = [any Streamable]() {
         didSet {
             applyFilter()
         }
     }
-    @Published private(set) var items = [any Streamable]()
+    private(set) var items = [any Streamable]()
+
     @Published private(set) var uniquedItems = [UniqueStream]()
 
     init(twitchAPI: TwitchAPI, fetch: Fetch) {
@@ -137,17 +138,21 @@ final class StreamStore: FetchingObject {
 
                 self.lastFetched = Date()
 
-                switch result {
-                case .success(let data):
-                    var streams = [any Streamable]()
-                    streams.append(contentsOf: data.data)
-                    streams.append(contentsOf: liveYoutubeChannels)
-                    self.originalItems = streams.sorted(by: compareStreamable)
-                case .failure(let error):
-                    print("Fetching '\(self.fetchType)' streams failed. \(error.localizedDescription)")
-                }
+                let stableLiveYoutubeChannels = liveYoutubeChannels
 
-                completion()
+                await MainActor.run {
+                    switch result {
+                    case .success(let data):
+                        var streams = [any Streamable]()
+                        streams.append(contentsOf: data.data)
+                        streams.append(contentsOf: stableLiveYoutubeChannels)
+                        self.originalItems = streams.sorted(by: compareStreamable)
+                    case .failure(let error):
+                        print("Fetching '\(self.fetchType)' streams failed. \(error.localizedDescription)")
+                    }
+
+                    completion()
+                }
             }
         }
 
