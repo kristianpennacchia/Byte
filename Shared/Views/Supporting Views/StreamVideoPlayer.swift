@@ -187,12 +187,20 @@ private extension StreamVideoPlayer {
                 switch response {
                 case .playlist(let playlist):
                     DispatchQueue.main.async {
-                        playerViewModel.player.automaticallyWaitsToMinimizeStalling = true
-                        playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: URL(string: playlist.sourceURL)!))
-                        playerViewModel.player.playImmediately(atRate: 1.0)
+                        if let urlString = playlist.meta.isEmpty ? playlist.rawURLs.last : playlist.meta.sorted(by: >).first?.url,
+                           let url = URL(string: urlString) {
+                            currentStreamURL = url
 
-                        if muteNotFocused {
-                            playerViewModel.player.isMuted = isFocused == false
+                            playerViewModel.player.automaticallyWaitsToMinimizeStalling = true
+                            playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: url))
+                            playerViewModel.player.playImmediately(atRate: 1.0)
+
+                            if muteNotFocused {
+                                playerViewModel.player.isMuted = isFocused == false
+                            }
+                        } else {
+                            self.error = AppError(message: "Unable to get valid video URL.")
+                            showErrorAlert = true
                         }
                     }
                 case .formats(let formats):

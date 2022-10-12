@@ -20,17 +20,15 @@ struct M3U8 {
     private static let videoAdvancedMetadataRegex = ##"#EXT-X-STREAM-INF:.*BANDWIDTH=(\d+).*(?:RESOLUTION=([\dx]+))?.*"##
     private static let urlRegex = #"https:\/\/.*\.m3u8"#
 
-    let sourceURL: String
     let rawText: String
     let meta: [Meta]
     let rawURLs: [String]
 
-    init(data: Data, sourceURL: String) throws {
+    init(data: Data) throws {
         guard let text = String(data: data, encoding: .utf8) else {
             throw Error.decodeFailure
         }
 
-        self.sourceURL = sourceURL
         rawText = text
 
         let basicMetadata = text.substrings(matching: Self.videoMetadataRegex)

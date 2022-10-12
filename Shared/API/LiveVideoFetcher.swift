@@ -130,7 +130,7 @@ extension LiveVideoFetcher {
                         let playerResponse = try JSONDecoder().decode(YoutubePlayerResponse.self, from: playerResponseJSONData)
 
                         let m3u8Data = try await session.data(from: URL(string: playerResponse.streamingData.hlsManifestUrl!)!).0
-                        let m3u8 = try M3U8(data: m3u8Data, sourceURL: playerResponse.streamingData.hlsManifestUrl!)
+                        let m3u8 = try M3U8(data: m3u8Data)
                         completion(.success(.playlist(m3u8)))
                     } catch let error as DecodingError {
                         completion(.failure(AppError(message: "Fetching channel for user ID '\(stream.userId)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")))
@@ -259,7 +259,7 @@ private extension LiveVideoFetcher {
                 let task = self.session.dataTask(with: url) { data, response, error in
                     if let data = data {
                         do {
-                            let m3u8 = try M3U8(data: data, sourceURL: url.absoluteString)
+                            let m3u8 = try M3U8(data: data)
                             completion(.success(.playlist(m3u8)))
                         } catch {
                             completion(.failure(AppError(message: "Failed to decode m3u8 data. \(error.localizedDescription)")))
