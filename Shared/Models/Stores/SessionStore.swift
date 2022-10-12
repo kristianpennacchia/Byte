@@ -43,11 +43,10 @@ final class SessionStore: ObservableObject {
     }
 
     func signInTwitch() {
-        twitchAPI.authenticate { [weak self] result in
-            switch result {
-            case .success(let data):
-                self?.twitchUser = data.data.first
-            case .failure(let error):
+        Task {
+            do {
+                twitchUser = try await twitchAPI.authenticate().data.first
+            } catch {
                 Swift.print("Failed Twitch sign-in. \(error)")
             }
         }

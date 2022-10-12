@@ -51,105 +51,57 @@ final class ChannelStore: FetchingObject {
         self.fetchType = fetch
     }
 
-    func fetch(completion: @escaping () -> Void) {
-        let continueFetch = { [weak self] (result: Result<TwitchDataItem<[Channel]>, Error>) in
-            guard let self = self else { return }
-
-            Task {
-                // We got all the Twitch results, now get the Youtube results (if applicable for the fetch type).
-                var youtubeChannels = [YoutubeSubscription]()
-
-                if let youtubeAPI = self.youtubeAPI, case .followed(twitchUserID: _) = self.fetchType {
-                    print("Getting subscribed Youtube channels...")
-
-                    do {
-                        // https://developers.google.com/youtube/v3/docs/subscriptions/list
-                        youtubeChannels = try await youtubeAPI.executeFetchAll(
-                            method: .get,
-                            base: .youtube,
-                            endpoint: "subscriptions",
-                            query: [
-                                "part": YoutubeSubscription.part,
-                                "maxResults": 50,
-                                "mine": true,
-                            ],
-                            decoding: YoutubeDataItem<YoutubeSubscription>.self
-                        )
-                    } catch {
-                        print("Failed to fetch subscribed Youtube channels. \(error.localizedDescription)")
-                    }
-                }
-
-                self.lastFetched = Date()
-
-                let stableYoutubeChannels = youtubeChannels
-
-                await MainActor.run {
-                    switch result {
-                    case .success(let data):
-                        var channels = [any Channelable]()
-                        channels.append(contentsOf: data.data)
-                        channels.append(contentsOf: stableYoutubeChannels)
-                        self.originalItems = channels.sorted(by: compareChannelable)
-                    case .failure(let error):
-                        print("Fetching '\(self.fetchType)' channels failed. \(error.localizedDescription)")
-                    }
-
-                    completion()
-                }
-            }
-        }
-
-        guard let twitchAPI else {
-            continueFetch(.success(TwitchDataItem<[Channel]>(data: [], pagination: nil)))
-            return
-        }
+    func fetch() async throws {
+        var channels = [any Channelable]()
 
         switch fetchType {
         case .followed(let twitchUserID):
-            let query: [String: Any] = [
-                "first": 100,
-                "from_id": twitchUserID!,
-            ]
+            do {
+                let query: [String: Any] = [
+                    "first": 100,
+                    "from_id": twitchUserID ?? "",
+                ]
 
-            twitchAPI.executeFetchAll(endpoint: "users/follows", query: query, decoding: [Channel.Stub].self) { [weak self] result in
-                switch result {
-                case .success(let followedUserData):
-                    // Now get the channel data for each followed user
-                    let group = DispatchGroup()
-                    var followedChannels = [Channel]()
-                    followedUserData.data
-                        .chunked(into: 100)
-                        .forEach { stubs in
-                            group.enter()
+                let twitchFollowedChannelStubs = try await twitchAPI?.executeFetchAll(method: .get, endpoint: "users/follows", query: query, decoding: [Channel.Stub].self).data ?? []
 
-                            let query: [String: Any] = [
-                                "first": stubs.count,
-                                "id": stubs.map { $0.toId },
-                            ]
+                // Now get the channel data for each followed channel.
+                for stubs in twitchFollowedChannelStubs.chunked(into: 100) {
+                    let query: [String: Any] = [
+                        "first": stubs.count,
+                        "id": stubs.map { $0.toId },
+                    ]
 
-                            twitchAPI.executeFetchAll(endpoint: "users", query: query, decoding: [Channel].self) { result in
-                                switch result {
-                                case .success(let data):
-                                    followedChannels += data.data
-                                case .failure(let error):
-                                    print("Fetching stream data for all followed users failed. \(error.localizedDescription)")
-                                }
-
-                                group.leave()
-                            }
-                        }
-                    group.notify(queue: .main) {
-                        continueFetch(.success(TwitchDataItem<[Channel]>(data: followedChannels, pagination: nil)))
-                    }
-                case .failure(let error):
-                    print("Fetching all user follows failed. \(error.localizedDescription)")
+                    let twitchUsers = try await twitchAPI?.executeFetchAll(method: .get, endpoint: "users", query: query, decoding: [Channel].self).data ?? []
+                    channels += twitchUsers
                 }
+            } catch {
+                print("Fetching all Twitch followed channels failed. \(error.localizedDescription)")
+            }
+
+            do {
+                // https://developers.google.com/youtube/v3/docs/subscriptions/list
+                let youtubeChannels = try await youtubeAPI?.executeFetchAll(
+                    method: .get,
+                    base: .youtube,
+                    endpoint: "subscriptions",
+                    query: [
+                        "part": YoutubeSubscription.part,
+                        "maxResults": 50,
+                        "mine": true,
+                    ],
+                    decoding: YoutubeDataItem<YoutubeSubscription>.self
+                ) ?? []
+                channels += youtubeChannels
+            } catch {
+                print("Fetching all Youtube subscribed channels failed. \(error.localizedDescription)")
             }
         case .top:
             /// - Todo: Fetch top channels
             break
         }
+
+        lastFetched = Date()
+        originalItems = channels.sorted(by: compareChannelable)
     }
 }
 

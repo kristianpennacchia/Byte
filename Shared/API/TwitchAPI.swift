@@ -18,9 +18,6 @@ final class TwitchAPI: ObservableObject {
         let secret: String
     }
 
-    typealias Completion<T> = (_ result: Result<TwitchDataItem<T>, Error>) -> Void where T: Decodable
-    typealias CompletionRaw = (_ result: Result<Data, Error>) -> Void
-
     static private(set) var shared: TwitchAPI!
 
     private let didChange = PassthroughSubject<Output, Failure>()
@@ -93,10 +90,10 @@ extension TwitchAPI {
 
     // - MARK: Authentication
 
-    func authenticate(completion: @escaping Completion<[Channel]>) {
+    func authenticate() async throws -> TwitchDataItem<[Channel]> {
         if accessToken != nil {
             // We should be able to get the user info assuming the accessToken is still valid
-            execute(endpoint: "users", decoding: [Channel].self, completion: completion)
+            return try await execute(method: .get, endpoint: "users", decoding: [Channel].self)
         } else {
             /// - Todo: Authenticate
 //            let query = [
@@ -106,14 +103,14 @@ extension TwitchAPI {
 //                "scope": "",
 //            ].queryParameters()
 //
-//            executeRaw(base: .auth, endpoint: "authorize", query: query, completion: completion)
+//            try await executeRaw(base: .auth, endpoint: "authorize", query: query)
+            throw AppError(message: "Twitch authentication without a pre-supplied access token is not yet implemented.")
         }
     }
 
-    func refreshAccessToken(completion: @escaping Completion<[Channel]>) {
+    func refreshAccessToken() async throws -> TwitchDataItem<[Channel]> {
         guard let refreshToken = refreshToken else {
-            completion(.failure(APIError.refreshToken))
-            return
+            throw APIError.refreshToken
         }
 
         let query = [
@@ -123,42 +120,40 @@ extension TwitchAPI {
             "refresh_token": refreshToken.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
         ]
 
-        executeRaw(method: .post, base: .auth, endpoint: "token", query: query) { result in
-            switch result {
-            case .success(let data):
-                guard let jsonData = try? JSONSerialization.jsonObject(with: data),
-                      let json = jsonData as? [String:  Any?],
-                      let accessToken = json["access_token"] as? String,
-                      let refreshToken = json["refresh_token"] as? String
-                else {
-                    // Refreshing user access token failed, which likely means the refresh token is no longer valid.
-                    self.refreshToken = nil
-                    completion(.failure(APIError.refreshToken))
-                    return
-                }
+        do {
+            let data = try await executeRaw(method: .post, base: .auth, endpoint: "token", query: query)
 
-                self.accessToken = accessToken
-                self.refreshToken = refreshToken
-                self.authenticate { result in
-                    if case .success(let users) = result, let user = users.data.first {
-                        self.didChange.send(user)
-                    }
-
-                    completion(result)
-                }
-            case .failure(let error):
+            guard let jsonData = try? JSONSerialization.jsonObject(with: data),
+                  let json = jsonData as? [String:  Any?],
+                  let accessToken = json["access_token"] as? String,
+                  let refreshToken = json["refresh_token"] as? String
+            else {
                 // Refreshing user access token failed, which likely means the refresh token is no longer valid.
                 self.refreshToken = nil
-
-                completion(.failure(error))
+                throw APIError.refreshToken
             }
+
+            self.accessToken = accessToken
+            self.refreshToken = refreshToken
+
+            let users = try await authenticate()
+            if let user = users.data.first {
+                didChange.send(user)
+            }
+
+            return users
+        } catch {
+            // Refreshing user access token failed, which likely means the refresh token is no longer valid.
+            self.refreshToken = nil
+
+            throw error
         }
     }
 }
 
 extension TwitchAPI {
     @discardableResult
-    func execute<T>(method: Method = .get, base: Base = .helix, endpoint: String, query: [String: Any?] = [:], decoding: T.Type, completion: @escaping Completion<T>) -> URLSessionTask {
+    func execute<T>(method: Method, base: Base = .helix, endpoint: String, query: [String: Any?] = [:], decoding: T.Type) async throws -> TwitchDataItem<T> {
         var components = URLComponents(url: base.url.appendingPathComponent(endpoint), resolvingAgainstBaseURL: true)!
         components.query = query.queryParameters()
 
@@ -170,112 +165,60 @@ extension TwitchAPI {
             request.setValue(authorization, forHTTPHeaderField: "Authorization")
         }
 
-        let task = session.dataTask(with: request) { data, response, error in
-            if let data = data {
-                do {
-                    let result = try self.decoder.decode(TwitchDataItem<T>.self, from: data)
+        let data = try await session.data(for: request).0
 
-                    DispatchQueue.main.async {
-                        completion(.success(result))
-                    }
-                } catch let de as DecodingError {
-                    Swift.print("URL from decoding failure = \(request.url?.absoluteString ?? "N/A"), query = \(query)")
+        do {
+            return try decoder.decode(TwitchDataItem<T>.self, from: data)
+        } catch let decodingError as DecodingError {
+            Swift.print("URL from decoding failure = \(request.url?.absoluteString ?? "N/A"), query = \(query)")
 
-                    if let rawData = String(data: data, encoding: .utf8) {
-                        Swift.print("Raw data from decoding failure = \(rawData)")
-                    }
-
-                    do {
-                        let error = try self.decoder.decode(TwitchError.self, from: data)
-
-                        if error.status == 401 {
-                            // Authentication failure. The access token has become invalid, try to refresh it.
-                            self.refreshAccessToken { result in
-                                switch result {
-                                case .success(_):
-                                    self.execute(method: method, base: base, endpoint: endpoint, query: query, decoding: decoding, completion: completion)
-                                case .failure(let error):
-                                    DispatchQueue.main.async {
-                                        completion(.failure(error))
-                                    }
-                                }
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                                completion(.failure(LocalizedDecodingError(decodingError: de)))
-                            }
-                        }
-                    } catch {
-                        DispatchQueue.main.async {
-                            completion(.failure(LocalizedDecodingError(decodingError: de)))
-                        }
-                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        completion(.failure(error))
-                    }
-                }
-            } else {
-                DispatchQueue.main.async {
-                    completion(.failure(error ?? APIError.unknown))
-                }
+            if let rawData = String(data: data, encoding: .utf8) {
+                Swift.print("Raw data from decoding failure = \(rawData)")
             }
-        }
-        task.resume()
-        return task
-    }
 
-    func executeFetchAll<T>(method: Method = .get, base: Base = .helix, endpoint: String, query: [String: Any?] = [:], decoding: [T].Type, completion: @escaping Completion<[T]>) where T: Decodable {
-        var allItems = [T]()
-
-        func fetch(page: Pagination?) {
-            var query = query
-            query["after"] = page?.cursor
-
-            execute(method: method, base: base, endpoint: endpoint, query: query, decoding: decoding) { result in
-                switch result {
-                case .success(let data):
-                    allItems += data.data
-
-                    if data.pagination == nil || data.pagination!.isValid == false || data.data.isEmpty {
-                        // All data has been downloaded
-                        completion(.success(TwitchDataItem<[T]>(data: allItems, pagination: data.pagination)))
-                    } else {
-                        fetch(page: data.pagination)
-                    }
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-            }
-        }
-
-        fetch(page: nil)
-    }
-
-    @discardableResult
-    func executeRaw(method: Method = .get, base: Base = .helix, endpoint: String, query: [String: Any?] = [:], page: Pagination? = nil, completion: @escaping CompletionRaw) -> URLSessionTask {
-        var components = URLComponents(url: base.url.appendingPathComponent(endpoint), resolvingAgainstBaseURL: true)!
-        components.query = query.queryParameters()
-
-        var request = URLRequest(url: components.url!)
-        request.httpMethod = method.rawValue
-
-        if let accessToken = accessToken {
-            let authorization = base.authorizationHeader(accessToken: accessToken)
-            request.setValue(authorization, forHTTPHeaderField: "Authorization")
-        }
-
-        let task = session.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async {
-                if let data = data {
-                    completion(.success(data))
+            do {
+                let twitchError = try self.decoder.decode(TwitchError.self, from: data)
+                if twitchError.status == 401 {
+                    // Authentication failure. The access token has become invalid, try to refresh it.
+                    _ = try await refreshAccessToken()
+                    return try await execute(method: method, base: base, endpoint: endpoint, query: query, decoding: decoding)
                 } else {
-                    completion(.failure(error ?? APIError.unknown))
+                    throw LocalizedDecodingError(decodingError: decodingError)
                 }
+            } catch {
+                throw LocalizedDecodingError(decodingError: decodingError)
             }
         }
-        task.resume()
-        return task
+    }
+
+    func executeFetchAll<T>(method: Method, base: Base = .helix, endpoint: String, query: [String: Any?] = [:], decoding: [T].Type) async throws -> TwitchDataItem<[T]> where T: Decodable {
+        var allItems = [T]()
+        var currentDataItem: TwitchDataItem<[T]>?
+
+        repeat {
+            var query = query
+            query["after"] = currentDataItem?.pagination?.cursor
+
+            currentDataItem = try await execute(method: method, base: base, endpoint: endpoint, query: query, decoding: decoding)
+            allItems += currentDataItem!.data
+        } while currentDataItem?.pagination != nil && currentDataItem!.pagination!.isValid && currentDataItem!.data.isEmpty == false
+
+        return TwitchDataItem<[T]>(data: allItems, pagination: currentDataItem?.pagination)
+    }
+
+    func executeRaw(method: Method, base: Base, endpoint: String, query: [String: Any?] = [:]) async throws -> Data {
+        var components = URLComponents(url: base.url.appendingPathComponent(endpoint), resolvingAgainstBaseURL: true)!
+        components.query = query.queryParameters()
+
+        var request = URLRequest(url: components.url!)
+        request.httpMethod = method.rawValue
+
+        if let accessToken = accessToken {
+            let authorization = base.authorizationHeader(accessToken: accessToken)
+            request.setValue(authorization, forHTTPHeaderField: "Authorization")
+        }
+
+        return try await session.data(for: request).0
     }
 }
 

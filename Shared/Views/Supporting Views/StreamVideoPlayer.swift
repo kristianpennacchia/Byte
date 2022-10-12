@@ -181,52 +181,49 @@ private extension StreamVideoPlayer {
         // Continue if this stream has not already been configured, or one of the variables has changed.
         guard playerViewModel.isConfigured == false else { return }
 
-        fetcher.fetch { result in
-            switch result {
-            case .success(let response):
-                switch response {
+        Task {
+            do {
+                let videoResponse = try await fetcher.fetch()
+
+                switch videoResponse {
                 case .playlist(let playlist):
-                    DispatchQueue.main.async {
-                        if let urlString = playlist.meta.isEmpty ? playlist.rawURLs.last : playlist.meta.sorted(by: >).first?.url,
-                           let url = URL(string: urlString) {
-                            currentStreamURL = url
-
-                            playerViewModel.player.automaticallyWaitsToMinimizeStalling = true
-                            playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: url))
-                            playerViewModel.player.playImmediately(atRate: 1.0)
-
-                            if muteNotFocused {
-                                playerViewModel.player.isMuted = isFocused == false
-                            }
-                        } else {
-                            self.error = AppError(message: "Unable to get valid video URL.")
-                            showErrorAlert = true
-                        }
-                    }
-                case .formats(let formats):
-                    DispatchQueue.main.async {
-                        guard let url = formats
-                            .filter({ $0.mimeType.contains("video/mp4") && $0.mimeType.contains("avc1.") && $0.mimeType.contains("mp4a.") })
-                            .sorted(by: { $0.bitrate > $1.bitrate })
-                            .first?.url
-                        else {
-                            self.error = AppError(message: "Unable to get valid video URL.")
-                            showErrorAlert = true
-                            return
-                        }
-
+                    if let urlString = playlist.meta.isEmpty ? playlist.rawURLs.last : playlist.meta.sorted(by: >).first?.url,
+                       let url = URL(string: urlString) {
                         currentStreamURL = url
 
-                        playerViewModel.player.automaticallyWaitsToMinimizeStalling = false
+                        playerViewModel.player.automaticallyWaitsToMinimizeStalling = true
                         playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: url))
                         playerViewModel.player.playImmediately(atRate: 1.0)
 
                         if muteNotFocused {
                             playerViewModel.player.isMuted = isFocused == false
                         }
+                    } else {
+                        self.error = AppError(message: "Unable to get valid video URL.")
+                        showErrorAlert = true
+                    }
+                case .formats(let formats):
+                    guard let url = formats
+                        .filter({ $0.mimeType.contains("video/mp4") && $0.mimeType.contains("avc1.") && $0.mimeType.contains("mp4a.") })
+                        .sorted(by: { $0.bitrate > $1.bitrate })
+                        .first?.url
+                    else {
+                        self.error = AppError(message: "Unable to get valid video URL.")
+                        showErrorAlert = true
+                        return
+                    }
+
+                    currentStreamURL = url
+
+                    playerViewModel.player.automaticallyWaitsToMinimizeStalling = false
+                    playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: url))
+                    playerViewModel.player.playImmediately(atRate: 1.0)
+
+                    if muteNotFocused {
+                        playerViewModel.player.isMuted = isFocused == false
                     }
                 }
-            case .failure(let error):
+            } catch {
                 print("Failed fetching live video data. \(error.localizedDescription)")
                 self.error = error
                 showErrorAlert = true

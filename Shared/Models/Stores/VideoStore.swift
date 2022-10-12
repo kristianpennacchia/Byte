@@ -50,24 +50,8 @@ final class VideoStore: FetchingObject {
         self.fetchType = fetch
     }
 
-    func fetch(completion: @escaping () -> Void) {
-        let continueFetch = { [weak self] (result: Result<(twitch: TwitchDataItem<[Video]>?, youtube: [YoutubePlaylistItem]?), Error>) in
-            guard let self = self else { return }
-
-            self.lastFetched = Date()
-
-            switch result {
-            case .success(let data):
-                var videos = [any Videoable]()
-                videos.append(contentsOf: data.twitch?.data ?? [])
-                videos.append(contentsOf: data.youtube ?? [])
-                self.originalItems = videos.sorted(by: compareVideoable)
-            case .failure(let error):
-                print("Fetching '\(self.fetchType)' videos failed. \(error.localizedDescription)")
-            }
-
-            completion()
-        }
+    func fetch() async throws {
+        var videos = [any Videoable]()
 
         switch fetchType {
         case .user(let userID):
@@ -76,13 +60,24 @@ final class VideoStore: FetchingObject {
                 "user_id": userID,
             ]
 
-            @Sendable
-            func getYoutubeVideos(userID: String) async throws -> [YoutubePlaylistItem] {
+            do {
+                let twitchVideos = try await twitchAPI?.execute(
+                    method: .get,
+                    endpoint: "videos",
+                    query: query,
+                    decoding: [Video].self
+                ).data ?? []
+                videos.append(contentsOf: twitchVideos)
+            } catch {
+                Swift.print("Failed getting Twitch videos. \(error.localizedDescription)")
+            }
+
+            do {
                 // https://developers.google.com/youtube/v3/docs/playlistItems/list
                 let uploadPlaylistID = "UU" + userID.dropFirst(2)
 
                 // Only get the latest 50, otherwise we could be downloading thousands of videos.
-                return try await youtubeAPI?.execute(
+                let youtubeVideos = try await youtubeAPI?.execute(
                     method: .get,
                     base: .youtube,
                     endpoint: "playlistItems",
@@ -93,35 +88,14 @@ final class VideoStore: FetchingObject {
                     ],
                     decoding: YoutubeDataItem<YoutubePlaylistItem>.self
                 ).items ?? []
-            }
-
-            if let twitchAPI = twitchAPI {
-                twitchAPI.execute(endpoint: "videos", query: query, decoding: [Video].self) { result in
-                    switch result {
-                    case .success(let twitchData):
-                        Task {
-                            do {
-                                let videos = try await getYoutubeVideos(userID: userID)
-                                continueFetch(.success((twitchData, videos)))
-                            } catch {
-                                continueFetch(.failure(error))
-                            }
-                        }
-                    case .failure(let error):
-                        continueFetch(.failure(error))
-                    }
-                }
-            } else {
-                Task {
-                    do {
-                        let videos = try await getYoutubeVideos(userID: userID)
-                        continueFetch(.success((nil, videos)))
-                    } catch {
-                        continueFetch(.failure(error))
-                    }
-                }
+                videos.append(contentsOf: youtubeVideos)
+            } catch {
+                Swift.print("Failed getting Youtube videos. \(error.localizedDescription)")
             }
         }
+
+        lastFetched = Date()
+        originalItems = videos.sorted(by: compareVideoable)
     }
 }
 

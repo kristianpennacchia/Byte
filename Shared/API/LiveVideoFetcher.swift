@@ -93,79 +93,66 @@ class LiveVideoFetcher: NSObject {
 }
 
 extension LiveVideoFetcher {
-    func fetch(completion: @escaping (Result<VideoDataResponse, Error>) -> Void) {
+    func fetch() async throws -> VideoDataResponse {
         switch videoMode {
         case .live(let stream):
             switch type(of: stream).platform {
             case .twitch:
-                twitchAPI.execute(endpoint: "users", query: ["id": stream.userId], decoding: [Channel].self) { [weak self] result in
-                    guard let self = self else { return }
-
-                    switch result {
-                    case .success(let data):
-                        if let channel = data.data.first {
-                            self.getVideo(.live(channel: channel.login), completion: completion)
-                        } else {
-                            completion(.failure(AppError(message: "Decoding channel data for user ID '\(stream.userId)' failed.")))
-                        }
-                    case .failure(let error):
-                        completion(.failure(AppError(message: "Fetching channel for user ID '\(stream.userId)' failed. \(error.localizedDescription)")))
-                    }
+                let data = try await twitchAPI.execute(method: .get, endpoint: "users", query: ["id": stream.userId], decoding: [Channel].self)
+                if let channel = data.data.first {
+                    return try await getVideo(.live(channel: channel.login))
+                } else {
+                    throw AppError(message: "Decoding channel data for user ID '\(stream.userId)' failed.")
                 }
             case .youtube:
-                Task {
-                    do {
-                        var request = URLRequest(url: URL(string: "https://www.youtube.com/channel/\(stream.userId)/live")!)
-                        request.httpMethod = "GET"
-                        request.setValue("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36", forHTTPHeaderField: "User-Agent")
-                        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                        let htmlPageData = try await session.data(for: request).0
-                        let htmlPageString = String(data: htmlPageData, encoding: .utf8)!
-                        let playerResponseJSON = try /var\s+ytInitialPlayerResponse\s*=\s*({.*?});\s*var\s+\w+\s*=/.firstMatch(in: htmlPageString)?.output.1
+                do {
+                    var request = URLRequest(url: URL(string: "https://www.youtube.com/channel/\(stream.userId)/live")!)
+                    request.httpMethod = "GET"
+                    request.setValue("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36", forHTTPHeaderField: "User-Agent")
+                    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                    let htmlPageData = try await session.data(for: request).0
+                    let htmlPageString = String(data: htmlPageData, encoding: .utf8)!
+                    let playerResponseJSON = try /var\s+ytInitialPlayerResponse\s*=\s*({.*?});\s*var\s+\w+\s*=/.firstMatch(in: htmlPageString)?.output.1
 
-                        guard let playerResponseJSONData = playerResponseJSON?.data(using: .utf8) else {
-                            throw AppError(message: "Could not get player response JSON data.")
-                        }
-
-                        let playerResponse = try JSONDecoder().decode(YoutubePlayerResponse.self, from: playerResponseJSONData)
-
-                        let m3u8Data = try await session.data(from: URL(string: playerResponse.streamingData.hlsManifestUrl!)!).0
-                        let m3u8 = try M3U8(data: m3u8Data)
-                        completion(.success(.playlist(m3u8)))
-                    } catch let error as DecodingError {
-                        completion(.failure(AppError(message: "Fetching channel for user ID '\(stream.userId)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")))
-                    } catch {
-                        completion(.failure(AppError(message: "Fetching channel for user ID '\(stream.userId)' failed. \(error.localizedDescription)")))
+                    guard let playerResponseJSONData = playerResponseJSON?.data(using: .utf8) else {
+                        throw AppError(message: "Could not get player response JSON data.")
                     }
+
+                    let playerResponse = try JSONDecoder().decode(YoutubePlayerResponse.self, from: playerResponseJSONData)
+
+                    let m3u8Data = try await session.data(from: URL(string: playerResponse.streamingData.hlsManifestUrl!)!).0
+                    let m3u8 = try M3U8(data: m3u8Data)
+                    return .playlist(m3u8)
+                } catch let error as DecodingError {
+                    throw AppError(message: "Fetching channel for user ID '\(stream.userId)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")
+                } catch {
+                    throw AppError(message: "Fetching channel for user ID '\(stream.userId)' failed. \(error.localizedDescription)")
                 }
             }
         case .vod(let video):
             switch type(of: video).platform {
             case .twitch:
-                getVideo(.vod(vodID: video.videoId), completion: completion)
+                return try await getVideo(.vod(vodID: video.videoId))
             case .youtube:
-                print("video.id = \(video.videoId)")
-                Task {
-                    do {
-                        var request = URLRequest(url: URL(string: "https://www.youtube.com/watch?v=\(video.videoId)")!)
-                        request.httpMethod = "GET"
-                        request.setValue("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36", forHTTPHeaderField: "User-Agent")
-                        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                        let htmlPageData = try await session.data(for: request).0
-                        let htmlPageString = String(data: htmlPageData, encoding: .utf8)!
-                        let playerResponseJSON = try /var\s+ytInitialPlayerResponse\s*=\s*({.*?});\s*var\s+\w+\s*=/.firstMatch(in: htmlPageString)?.output.1
+                do {
+                    var request = URLRequest(url: URL(string: "https://www.youtube.com/watch?v=\(video.videoId)")!)
+                    request.httpMethod = "GET"
+                    request.setValue("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36", forHTTPHeaderField: "User-Agent")
+                    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                    let htmlPageData = try await session.data(for: request).0
+                    let htmlPageString = String(data: htmlPageData, encoding: .utf8)!
+                    let playerResponseJSON = try /var\s+ytInitialPlayerResponse\s*=\s*({.*?});\s*var\s+\w+\s*=/.firstMatch(in: htmlPageString)?.output.1
 
-                        guard let playerResponseJSONData = playerResponseJSON?.data(using: .utf8) else {
-                            throw AppError(message: "Could not get player response JSON data.")
-                        }
-
-                        let playerResponse = try JSONDecoder().decode(YoutubePlayerResponse.self, from: playerResponseJSONData)
-                        completion(.success(.formats(playerResponse.streamingData.formats ?? [])))
-                    } catch let error as DecodingError {
-                        completion(.failure(AppError(message: "Fetching channel for video ID '\(video.videoId)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")))
-                    } catch {
-                        completion(.failure(AppError(message: "Fetching channel for video ID '\(video.videoId)' failed. \(error.localizedDescription)")))
+                    guard let playerResponseJSONData = playerResponseJSON?.data(using: .utf8) else {
+                        throw AppError(message: "Could not get player response JSON data.")
                     }
+
+                    let playerResponse = try JSONDecoder().decode(YoutubePlayerResponse.self, from: playerResponseJSONData)
+                    return .formats(playerResponse.streamingData.formats ?? [])
+                } catch let error as DecodingError {
+                    throw AppError(message: "Fetching channel for video ID '\(video.videoId)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")
+                } catch {
+                    throw AppError(message: "Fetching channel for video ID '\(video.videoId)' failed. \(error.localizedDescription)")
                 }
             }
         }
@@ -229,49 +216,28 @@ private extension LiveVideoFetcher {
         return request
     }
 
-    func getTokenAndSignature(video: VideoStream, completion: @escaping (Result<SigToken, Error>) -> Void) {
+    func getTokenAndSignature(video: VideoStream) async throws -> SigToken {
         let request = tokenAPI(video: video)
-        let task = session.dataTask(with: request) { data, response, error in
-            if let data = data {
-                do {
-                    let decoder = JSONDecoder()
-                    let sigToken = try decoder.decode(SigToken.self, from: data)
-                    completion(.success(sigToken))
-                } catch let error as NSError {
-                    completion(.failure(AppError(message: "Failed to decode token and signature from JSON. \(error.localizedDescription)\n\n\(error.debugDescription)")))
-                } catch {
-                    completion(.failure(AppError(message: "Failed to decode token and signature from JSON. \(error.localizedDescription)")))
-                }
-            } else {
-                completion(.failure(AppError(message: "Failed to download token and signature. \(error?.localizedDescription ?? "Unknown error.")")))
-            }
+        let data = try await session.data(for: request).0
+
+        do {
+            return try JSONDecoder().decode(SigToken.self, from: data)
+        } catch let error as DecodingError {
+            let localizedError = LocalizedDecodingError(decodingError: error)
+            print("Failed to decode Twitch token and signature from JSON. \(error.localizedDescription)")
+            throw localizedError
         }
-        task.resume()
     }
 
-    func getVideo(_ video: VideoStream, completion: @escaping (Result<VideoDataResponse, Error>) -> Void) {
-        getTokenAndSignature(video: video) { [weak self] result in
-            guard let self = self else { return }
-
-            switch result {
-            case .success(let data):
-                let url = self.usherAPI(video: video, sigToken: data)
-                let task = self.session.dataTask(with: url) { data, response, error in
-                    if let data = data {
-                        do {
-                            let m3u8 = try M3U8(data: data)
-                            completion(.success(.playlist(m3u8)))
-                        } catch {
-                            completion(.failure(AppError(message: "Failed to decode m3u8 data. \(error.localizedDescription)")))
-                        }
-                    } else {
-                        completion(.failure(AppError(message: "Failed to download live stream m3u8 data. \(error?.localizedDescription ?? "Unknown error.")")))
-                    }
-                }
-                task.resume()
-            case .failure(let error):
-                completion(.failure(error))
-            }
+    func getVideo(_ video: VideoStream) async throws -> VideoDataResponse {
+        let sigToken = try await getTokenAndSignature(video: video)
+        let url = usherAPI(video: video, sigToken: sigToken)
+        let data = try await session.data(from: url).0
+        do {
+            let m3u8 = try M3U8(data: data)
+            return .playlist(m3u8)
+        } catch {
+            throw AppError(message: "Failed to decode m3u8 data. \(error.localizedDescription)")
         }
     }
 }

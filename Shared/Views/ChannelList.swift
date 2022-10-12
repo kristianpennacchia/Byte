@@ -98,9 +98,9 @@ private extension ChannelList {
     func refresh() {
         guard channelViewModel.isRefreshing == false else { return }
 
-        channelViewModel.isRefreshing = true
-
-        store.fetch {
+        Task {
+            channelViewModel.isRefreshing = true
+            try? await store.fetch()
             channelViewModel.isRefreshing = false
         }
     }

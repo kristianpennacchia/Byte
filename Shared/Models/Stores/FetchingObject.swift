@@ -25,7 +25,7 @@ protocol FetchingObject: ObservableObject {
 
     init(twitchAPI: TwitchAPI, fetch: Key)
 
-    func fetch(completion: @escaping () -> Void)
+    func fetch() async throws
 }
 
 extension FetchingObject {
@@ -34,8 +34,4 @@ extension FetchingObject {
         return lastFetched == nil || lastFetched! < timeout
     }
     var staleTimeoutMinutes: Int { 5 }
-
-    func fetch() {
-        fetch {}
-    }
 }

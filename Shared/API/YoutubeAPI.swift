@@ -24,7 +24,6 @@ final class YoutubeAPI: ObservableObject {
     }
 
     typealias Completion<T> = (_ result: Result<T, Error>) -> Void where T: Decodable
-    typealias CompletionRaw = (_ result: Result<Data, Error>) -> Void
 
     static var isAvailable: Bool { shared != nil }
     static private(set) var shared: YoutubeAPI!
@@ -196,7 +195,7 @@ extension YoutubeAPI {
         }
     }
 
-    func refreshAccessToken() async throws -> Void {
+    func refreshAccessToken() async throws {
         guard let refreshToken = refreshToken else {
             throw APIError.refreshToken
         }

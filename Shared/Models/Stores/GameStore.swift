@@ -35,30 +35,27 @@ final class GameStore: FetchingObject {
         self.fetchType = fetch
     }
 
-    func fetch(completion: @escaping () -> Void) {
+    func fetch() async throws {
+        var games = [Game]()
+
         let query: [String: Any] = [
             "first": 100,
         ]
 
         switch fetchType {
         case .top:
-            twitchAPI!.execute(endpoint: "games/top", query: query, decoding: [Game].self) { [weak self] result in
-                guard let self = self else { return }
-
-                self.lastFetched = Date()
-
-                switch result {
-                case .success(let data):
-                    self.originalItems = data.data
-                case .failure(let error):
-                    print("Fetching '\(self.fetchType)' games failed. \(error.localizedDescription)")
-                }
-
-                completion()
+            do {
+                let twitchGames = try await twitchAPI!.execute(method: .get, endpoint: "games/top", query: query, decoding: [Game].self).data
+                games.append(contentsOf: twitchGames)
+            } catch {
+                print("Fetching '\(fetchType)' games failed. \(error.localizedDescription)")
             }
         case .followed:
             break
         }
+
+        lastFetched = Date()
+        originalItems = games
     }
 }
 

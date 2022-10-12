@@ -26,11 +26,10 @@ struct StreamView: View {
 
     var body: some View {
         if let stream = stream as? Stream, game?.id != stream.gameId {
-            stream.game(api: api) { result in
-                switch result {
-                case .success(let data):
-                    self.game = data
-                case .failure(let error):
+            Task {
+                do {
+                    game = try await stream.game(api: api)
+                } catch {
                     print("Fetching game (id = \(stream.gameId) failed. \(error.localizedDescription))")
                 }
             }

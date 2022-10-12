@@ -131,9 +131,9 @@ private extension StreamList {
     func refresh() {
         guard streamViewModel.isRefreshing == false else { return }
 
-        streamViewModel.isRefreshing = true
-
-        store.fetch {
+        Task {
+            streamViewModel.isRefreshing = true
+            try? await store.fetch()
             streamViewModel.isRefreshing = false
         }
     }

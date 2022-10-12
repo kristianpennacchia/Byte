@@ -67,9 +67,10 @@ struct StreamPicker: View {
 
 private extension StreamPicker {
     func refresh() {
-        isRefreshing = true
-        store.fetch {
-            self.isRefreshing = false
+        Task {
+            isRefreshing = true
+            try? await store.fetch()
+            isRefreshing = false
         }
     }
 }

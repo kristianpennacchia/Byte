@@ -46,19 +46,12 @@ extension Stream {
             .replacingOccurrences(of: "{height}", with: "\(height)")
     }
 
-    @discardableResult
-    func game(api: TwitchAPI, completion: @escaping (Result<Game, Error>) -> Void) -> URLSessionTask? {
-        api.execute(endpoint: "games", query: ["id": gameId], decoding: [Game].self) { result in
-            switch result {
-            case .success(let data):
-                if let game = data.data.first {
-                    completion(.success(game))
-                } else {
-                    completion(.failure(APIError.invalidData(Game.self)))
-                }
-            case .failure(let error):
-                completion(.failure(error))
-            }
+    func game(api: TwitchAPI) async throws -> Game {
+        let data = try await api.execute(method: .get, endpoint: "games", query: ["id": gameId], decoding: [Game].self)
+        if let game = data.data.first {
+            return game
+        } else {
+            throw APIError.invalidData(Game.self)
         }
     }
 }

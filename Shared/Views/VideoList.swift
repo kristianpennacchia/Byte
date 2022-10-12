@@ -84,9 +84,10 @@ struct VideoList: View {
 
 private extension VideoList {
     func refresh() {
-        isRefreshing = true
-        store.fetch {
-            self.isRefreshing = false
+        Task {
+            isRefreshing = true
+            try? await store.fetch()
+            isRefreshing = false
         }
     }
 }

@@ -105,9 +105,9 @@ private extension GameList {
     func refresh() {
         guard gameViewModel.isRefreshing == false else { return }
 
-        gameViewModel.isRefreshing = true
-
-        store.fetch {
+        Task {
+            gameViewModel.isRefreshing = true
+            try? await store.fetch()
             gameViewModel.isRefreshing = false
         }
     }
