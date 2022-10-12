@@ -19,7 +19,8 @@ struct YoutubeVideo: Decodable {
             let `default`: URL
             let medium: URL
             let high: URL
-            let maxres: URL
+            let standard: URL
+            let maxres: URL?
         }
 
         let publishedAt: Date
@@ -109,6 +110,7 @@ extension YoutubeVideo: Streamable {
     }
 
     func thumbnail(width: Int, height: Int) -> String {
-        snippet.thumbnails.maxres.url
+        // Fallback to medium as it has a better fitting aspect ratio.
+        snippet.thumbnails.maxres?.url ?? snippet.thumbnails.medium.url
     }
 }
