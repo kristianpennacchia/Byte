@@ -11,8 +11,6 @@ import SwiftUI
 struct ChannelList: View {
     private class ChannelViewModel: ObservableObject {
         @Published var channel: (any Channelable)?
-
-        var isRefreshing = false
     }
 
     @EnvironmentObject private var sessionStore: SessionStore
@@ -22,6 +20,7 @@ struct ChannelList: View {
     @StateObject private var channelViewModel = ChannelViewModel()
 
     @State private var items = [any Channelable]()
+    @State private var isRefreshing = false
 
     @StateObject var store: ChannelStore
     @State private var showChannel = false
@@ -30,7 +29,7 @@ struct ChannelList: View {
     var body: some View {
         ZStack {
             Color.brand.brandDarkDark.ignoresSafeArea()
-            if items.isEmpty {
+            if items.isEmpty || isRefreshing {
                 HeartbeatActivityIndicator()
                     .frame(alignment: .center)
             } else {
@@ -96,12 +95,12 @@ struct ChannelList: View {
 
 private extension ChannelList {
     func refresh() {
-        guard channelViewModel.isRefreshing == false else { return }
+        guard isRefreshing == false else { return }
 
         Task {
-            channelViewModel.isRefreshing = true
+            isRefreshing = true
             try? await store.fetch()
-            channelViewModel.isRefreshing = false
+            isRefreshing = false
         }
     }
 }

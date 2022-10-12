@@ -11,8 +11,6 @@ import SwiftUI
 struct GameList: View {
     private class GameViewModel: ObservableObject {
         @Published var game: Game?
-
-        var isRefreshing = false
     }
 
     @EnvironmentObject private var sessionStore: SessionStore
@@ -20,6 +18,7 @@ struct GameList: View {
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @StateObject private var gameViewModel = GameViewModel()
+    @State private var isRefreshing = false
 
     @StateObject var store: GameStore
     @State private var items = [Game]()
@@ -30,7 +29,7 @@ struct GameList: View {
     var body: some View {
         ZStack {
             Color.brand.brandDarkDark.ignoresSafeArea()
-            if items.isEmpty {
+            if items.isEmpty || isRefreshing {
                 HeartbeatActivityIndicator()
                     .frame(alignment: .center)
             } else {
@@ -103,12 +102,12 @@ struct GameList: View {
 
 private extension GameList {
     func refresh() {
-        guard gameViewModel.isRefreshing == false else { return }
+        guard isRefreshing == false else { return }
 
         Task {
-            gameViewModel.isRefreshing = true
+            isRefreshing = true
             try? await store.fetch()
-            gameViewModel.isRefreshing = false
+            isRefreshing = false
         }
     }
 }

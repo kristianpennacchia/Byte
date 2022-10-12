@@ -25,11 +25,12 @@ final class VideoStore: FetchingObject {
         }
     }
 
-    @Published private(set) var originalItems = [any Videoable]() {
+    private(set) var originalItems = [any Videoable]() {
         didSet {
             applyFilter()
         }
     }
+
     @Published private(set) var items = [any Videoable]()
 
     init(twitchAPI: TwitchAPI, fetch: Fetch) {

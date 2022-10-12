@@ -12,8 +12,6 @@ struct StreamList: View {
     private class StreamViewModel: ObservableObject {
         @Published var streams = [any Streamable]()
         @Published var stream: (any Streamable)?
-
-        var isRefreshing = false
     }
 
     @EnvironmentObject private var sessionStore: SessionStore
@@ -26,6 +24,7 @@ struct StreamList: View {
     @State private var selectedStreams = [any Streamable]()
     @State private var showSpoilerMenu = false
     @State private var showVideoPlayer = false
+    @State private var isRefreshing = false
 
     @StateObject var store: StreamStore
     @Binding var shouldRefresh: Bool
@@ -33,7 +32,7 @@ struct StreamList: View {
     var body: some View {
         ZStack {
             Color.brand.brandDarkDark.ignoresSafeArea()
-            if streams.isEmpty {
+            if streams.isEmpty || isRefreshing {
                 HeartbeatActivityIndicator()
                     .frame(alignment: .center)
             } else {
@@ -129,12 +128,12 @@ struct StreamList: View {
 
 private extension StreamList {
     func refresh() {
-        guard streamViewModel.isRefreshing == false else { return }
+        guard isRefreshing == false else { return }
 
         Task {
-            streamViewModel.isRefreshing = true
+            isRefreshing = true
             try? await store.fetch()
-            streamViewModel.isRefreshing = false
+            isRefreshing = false
         }
     }
 }

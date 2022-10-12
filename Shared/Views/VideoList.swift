@@ -16,29 +16,30 @@ struct VideoList: View {
     @EnvironmentObject private var api: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
-    @ObservedObject var store: VideoStore
+    @StateObject var store: VideoStore
 
     @StateObject private var videoViewModel = VideoViewModel()
 
-    @State private var isRefreshing = false
+    @State private var items = [any Videoable]()
     @State private var showVideoPlayer = false
+    @State private var isRefreshing = false
 
     var body: some View {
         ZStack {
             Color.brand.brandDarkDark.ignoresSafeArea()
-            if isRefreshing, store.items.isEmpty {
+            if items.isEmpty || isRefreshing {
                 HeartbeatActivityIndicator()
                     .frame(alignment: .center)
             } else {
                 ScrollView {
-                    if store.items.isEmpty == false {
+                    if items.isEmpty == false {
                         Refresh(isAnimating: $isRefreshing, action: refresh)
                             .padding(.bottom, 8)
                     }
 
                     let columns = Array(repeating: GridItem(.flexible()), count: 4)
                     LazyVGrid(columns: columns) {
-                        ForEach(store.items, id: \.videoId) { video in
+                        ForEach(items, id: \.videoId) { video in
                             VideoView(video: video)
                                 .buttonWrap {
                                     videoViewModel.video = video
@@ -48,18 +49,21 @@ struct VideoList: View {
                         .padding([.leading, .trailing], 14)
                     }
                 }
-                .onAppear {
-                    if store.isStale {
-                        refresh()
-                    }
-                }
-                .onReceive(AppState()) { state in
-                    if store.isStale, state == .willEnterForeground {
-                        refresh()
-                    }
-                }
                 .padding([.leading, .trailing], 14)
                 .edgesIgnoringSafeArea([.leading, .trailing])
+            }
+        }
+        .onReceive(store.$items) { items in
+            self.items = items
+        }
+        .onReceive(AppState()) { state in
+            if store.isStale, state == .willEnterForeground {
+                refresh()
+            }
+        }
+        .onAppear {
+            if store.isStale {
+                refresh()
             }
         }
         .fullScreenCover(
@@ -84,6 +88,8 @@ struct VideoList: View {
 
 private extension VideoList {
     func refresh() {
+        guard isRefreshing == false else { return }
+
         Task {
             isRefreshing = true
             try? await store.fetch()
