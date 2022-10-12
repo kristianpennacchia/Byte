@@ -12,8 +12,9 @@ struct StreamPicker: View {
     @EnvironmentObject private var api: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
-    @ObservedObject var store: StreamStore
+    @StateObject var store: StreamStore
 
+    @State private var streams = [StreamStore.UniqueStream]()
     @State private var isRefreshing = false
 
     let onSelectedStream: (any Streamable) -> Void
@@ -22,13 +23,13 @@ struct StreamPicker: View {
         ZStack {
             ZStack {
                 ScrollView {
-                    if store.uniquedItems.isEmpty == false {
+                    if streams.isEmpty == false {
                         Refresh(isAnimating: $isRefreshing, action: refresh)
                     }
 
                     let columns = Array(repeating: GridItem(.flexible()), count: 4)
                     LazyVGrid(columns: columns) {
-                        ForEach(store.uniquedItems) { uniqueItem in
+                        ForEach(streams) { uniqueItem in
                             let stream = uniqueItem.stream
                             StreamView(stream: stream, isSelected: false)
                                 .buttonWrap {
@@ -36,16 +37,6 @@ struct StreamPicker: View {
                                 }
                         }
                         .padding(14)
-                    }
-                }
-                .onAppear {
-                    if store.isStale {
-                        refresh()
-                    }
-                }
-                .onReceive(AppState()) { state in
-                    if store.isStale, state == .willEnterForeground {
-                        refresh()
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -58,6 +49,19 @@ struct StreamPicker: View {
                 }
             )
         }
+        .onReceive(store.$uniquedItems) { items in
+            streams = items
+        }
+        .onReceive(AppState()) { state in
+            if store.isStale, state == .willEnterForeground {
+                refresh()
+            }
+        }
+        .onAppear {
+            if store.isStale {
+                refresh()
+            }
+        }
         .padding([.leading, .trailing], 50)
         .padding([.top, .bottom], 50)
         .background(VisualEffectView(effect: UIBlurEffect(style: .dark)))
@@ -67,6 +71,8 @@ struct StreamPicker: View {
 
 private extension StreamPicker {
     func refresh() {
+        guard isRefreshing == false else { return }
+
         Task {
             isRefreshing = true
             try? await store.fetch()
