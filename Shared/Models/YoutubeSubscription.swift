@@ -48,8 +48,6 @@ struct YoutubeSubscription: Decodable {
     let id: String
     let snippet: Snippet
     let contentDetails: ContentDetail
-
-    @CodableIgnored var live: YoutubeAPI.LiveResult?
 }
 
 extension YoutubeSubscription: Channelable {

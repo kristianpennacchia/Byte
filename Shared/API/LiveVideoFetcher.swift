@@ -28,24 +28,7 @@ class LiveVideoFetcher: NSObject {
         var token: String { data.playbackAccessToken.value }
     }
 
-    enum VideoMode: Equatable {
-        static func == (lhs: LiveVideoFetcher.VideoMode, rhs: LiveVideoFetcher.VideoMode) -> Bool {
-            switch (lhs, rhs) {
-            case (.live(_), .vod(_)):
-                return false
-            case (.vod(_), .live(_)):
-                return false
-            case (.live(let a), .live(let b)):
-                return a.id == b.id
-            case (.vod(let a), .vod(let b)):
-                return a.videoId == b.videoId
-            }
-        }
-
-        case live(any Streamable), vod(any Videoable)
-    }
-
-    enum VideoStream {
+    fileprivate enum VideoStream {
         case live(channel: String), vod(vodID: String)
 
         var isLive: Bool {
@@ -71,6 +54,23 @@ class LiveVideoFetcher: NSObject {
                 return vodID
             }
         }
+    }
+
+    enum VideoMode: Equatable {
+        static func == (lhs: LiveVideoFetcher.VideoMode, rhs: LiveVideoFetcher.VideoMode) -> Bool {
+            switch (lhs, rhs) {
+            case (.live(_), .vod(_)):
+                return false
+            case (.vod(_), .live(_)):
+                return false
+            case (.live(let a), .live(let b)):
+                return a.id == b.id
+            case (.vod(let a), .vod(let b)):
+                return a.videoId == b.videoId
+            }
+        }
+
+        case live(any Streamable), vod(any Videoable)
     }
 
     enum VideoDataResponse {
@@ -106,13 +106,13 @@ extension LiveVideoFetcher {
                 }
             case .youtube:
                 do {
-                    var request = URLRequest(url: URL(string: "https://www.youtube.com/channel/\(stream.userId)/live")!)
+                    var request = URLRequest(url: URL(string: "https://www.youtube.com/watch?v=\(stream.id)")!)
                     request.httpMethod = "GET"
                     request.setValue("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36", forHTTPHeaderField: "User-Agent")
                     request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                     let htmlPageData = try await session.data(for: request).0
                     let htmlPageString = String(data: htmlPageData, encoding: .utf8)!
-                    let playerResponseJSON = try /var\s+ytInitialPlayerResponse\s*=\s*({.*?});\s*var\s+\w+\s*=/.firstMatch(in: htmlPageString)?.output.1
+                    let playerResponseJSON = try /var\s+ytInitialPlayerResponse\s*=\s*({.*?});/.firstMatch(in: htmlPageString)?.output.1
 
                     guard let playerResponseJSONData = playerResponseJSON?.data(using: .utf8) else {
                         throw AppError(message: "Could not get player response JSON data.")

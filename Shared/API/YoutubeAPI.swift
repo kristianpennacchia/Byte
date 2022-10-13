@@ -17,12 +17,6 @@ final class YoutubeAPI: ObservableObject {
         let secret: String
     }
 
-    struct LiveResult: Hashable {
-        let videoID: String
-        let innertubeAPIKey: String
-        let innertubeClientVersion: String
-    }
-
     typealias Completion<T> = (_ result: Result<T, Error>) -> Void where T: Decodable
 
     static var isAvailable: Bool { shared != nil }
@@ -232,25 +226,31 @@ extension YoutubeAPI {
         return try await execute(method: .get, base: .people, endpoint: "people/me", query: query, decoding: YoutubePerson.self)
     }
 
-    func getIsLive(channelID: String) async throws -> LiveResult? {
-        let channelURL = URL(string: "https://www.youtube.com/embed/live_stream?channel=\(channelID)")!
-        let htmlPageData = try await session.data(from: channelURL).0
-        let htmlPageString = String(data: htmlPageData, encoding: .utf8)!
+    func getLiveVideoIDs(channelID: String) async throws -> [String] {
+        // Perform a cheap (data size) check to see if the channel is live.
+        let embedChannelURL = URL(string: "https://www.youtube.com/embed/live_stream?channel=\(channelID)")!
+        let embedHtmlPageData = try await session.data(from: embedChannelURL).0
+        let embedHtmlPageString = String(data: embedHtmlPageData, encoding: .utf8)!
 
-        guard htmlPageString.contains(##"<link rel="canonical" href="https://www.youtube.com/watch?v="##)
-           && htmlPageString.contains("scheduledStartTime") == false
+        guard embedHtmlPageString.contains(##"<link rel="canonical" href="https://www.youtube.com/watch?v="##)
+           && embedHtmlPageString.contains("scheduledStartTime") == false
         else {
-            return nil
+            return []
         }
 
-        guard let videoID = try /"video_id":\s*"([^"]+)"/.firstMatch(in: htmlPageString)?.output.1 else {
-            throw AppError(message: "Failed to get video ID in live stream = \(channelURL)")
-        }
+        // Channel is live. A channel can have multiple live streams at once, so we need to get all their live video IDs.
+        let liveVideoChannelURL = URL(string: "https://www.youtube.com/channel/\(channelID)/videos?view=2&live_view=501")!
 
-        let innertubeAPIKey = try /"INNERTUBE_API_KEY":\s*"([^"]+)"/.firstMatch(in: htmlPageString)?.output.1 ?? "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
-        let innertubeClientVersion = try /"INNERTUBE_CLIENT_VERSION":\s*"([\d\.]+)"/.firstMatch(in: htmlPageString)?.output.1 ?? "1.20210616.1.0"
+        var request = URLRequest(url: liveVideoChannelURL)
 
-        return LiveResult(videoID: String(videoID), innertubeAPIKey: String(innertubeAPIKey), innertubeClientVersion: String(innertubeClientVersion))
+        // We need to get the desktop webpage.
+        request.setValue("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Safari/605.1.15", forHTTPHeaderField: "User-Agent")
+
+        let liveVideoHtmlPageData = try await session.data(for: request).0
+        let liveVideoHtmlPageString = String(data: liveVideoHtmlPageData, encoding: .utf8)!
+
+        // Now use regex to get all the live video IDs.
+        return liveVideoHtmlPageString.matches(of: /"watchEndpoint":{"videoId":"(.*?)"/).map(\.output.1).map(String.init)
     }
 }
 
