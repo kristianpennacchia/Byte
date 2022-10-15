@@ -8,13 +8,17 @@ An unofficial Twitch and Youtube app for tvOS built with SwiftUI.
 - Seamlessly lists together your follows/subscriptions from both video streaming services.
 - Multistream support - Watch upto four streams simultaneously so you don't miss anybody's POV!
 - Spoiler filtering - Hide the thumbnails of games you haven't yet finished to avoid seeing spoilers (Twitch only).
-- No ads! Yep, no Twitch ads, no Youtube ads. Heaven.
+- No ads! Yep, no Twitch ads, no Youtube ads.
 
 ### 🕹 Controls and Tips
 - On the stream listing screen, press the ⏯ button on your Apple TV remote to select multiple streams at once, upto four. Press the clickpad to start watching them all.
-- On the stream or game listing screens, long press the clickpad to bring up the spoiler filter.
+- On the stream or game listing screens, long press the clickpad to bring up the spoiler filter (Twitch only).
 - While watching a stream, press the clickpad to bring up some options.
 - While watching a stream, long press the clickpad to refresh the stream (useful if the stream buffered and is behind live).
+
+<p align="center">
+<img src="https://user-images.githubusercontent.com/767677/195966097-d561db92-9476-46a3-8a4b-8c4b050030b7.png" width=30% height=30%> <img src="https://user-images.githubusercontent.com/767677/195966102-8eb2ee05-59f4-490d-92b3-10332d054376.png" width=30% height=30%> <img src="https://user-images.githubusercontent.com/767677/195966105-71b2db84-34b5-469e-9507-158990aff41f.png" width=30% height=30%>
+</p>
 
 ### 🛠 Project setup
 This project must be built from source, I do not currently provide a compiled app.
