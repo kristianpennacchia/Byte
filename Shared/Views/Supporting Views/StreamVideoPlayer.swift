@@ -20,13 +20,12 @@ struct StreamVideoPlayer: View {
     @EnvironmentObject private var twitchAPI: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
+    @FocusState private var isFocused: Bool
+
     @State private var showErrorAlert = false
     @State private var error: Error?
     @State private var currentStreamURL: URL?
-    @State private var isFocused = false
     @State private var indicatorState: SwimplyPlayIndicator.AudioState = .stop
-    @State private var collatedSeekCount = 0
-    @State private var cancelSeekSource: TaskCancellationSource?
 
     @StateObject private var playerViewModel = PlayerViewModel()
 
@@ -60,102 +59,18 @@ struct StreamVideoPlayer: View {
             initiateStream(fetcher: fetcher)
         }
 
-        let allowSeeking: Bool
+        let disableSeeking: Bool
         switch videoMode {
         case .live(_):
-            allowSeeking = false
+            disableSeeking = true
         case .vod(_):
-            allowSeeking = true
+            disableSeeking = false
         }
 
         return ZStack {
             VideoPlayer(player: playerViewModel.player)
-                .disabled(true)
-                .onAppear {
-                    initiateStream(fetcher: fetcher)
-                }
-                .onDisappear {
-                    playerViewModel.player.pause()
-                    playerViewModel.player.replaceCurrentItem(with: nil)
-                }
-                .focusable(true) { isFocused in
-                    self.isFocused = isFocused
-
-                    if muteNotFocused {
-                        playerViewModel.player.isMuted = !isFocused
-                        indicatorState = isFocused ? .play : .stop
-                    } else {
-                        playerViewModel.player.isMuted = false
-                        indicatorState = .stop
-                    }
-                    
-                    onPlayerFocused?(playerViewModel.player)
-                }
-                .onPlayPauseCommand {
-                    guard allowSeeking else { return }
-
-                    if playerViewModel.player.rate == 0 {
-                        playerViewModel.player.play()
-                    } else {
-                        playerViewModel.player.pause()
-                    }
-                }
-                .onMoveCommand { direction in
-                    guard allowSeeking else { return }
-
-                    collatedSeekCount += 1
-
-                    cancelSeekSource?.isCancelled = true
-                    cancelSeekSource = performAfter(duration: .milliseconds(250)) {
-                        let time = playerViewModel.player.currentTime()
-                        let seekDurationInterval: TimeInterval = 60 * (playerViewModel.player.rate == 0 ? 10 : 2)
-                        let seekDuration = CMTime(seconds: seekDurationInterval * Double(collatedSeekCount), preferredTimescale: time.timescale)
-
-                        switch direction {
-                        case .left:
-                            playerViewModel.player.seek(to: time - seekDuration)
-                        case .right:
-                            playerViewModel.player.seek(to: time + seekDuration)
-                        default:
-                            break
-                        }
-
-                        // If the playback is paused, we need to play then pause immediately to force the player to update its pause frame
-                        if playerViewModel.player.rate == 0 {
-                            playerViewModel.player.play()
-                            playerViewModel.player.pause()
-                        }
-
-                        collatedSeekCount = 0
-                    }
-                }
-                .onExitCommand {
-                    isPresented = false
-                }
-                .onLongPressGesture {
-                    guard let currentStreamURL = currentStreamURL else { return }
-
-                    playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: currentStreamURL))
-                    playerViewModel.player.playImmediately(atRate: 1.0)
-                }
-                .onReceive(NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)) { output in
-                    if let item = output.object as? AVPlayerItem, item == playerViewModel.player.currentItem {
-                        onPlayToEndTime?()
-                    }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .disabled(disableSeeking)
                 .scaleEffect(CGSize(width: isFlipped ? -1 : 1, height: 1))
-                .alert(isPresented: $showErrorAlert) {
-                    Alert(
-                        title: Text("Unable To Play Stream"),
-                        message: Text(error?.localizedDescription ?? "Unknown error occurred."),
-                        dismissButton: .default(Text("OK")) {
-                            playerViewModel.player.pause()
-                            playerViewModel.player.replaceCurrentItem(with: nil)
-                            isPresented = false
-                        }
-                    )
-                }
             if isAudioOnly {
                 Color.clear
                     .background(.regularMaterial)
@@ -164,6 +79,52 @@ struct StreamVideoPlayer: View {
             SwimplyPlayIndicator(state: $indicatorState, color: .brand.brand.opacity(0.5), style: .legacy)
                 .frame(width: 18, height: 18)
                 .position(x: 30, y: 30)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .focusable(disableSeeking)
+        .focused($isFocused)
+        .onAppear {
+            initiateStream(fetcher: fetcher)
+        }
+        .onDisappear {
+            playerViewModel.player.pause()
+            playerViewModel.player.replaceCurrentItem(with: nil)
+        }
+        .onExitCommand {
+            isPresented = false
+        }
+        .onLongPressGesture {
+            guard let currentStreamURL = currentStreamURL else { return }
+
+            playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: currentStreamURL))
+            playerViewModel.player.playImmediately(atRate: 1.0)
+        }
+        .onChange(of: isFocused) { isFocused in
+            if muteNotFocused {
+                playerViewModel.player.isMuted = !isFocused
+                indicatorState = isFocused ? .play : .stop
+            } else {
+                playerViewModel.player.isMuted = false
+                indicatorState = .stop
+            }
+
+            onPlayerFocused?(playerViewModel.player)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)) { output in
+            if let item = output.object as? AVPlayerItem, item == playerViewModel.player.currentItem {
+                onPlayToEndTime?()
+            }
+        }
+        .alert(isPresented: $showErrorAlert) {
+            Alert(
+                title: Text("Unable To Play Stream"),
+                message: Text(error?.localizedDescription ?? "Unknown error occurred."),
+                dismissButton: .default(Text("OK")) {
+                    playerViewModel.player.pause()
+                    playerViewModel.player.replaceCurrentItem(with: nil)
+                    isPresented = false
+                }
+            )
         }
     }
 }
