@@ -74,7 +74,9 @@ class LiveVideoFetcher: NSObject {
     }
 
     enum VideoDataResponse {
-        case playlist(M3U8), formats([YoutubePlayerResponse.StreamingData.Format])
+        case playlist(M3U8)
+        case formats([YoutubePlayerResponse.StreamingData.Format])
+        case urls([URL])
     }
 
     private(set) lazy var session: URLSession = {
@@ -105,6 +107,31 @@ extension LiveVideoFetcher {
                     throw AppError(message: "Decoding channel data for user ID '\(stream.userId)' failed.")
                 }
             case .youtube:
+                // First try getting the direct video URLs via yt-dlp.
+                do {
+                    let request = URLRequest(url: URL(string: "https://ytdl.hamsterlabs.de/?url=https://www.youtube.com/watch?v=\(stream.id)")!)
+                    let htmlPageData = try await session.data(for: request).0
+                    let htmlPageString = String(data: htmlPageData, encoding: .utf8)!
+
+                    let urlRegex = /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/
+                    let urls = htmlPageString
+                        .matches(of: urlRegex)
+                        .map(\.output.2)
+                        .map(String.init)
+                        .compactMap(URL.init)
+                        .filter { $0.absoluteString.contains("googlevideo.com") && $0.pathExtension == "m3u8" }
+
+                    guard urls.isEmpty == false else {
+                        throw AppError(message: "No direct Youtube URLs found.")
+                    }
+
+                    return .urls(urls)
+                } catch {
+                    // Failed getting direct URLs. Fallback to getting them ourselves.
+                    print("Fetching direct Youtube video URLs for video ID '\(stream.id)' failed. \(error.localizedDescription)")
+                }
+
+                // Fallback to scraping the Youtube website ourselves.
                 do {
                     var request = URLRequest(url: URL(string: "https://www.youtube.com/watch?v=\(stream.id)")!)
                     request.httpMethod = "GET"
@@ -124,9 +151,9 @@ extension LiveVideoFetcher {
                     let m3u8 = try M3U8(data: m3u8Data)
                     return .playlist(m3u8)
                 } catch let error as DecodingError {
-                    throw AppError(message: "Fetching channel for user ID '\(stream.userId)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")
+                    throw AppError(message: "Fetching video page for video ID '\(stream.id)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")
                 } catch {
-                    throw AppError(message: "Fetching channel for user ID '\(stream.userId)' failed. \(error.localizedDescription)")
+                    throw AppError(message: "Fetching video page for video ID '\(stream.id)' failed. \(error.localizedDescription)")
                 }
             }
         case .vod(let video):

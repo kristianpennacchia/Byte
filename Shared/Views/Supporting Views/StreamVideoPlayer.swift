@@ -145,44 +145,46 @@ private extension StreamVideoPlayer {
         Task {
             do {
                 let videoResponse = try await fetcher.fetch()
+                let url: URL
+                let automaticallyWaitsToMinimizeStalling: Bool
 
                 switch videoResponse {
                 case .playlist(let playlist):
-                    if let urlString = playlist.meta.isEmpty ? playlist.rawURLs.last : playlist.meta.sorted(by: >).first?.url,
-                       let url = URL(string: urlString) {
-                        currentStreamURL = url
-
-                        playerViewModel.player.automaticallyWaitsToMinimizeStalling = true
-                        playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: url))
-                        playerViewModel.player.playImmediately(atRate: 1.0)
-
-                        if muteNotFocused {
-                            playerViewModel.player.isMuted = isFocused == false
-                        }
+                    if let urlString = playlist.meta.isEmpty ? playlist.rawURLs.last : playlist.meta.sorted(by: >).first?.url {
+                        url = URL(string: urlString)!
+                        automaticallyWaitsToMinimizeStalling = true
                     } else {
-                        self.error = AppError(message: "Unable to get valid video URL.")
-                        showErrorAlert = true
+                        throw AppError(message: "Unable to get valid video URL.")
                     }
                 case .formats(let formats):
-                    guard let url = formats
+                    guard let format = formats
                         .filter({ $0.mimeType.contains("video/mp4") && $0.mimeType.contains("avc1.") && $0.mimeType.contains("mp4a.") })
                         .sorted(by: { $0.bitrate > $1.bitrate })
-                        .first?.url
+                        .first
                     else {
-                        self.error = AppError(message: "Unable to get valid video URL.")
-                        showErrorAlert = true
-                        return
+                        throw AppError(message: "Unable to get valid video URL.")
                     }
 
-                    currentStreamURL = url
-
-                    playerViewModel.player.automaticallyWaitsToMinimizeStalling = false
-                    playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: url))
-                    playerViewModel.player.playImmediately(atRate: 1.0)
-
-                    if muteNotFocused {
-                        playerViewModel.player.isMuted = isFocused == false
+                    url = format.url
+                    automaticallyWaitsToMinimizeStalling = false
+                case .urls(let urls):
+                    print(urls)
+                    if urls.isEmpty == false {
+                        url = urls.first!
+                        automaticallyWaitsToMinimizeStalling = true
+                    } else {
+                        throw AppError(message: "Unable to get valid video URL.")
                     }
+                }
+
+                currentStreamURL = url
+
+                playerViewModel.player.automaticallyWaitsToMinimizeStalling = automaticallyWaitsToMinimizeStalling
+                playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: url))
+                playerViewModel.player.playImmediately(atRate: 1.0)
+
+                if muteNotFocused {
+                    playerViewModel.player.isMuted = isFocused == false
                 }
             } catch {
                 print("Failed fetching live video data. \(error.localizedDescription)")
