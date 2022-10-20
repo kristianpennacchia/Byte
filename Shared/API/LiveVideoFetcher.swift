@@ -9,6 +9,10 @@
 import Foundation
 
 class LiveVideoFetcher: NSObject {
+    private struct YtdlpURL: Decodable {
+        let url: URL
+    }
+
     fileprivate struct SigToken: Decodable {
         struct Data: Decodable {
             struct Token: Decodable {
@@ -109,23 +113,11 @@ extension LiveVideoFetcher {
             case .youtube:
                 // First try getting the direct video URLs via yt-dlp.
                 do {
-                    let request = URLRequest(url: URL(string: "https://ytdl.hamsterlabs.de/?url=https://www.youtube.com/watch?v=\(stream.id)")!)
-                    let htmlPageData = try await session.data(for: request).0
-                    let htmlPageString = String(data: htmlPageData, encoding: .utf8)!
+                    let request = URLRequest(url: URL(string: "https://byte-dl.herokuapp.com/v1/video?url=https://www.youtube.com/watch?v=\(stream.id)&cli=yt-dlp&schema=url")!)
+                    let data = try await session.data(for: request).0
+                    let ytdlpURL = try JSONDecoder().decode(YtdlpURL.self, from: data)
 
-                    let urlRegex = /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/
-                    let urls = htmlPageString
-                        .matches(of: urlRegex)
-                        .map(\.output.2)
-                        .map(String.init)
-                        .compactMap(URL.init)
-                        .filter { $0.absoluteString.contains("googlevideo.com") && $0.pathExtension == "m3u8" }
-
-                    guard urls.isEmpty == false else {
-                        throw AppError(message: "No direct Youtube URLs found.")
-                    }
-
-                    return .urls(urls)
+                    return .urls([ytdlpURL.url])
                 } catch {
                     // Failed getting direct URLs. Fallback to getting them ourselves.
                     print("Fetching direct Youtube video URLs for video ID '\(stream.id)' failed. \(error.localizedDescription)")
@@ -161,6 +153,20 @@ extension LiveVideoFetcher {
             case .twitch:
                 return try await getVideo(.vod(vodID: video.videoId))
             case .youtube:
+                // First try getting the direct video URLs via yt-dlp.
+                do {
+                    let request = URLRequest(url: URL(string: "https://byte-dl.herokuapp.com/v1/video?url=https://www.youtube.com/watch?v=\(video.videoId)&cli=yt-dlp&schema=url")!)
+                    let data = try await session.data(for: request).0
+                    let ytdlpURL = try JSONDecoder().decode(YtdlpURL.self, from: data)
+
+                    print(ytdlpURL.url)
+
+                    return .urls([ytdlpURL.url])
+                } catch {
+                    // Failed getting direct URLs. Fallback to getting them ourselves.
+                    print("Fetching direct Youtube video URLs for video ID '\(video.videoId)' failed. \(error.localizedDescription)")
+                }
+
                 do {
                     var request = URLRequest(url: URL(string: "https://www.youtube.com/watch?v=\(video.videoId)")!)
                     request.httpMethod = "GET"
@@ -272,7 +278,7 @@ private extension LiveVideoFetcher {
 extension LiveVideoFetcher: URLSessionDelegate {
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         switch challenge.protectionSpace.host {
-        case "usher.twitch.tv", "usher.ttvnw.net", "api.ttv.lol", "ytdl.hamsterlabs.de":
+        case "usher.twitch.tv", "usher.ttvnw.net", "api.ttv.lol":
             // Ignore all server SSL/security issues for this host
             let credential = URLCredential(trust: challenge.protectionSpace.serverTrust!)
             completionHandler(.useCredential, credential)
