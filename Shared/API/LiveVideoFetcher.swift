@@ -272,7 +272,7 @@ private extension LiveVideoFetcher {
 extension LiveVideoFetcher: URLSessionDelegate {
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         switch challenge.protectionSpace.host {
-        case "usher.twitch.tv", "usher.ttvnw.net", "api.ttv.lol":
+        case "usher.twitch.tv", "usher.ttvnw.net", "api.ttv.lol", "ytdl.hamsterlabs.de":
             // Ignore all server SSL/security issues for this host
             let credential = URLCredential(trust: challenge.protectionSpace.serverTrust!)
             completionHandler(.useCredential, credential)

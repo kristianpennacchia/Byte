@@ -31,6 +31,11 @@
 	<dict>
 		<key>NSExceptionDomains</key>
 		<dict>
+			<key>ytdl.hamsterlabs.de</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
 			<key>usher.twitch.tv</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
