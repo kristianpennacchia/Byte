@@ -9,8 +9,9 @@
 import Foundation
 
 class LiveVideoFetcher: NSObject {
-    private struct YtdlpURL: Decodable {
-        let url: URL
+    private struct YtdlpResponse: Decodable {
+        let formats: [YtdlpFormat]?
+        let url: URL?
     }
 
     fileprivate struct SigToken: Decodable {
@@ -80,6 +81,7 @@ class LiveVideoFetcher: NSObject {
     enum VideoDataResponse {
         case playlist(M3U8)
         case formats([YoutubePlayerResponse.StreamingData.Format])
+        case ytdlpFormats([YtdlpFormat])
         case urls([URL])
     }
 
@@ -115,9 +117,14 @@ extension LiveVideoFetcher {
                 do {
                     let request = URLRequest(url: URL(string: "https://byte-dl.herokuapp.com/v1/video?url=https://www.youtube.com/watch?v=\(stream.id)&cli=yt-dlp&schema=url")!)
                     let data = try await session.data(for: request).0
-                    let ytdlpURL = try JSONDecoder().decode(YtdlpURL.self, from: data)
+                    let ytdlpResponse = try JSONDecoder().decode(YtdlpResponse.self, from: data)
+                    guard let url = ytdlpResponse.url else {
+                        throw AppError(message: "Could not get 'best' URL from yt-dlp response.")
+                    }
 
-                    return .urls([ytdlpURL.url])
+                    return .urls([url])
+                } catch let error as DecodingError {
+                    throw AppError(message: "Fetching direct Youtube video URLs for video ID '\(stream.id)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")
                 } catch {
                     // Failed getting direct URLs. Fallback to getting them ourselves.
                     print("Fetching direct Youtube video URLs for video ID '\(stream.id)' failed. \(error.localizedDescription)")
@@ -157,11 +164,14 @@ extension LiveVideoFetcher {
                 do {
                     let request = URLRequest(url: URL(string: "https://byte-dl.herokuapp.com/v1/video?url=https://www.youtube.com/watch?v=\(video.videoId)&cli=yt-dlp&schema=url")!)
                     let data = try await session.data(for: request).0
-                    let ytdlpURL = try JSONDecoder().decode(YtdlpURL.self, from: data)
+                    let ytdlpResponse = try JSONDecoder().decode(YtdlpResponse.self, from: data)
+                    guard let url = ytdlpResponse.url else {
+                        throw AppError(message: "Could not get 'best' URL from yt-dlp response.")
+                    }
 
-                    print(ytdlpURL.url)
-
-                    return .urls([ytdlpURL.url])
+                    return .urls([url])
+                } catch let error as DecodingError {
+                    throw AppError(message: "Fetching direct Youtube video URLs for video ID '\(video.videoId)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")
                 } catch {
                     // Failed getting direct URLs. Fallback to getting them ourselves.
                     print("Fetching direct Youtube video URLs for video ID '\(video.videoId)' failed. \(error.localizedDescription)")

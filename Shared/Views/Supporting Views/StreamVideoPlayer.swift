@@ -17,6 +17,11 @@ struct StreamVideoPlayer: View {
         var isConfigured: Bool { player.currentItem != nil }
     }
 
+    fileprivate enum PlayingItem {
+        case url(URL)
+        case asset(AVAsset)
+    }
+
     @EnvironmentObject private var twitchAPI: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
@@ -24,7 +29,7 @@ struct StreamVideoPlayer: View {
 
     @State private var showErrorAlert = false
     @State private var error: Error?
-    @State private var currentStreamURL: URL?
+    @State private var currentPlayingItem: PlayingItem?
     @State private var indicatorState: SwimplyPlayIndicator.AudioState = .stop
 
     @StateObject private var playerViewModel = PlayerViewModel()
@@ -94,9 +99,9 @@ struct StreamVideoPlayer: View {
             isPresented = false
         }
         .onLongPressGesture {
-            guard let currentStreamURL = currentStreamURL else { return }
+            guard let currentPlayingItem = currentPlayingItem else { return }
 
-            playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: currentStreamURL))
+            playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: currentPlayingItem))
             playerViewModel.player.playImmediately(atRate: 1.0)
         }
         .onChange(of: isFocused) { isFocused in
@@ -130,8 +135,16 @@ struct StreamVideoPlayer: View {
 }
 
 private extension StreamVideoPlayer {
-    func makePlayerItem(from url: URL) -> AVPlayerItem {
-        let item = AVPlayerItem(url: url)
+    func makePlayerItem(from playingItem: PlayingItem) -> AVPlayerItem {
+        let item: AVPlayerItem
+
+        switch playingItem {
+        case .url(let url):
+            item = AVPlayerItem(url: url)
+        case .asset(let asset):
+            item = AVPlayerItem(asset: asset)
+        }
+
         item.preferredForwardBufferDuration = 0.5
         item.automaticallyPreservesTimeOffsetFromLive = true
         item.canUseNetworkResourcesForLiveStreamingWhilePaused = true
@@ -145,13 +158,13 @@ private extension StreamVideoPlayer {
         Task {
             do {
                 let videoResponse = try await fetcher.fetch()
-                let url: URL
+                let playingItem: PlayingItem
                 let automaticallyWaitsToMinimizeStalling: Bool
 
                 switch videoResponse {
                 case .playlist(let playlist):
                     if let urlString = playlist.meta.isEmpty ? playlist.rawURLs.last : playlist.meta.sorted(by: >).first?.url {
-                        url = URL(string: urlString)!
+                        playingItem = .url(URL(string: urlString)!)
                         automaticallyWaitsToMinimizeStalling = true
                     } else {
                         throw AppError(message: "Unable to get valid video URL.")
@@ -165,22 +178,47 @@ private extension StreamVideoPlayer {
                         throw AppError(message: "Unable to get valid video URL.")
                     }
 
-                    url = format.url
+                    playingItem = .url(format.url)
                     automaticallyWaitsToMinimizeStalling = false
+                case .ytdlpFormats(let formats):
+                    let supportedFormats = formats.sorted(by: >).filter { $0.ext == "mp4" || $0.ext == "m4a" }
+                    if let audioURL = supportedFormats.first(where: \.isAudioOnly)?.url, let videoURL = supportedFormats.first(where: \.isVideoOnly)?.url {
+                        let audioAsset = AVAsset(url: audioURL)
+                        let videoAsset = AVAsset(url: videoURL)
+
+                        let videoDuration = try await videoAsset.load(.duration)
+                        let audioDuration = try await audioAsset.load(.duration)
+                        let duration = videoDuration > audioDuration ? videoDuration : audioDuration
+
+                        let mixAsset = AVMutableComposition()
+
+                        let compoAudioTrack = mixAsset.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+                        let audioTrack = try await audioAsset.loadTracks(withMediaType: .audio).first!
+                        try compoAudioTrack?.insertTimeRange(CMTimeRangeMake(start: .zero, duration: duration), of: audioTrack, at: .zero)
+
+                        let compoVideoTrack = mixAsset.addMutableTrack(withMediaType: .video, preferredTrackID: kCMPersistentTrackID_Invalid)
+                        let videoTrack = try await videoAsset.loadTracks(withMediaType: .video).first!
+                        try compoVideoTrack?.insertTimeRange(CMTimeRangeMake(start: .zero, duration: duration), of: videoTrack, at: .zero)
+
+                        playingItem = .asset(mixAsset)
+                        automaticallyWaitsToMinimizeStalling = true
+                    } else {
+                        throw AppError(message: "Unable to get valid audio and video URLs.")
+                    }
                 case .urls(let urls):
                     print(urls)
                     if urls.isEmpty == false {
-                        url = urls.first!
+                        playingItem = .url(urls.first!)
                         automaticallyWaitsToMinimizeStalling = true
                     } else {
                         throw AppError(message: "Unable to get valid video URL.")
                     }
                 }
 
-                currentStreamURL = url
+                currentPlayingItem = playingItem
 
                 playerViewModel.player.automaticallyWaitsToMinimizeStalling = automaticallyWaitsToMinimizeStalling
-                playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: url))
+                playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: playingItem))
                 playerViewModel.player.playImmediately(atRate: 1.0)
 
                 if muteNotFocused {
