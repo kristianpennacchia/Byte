@@ -113,7 +113,9 @@ struct StreamVideoPlayer: View {
                 indicatorState = .stop
             }
 
-            onPlayerFocused?(playerViewModel.player)
+            if isFocused {
+                onPlayerFocused?(playerViewModel.player)
+            }
         }
         .onReceive(NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)) { output in
             if let item = output.object as? AVPlayerItem, item == playerViewModel.player.currentItem {
