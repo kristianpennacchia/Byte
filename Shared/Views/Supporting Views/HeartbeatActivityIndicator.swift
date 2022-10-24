@@ -17,11 +17,11 @@ struct HeartbeatActivityIndicator: View {
         ZStack {
             Circle()
                 .frame(width: 200, height: 200)
-                .foregroundColor(heartbeatChanged ? .brand.tertiary.opacity(0.8) : .brand.brand)
+                .foregroundColor(heartbeatChanged ? .brand.tertiary.opacity(0.8) : .brand.primary)
                 .animation(.spring(response: 0.3, dampingFraction: 0.3, blendDuration: 0.3))
 //            Image(systemName: "heart.fill")
             Image("LogoShort")
-                .foregroundColor(heartbeatChanged ? .brand.brand : .brand.tertiary)
+                .foregroundColor(heartbeatChanged ? .brand.primary : .brand.tertiary)
                 .font(.system(size: 100))
                 .scaleEffect(heartbeatChanged ? 1.5 : 1.0)
                 .animation(.spring(response: 0.3, dampingFraction: 0.3, blendDuration: 0.3))

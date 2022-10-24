@@ -31,7 +31,7 @@ struct StreamList: View {
 
     var body: some View {
         ZStack {
-            Color.brand.brandDarkDark.ignoresSafeArea()
+            Color.brand.primaryDarkDark.ignoresSafeArea()
             if streams.isEmpty || isRefreshing {
                 HeartbeatActivityIndicator()
                     .frame(alignment: .center)

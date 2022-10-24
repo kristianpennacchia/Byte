@@ -26,7 +26,7 @@ struct SignInView: View {
                         .foregroundColor(.white)
                         .padding(EdgeInsets(top: 50, leading: 100, bottom: 50, trailing: 100))
                 }
-                .background(Color.brand.brand)
+                .background(Color.brand.primary)
             }
         }
     }

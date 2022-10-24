@@ -9,9 +9,9 @@
 import SwiftUI
 
 enum BrandColor {
-    static let brand = Color("Brand")
-    static let brandDark = Color("BrandDark")
-    static let brandDarkDark = Color("BrandDarkDark")
+    static let primary = Color("Primary")
+    static let primaryDark = Color("PrimaryDark")
+    static let primaryDarkDark = Color("PrimaryDarkDark")
     static let tertiary = Color("Tertiary")
     static let live = Color("Live")
     static let highlight = Color("Highlight")

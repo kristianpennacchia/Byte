@@ -119,16 +119,9 @@ struct ContentView: View {
     }
     @State private var isRefreshing = false
 
-    init() {
-        #if !os(tvOS)
-        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor(named: "Brand")!]
-        #endif
-        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor(named: "Brand")!]
-    }
-
     var body: some View {
         ZStack {
-            Color.brand.brandDarkDark.ignoresSafeArea()
+            Color.brand.primaryDarkDark.ignoresSafeArea()
             if twitchUser == nil {
                 HeartbeatActivityIndicator()
                     .frame(alignment: .center)
@@ -169,7 +162,7 @@ struct ContentView: View {
                         .padding([.leading, .trailing], 30)
                         .padding([.top, .bottom], 50)
                     }
-                    .background(Color.brand.brandDark)
+                    .background(Color.brand.primaryDark)
                     .frame(width: 440)
                     .edgesIgnoringSafeArea(.all)
                     Group {
@@ -206,7 +199,7 @@ struct ContentView: View {
                 }
             }
         }
-        .accentColor(Color.brand.brand)
+        .accentColor(Color.brand.primary)
         .edgesIgnoringSafeArea(.all)
         .onFirstAppear {
             sessionStore.signInTwitch()

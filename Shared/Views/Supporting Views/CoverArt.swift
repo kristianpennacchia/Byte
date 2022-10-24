@@ -18,7 +18,7 @@ struct CoverArt: View {
             .placeholder {
                 Placeholder(artSize: artSize)
             }
-            .background(Color.brand.brand)
+            .background(Color.brand.primary)
             .frame(width: artSize.width, height: artSize.height)
     }
 }
@@ -29,7 +29,7 @@ extension CoverArt {
 
         var body: some View {
             Rectangle()
-                .fill(Color.brand.brand)
+                .fill(Color.brand.primary)
                 .frame(width: artSize.width, height: artSize.height)
         }
     }
