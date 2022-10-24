@@ -24,6 +24,7 @@ struct YoutubePlaylistItem: Decodable {
             let `default`: URL
             let medium: URL
             let high: URL
+            let maxres: URL?
         }
 
         let publishedAt: String
@@ -68,6 +69,7 @@ extension YoutubePlaylistItem: Videoable {
     var duration: String? { nil }
 
     func thumbnail(size: Int) -> String {
-        snippet.thumbnails.high.url
+        // Fallback to medium as it has a better fitting aspect ratio.
+        snippet.thumbnails.maxres?.url ?? snippet.thumbnails.medium.url
     }
 }
