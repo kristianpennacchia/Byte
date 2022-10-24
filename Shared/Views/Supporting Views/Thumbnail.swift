@@ -63,13 +63,19 @@ struct Thumbnail: View {
                     .aspectRatio(1.5, contentMode: .fill)
             }
             if let duration {
-                Text("  \(duration)  ")
-                    .font(.caption)
-                    .bold()
-                    .foregroundColor(.white)
-                    .background(Color.accentColor)
-                    .cornerRadius(8)
-                    .padding([.leading, .bottom], 8)
+                HStack(alignment: .center, spacing: 0) {
+                    Spacer()
+                        .frame(width: 8)
+                    Text(duration)
+                        .font(.caption)
+                        .bold()
+                        .foregroundColor(.white)
+                    Spacer()
+                        .frame(width: 8)
+                }
+                .background(Color.accentColor)
+                .cornerRadius(8)
+                .padding([.leading, .bottom], 8)
             }
         }
     }
