@@ -26,6 +26,10 @@ struct YtdlpFormat: Decodable {
 
 extension YtdlpFormat: Comparable {
     static func < (lhs: Self, rhs: Self) -> Bool {
-        (lhs.filesize ?? 0) < (rhs.filesize ?? 0)
+        if let lhsFilesize = lhs.filesize, let rhsFileSize = rhs.filesize {
+            return lhsFilesize < rhsFileSize
+        } else {
+            return (lhs.height ?? 0) < (rhs.height ?? 0)
+        }
     }
 }
