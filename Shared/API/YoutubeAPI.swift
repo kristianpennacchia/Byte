@@ -239,7 +239,7 @@ extension YoutubeAPI {
         }
 
         // Channel is live. A channel can have multiple live streams at once, so we need to get all their live video IDs.
-        let liveVideoChannelURL = URL(string: "https://www.youtube.com/channel/\(channelID)/videos?view=2&live_view=501")!
+        let liveVideoChannelURL = URL(string: "https://www.youtube.com/channel/\(channelID)/streams")!
 
         var request = URLRequest(url: liveVideoChannelURL)
 
