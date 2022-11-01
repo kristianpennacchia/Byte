@@ -150,7 +150,7 @@ final class StreamStore: FetchingObject {
                         "id": liveVideoIDs.joined(separator: ","),
                     ],
                     decoding: YoutubeDataItem<YoutubeVideo>.self
-                ) ?? []
+                ).filter(\.isCurrentlyLive) ?? []
                 streams += liveYoutubeChannels
             } catch {
                 print("Fetching all Youtube followed channels failed. \(error.localizedDescription)")
