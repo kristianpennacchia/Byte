@@ -41,10 +41,11 @@ struct Thumbnail: View {
         return ZStack(alignment: .bottomLeading) {
             switch videoStream {
             case .stream(_):
-                KFImage(isSpoiler ? nil : url)
+                KFImage(url)
                     .cacheMemoryOnly()
                     .memoryCacheExpiration(.seconds(300))
                     .memoryCacheAccessExtending(.none)
+                    .setProcessor(isSpoiler ? BlurImageProcessor(blurRadius: 20) : DefaultImageProcessor.default)
                     .placeholder {
                         Placeholder()
                     }
