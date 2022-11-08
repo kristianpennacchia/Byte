@@ -19,7 +19,6 @@ struct YoutubeVideo: Decodable {
             let `default`: URL
             let medium: URL
             let high: URL
-            let standard: URL
             let maxres: URL?
         }
 
