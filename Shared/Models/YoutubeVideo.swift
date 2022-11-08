@@ -64,7 +64,7 @@ struct YoutubeVideo: Decodable {
     }
 
     private static let formatter: DateComponentsFormatter = {
-        $0.allowedUnits = [.hour, .minute]
+        $0.allowedUnits = [.day, .hour, .minute]
         $0.unitsStyle = .abbreviated
         $0.zeroFormattingBehavior = .dropLeading
         return $0

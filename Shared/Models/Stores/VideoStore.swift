@@ -78,7 +78,7 @@ final class VideoStore: FetchingObject {
                 let uploadPlaylistID = "UU" + userID.dropFirst(2)
 
                 // Only get the latest 50, otherwise we could be downloading thousands of videos.
-                let youtubeVideos = try await youtubeAPI?.execute(
+                var youtubeVideos = try await youtubeAPI?.execute(
                     method: .get,
                     base: .youtube,
                     endpoint: "playlistItems",
@@ -89,6 +89,29 @@ final class VideoStore: FetchingObject {
                     ],
                     decoding: YoutubeDataItem<YoutubePlaylistItem>.self
                 ).items ?? []
+
+                let youtubeVideoDetails = try await youtubeAPI?.execute(
+                    method: .get,
+                    base: .youtube,
+                    endpoint: "videos",
+                    query: [
+                        "part": YoutubeVideo.part,
+                        "maxResults": 50,
+                        "id": youtubeVideos.map(\.videoId),
+                    ],
+                    decoding: YoutubeDataItem<YoutubeVideo>.self
+                ).items ?? []
+
+                youtubeVideos = youtubeVideos.map { video in
+                    if let matchingDetails = youtubeVideoDetails.first(where: { $0.id == video.videoId }) {
+                        var video = video
+                        video.adhocDuration = matchingDetails.contentDetails.duration
+                        return video
+                    } else {
+                        return video
+                    }
+                }
+
                 videos.append(contentsOf: youtubeVideos)
             } catch {
                 Swift.print("Failed getting Youtube videos. \(error.localizedDescription)")
