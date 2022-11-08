@@ -24,7 +24,7 @@ struct VideoView: View {
     let video: any Videoable
 
     var body: some View {
-        return VStack(alignment: .leading, spacing: 8) {
+        return VStack(alignment: .center, spacing: 8) {
             ZStack(alignment: .bottomTrailing) {
                 Thumbnail(videoStream: .vod(video))
                     .frame(minWidth: 0, maxWidth: .infinity)
