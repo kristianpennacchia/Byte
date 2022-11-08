@@ -109,6 +109,8 @@ private extension YoutubePlaylistItem {
             second = 0
         }
 
-        return Self.formatter.string(from: hour * 3600 + minute * 60 + second)
+        return Self.formatter
+            .string(from: hour * 3600 + minute * 60 + second)?
+            .replacingOccurrences(of: "min.", with: "m")
     }
 }
