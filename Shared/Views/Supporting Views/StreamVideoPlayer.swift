@@ -36,20 +36,18 @@ struct StreamVideoPlayer: View {
 
     private var onPlayToEndTime: (() -> Void)?
     private var onPlayerFocused: ((AVPlayer) -> Void)?
+    private var onStreamError: ((Error?) -> Void)?
 
     let videoMode: LiveVideoFetcher.VideoMode
     let muteNotFocused: Bool
     let isAudioOnly: Bool
     let isFlipped: Bool
 
-    @Binding var isPresented: Bool
-
-    init(videoMode: LiveVideoFetcher.VideoMode, muteNotFocused: Bool, isAudioOnly: Bool, isFlipped: Bool, isPresented: Binding<Bool>) {
+    init(videoMode: LiveVideoFetcher.VideoMode, muteNotFocused: Bool, isAudioOnly: Bool, isFlipped: Bool) {
         self.videoMode = videoMode
         self.muteNotFocused = muteNotFocused
         self.isAudioOnly = isAudioOnly
         self.isFlipped = isFlipped
-        self._isPresented = isPresented
     }
 
     var body: some View {
@@ -95,9 +93,6 @@ struct StreamVideoPlayer: View {
             playerViewModel.player.pause()
             playerViewModel.player.replaceCurrentItem(with: nil)
         }
-        .onExitCommand {
-            isPresented = false
-        }
         .onLongPressGesture {
             guard let currentPlayingItem = currentPlayingItem else { return }
 
@@ -129,7 +124,7 @@ struct StreamVideoPlayer: View {
                 dismissButton: .default(Text("OK")) {
                     playerViewModel.player.pause()
                     playerViewModel.player.replaceCurrentItem(with: nil)
-                    isPresented = false
+                    onStreamError?(error)
                 }
             )
         }
@@ -245,6 +240,12 @@ extension StreamVideoPlayer {
     func onPlayerFocused(perform: @escaping (AVPlayer) -> Void) -> Self {
         var copy = self
         copy.onPlayerFocused = perform
+        return copy
+    }
+
+    func onStreamError(perform: @escaping (Error?) -> Void) -> Self {
+        var copy = self
+        copy.onStreamError = perform
         return copy
     }
 }

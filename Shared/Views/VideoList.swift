@@ -76,7 +76,13 @@ struct VideoList: View {
                 }
             },
             content: {
-                StreamVideoPlayer(videoMode: .vod(videoViewModel.video!), muteNotFocused: false, isAudioOnly: false, isFlipped: false, isPresented: $showVideoPlayer)
+                StreamVideoPlayer(videoMode: .vod(videoViewModel.video!), muteNotFocused: false, isAudioOnly: false, isFlipped: false)
+                    .onStreamError { _ in
+                        showVideoPlayer = false
+                    }
+                    .onExitCommand {
+                        showVideoPlayer = false
+                    }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.black)
                     .edgesIgnoringSafeArea(.all)

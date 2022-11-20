@@ -42,14 +42,16 @@ struct MultiStreamVideoPlayer: View {
                             videoMode: .live(stream),
                             muteNotFocused: shouldMuteWhenNotInFocus(stream: stream),
                             isAudioOnly: audioOnlyStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }),
-                            isFlipped: flippedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }),
-                            isPresented: $isPresented
+                            isFlipped: flippedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
                         )
                         .onPlayToEndTime {
                             remove(stream: stream)
                         }
                         .onPlayerFocused { player in
                             focusedPlayer = player
+                        }
+                        .onStreamError { _ in
+                            remove(stream: stream)
                         }
                         .equatable()
                         .aspectRatio(contentMode: .fit)
@@ -71,6 +73,9 @@ struct MultiStreamVideoPlayer: View {
         }
         .onDisappear {
             UIApplication.shared.isIdleTimerDisabled = false
+        }
+        .onExitCommand {
+            isPresented = false
         }
         .actionSheet(isPresented: $showMenu) {
             let stream = streamViewModel.selectedStream!
