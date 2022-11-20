@@ -203,33 +203,77 @@ extension LiveVideoFetcher {
 }
 
 private extension LiveVideoFetcher {
-    func usherAPI(video: VideoStream, sigToken: SigToken) -> URL {
+    func usherAPI(video: VideoStream, sigToken: SigToken) async -> (url: URL, additionalHeaders: [String: String]) {
+        let isAdblockProxyAvailable: Bool
+
         var components: URLComponents
         switch video {
         case .live(let channel):
-            components = URLComponents(string: "https://usher.ttvnw.net/api/channel/hls/\(channel).m3u8")!
+            let adblockProxyPingCheckResult = try? await session.data(from: URL(string: "https://api.ttv.lol/ping")!)
+            if let data = adblockProxyPingCheckResult?.0, let response = adblockProxyPingCheckResult?.1 as? HTTPURLResponse {
+                let dataContents = String(data: data, encoding: .utf8)
+                isAdblockProxyAvailable = response.statusCode == 200 && dataContents == "1"
+            } else {
+                isAdblockProxyAvailable = false
+            }
+
+            if isAdblockProxyAvailable {
+                components = URLComponents(string: "https://api.ttv.lol/playlist/\(channel).m3u8")!
+            } else {
+                components = URLComponents(string: "https://usher.ttvnw.net/api/channel/hls/\(channel).m3u8")!
+            }
         case .vod(let vodID):
-            components = URLComponents(string: "https://usher.ttvnw.net/vod/\(vodID)")!
+            // Note: Not yet getting ads on VODs so dont use the adblock proxy.
+            isAdblockProxyAvailable = false
+
+            if isAdblockProxyAvailable {
+                components = URLComponents(string: "https://api.ttv.lol/vod/\(vodID)")!
+            } else {
+                components = URLComponents(string: "https://usher.ttvnw.net/vod/\(vodID)")!
+            }
         }
 
-        components.queryItems = [
-            "player": "twitchweb",
-            "allow_source": true,
-            "allow_audio_only": true,
-            "sig": sigToken.signature,
-            "p": Int.random(in: 0 ... .max),
-            "type": "any",
-            "allow_spectre": false,
-            "fast_bread": true,
-        ].map { URLQueryItem(name: $0.key, value: String(describing: $0.value)) }
+        let queryItemsDict: [String: Any]?
+        if isAdblockProxyAvailable {
+            queryItemsDict = nil
+        } else {
+            queryItemsDict = [
+                "player": "twitchweb",
+                "allow_source": true,
+                "allow_audio_only": true,
+                "sig": sigToken.signature,
+                "p": Int.random(in: 0 ... .max),
+                "type": "any",
+                "allow_spectre": false,
+                "fast_bread": true,
+            ]
+        }
 
-        let urlQueryCharacterSet = CharacterSet.alphanumerics.union(.init([".", "_"]))
-        let token = sigToken.token
-            .replacingOccurrences(of: "\\", with: "")
-            .addingPercentEncoding(withAllowedCharacters: urlQueryCharacterSet)
-            ?? ""
-        let urlString = components.url!.absoluteString.appending("&token=\(token)")
-        return URL(string: urlString)!
+        components.queryItems = queryItemsDict?.map { URLQueryItem(name: $0.key, value: String(describing: $0.value)) }
+
+        let url: URL
+        let additionalheaders: [String: String]
+
+        if isAdblockProxyAvailable {
+            url = URL(string: components.url!.absoluteString.appending("%3Facmb%3De30%253D%26allow_source%3Dtrue"))!
+            additionalheaders = [
+                "X-Donate-To": "https://ttv.lol/donate",
+            ]
+        } else {
+            let urlQueryCharacterSet = CharacterSet.alphanumerics.union(.init([".", "_"]))
+            let token = sigToken.token
+                .replacingOccurrences(of: "\\", with: "")
+                .addingPercentEncoding(withAllowedCharacters: urlQueryCharacterSet) ?? ""
+            let urlString = components.url!.absoluteString.appending("&token=\(token)")
+            url = URL(string: urlString)!
+
+            additionalheaders = [:]
+        }
+
+        print("Twitch isAdblockProxyAvailable = \(isAdblockProxyAvailable)")
+        print("Twitch URL = \(components.url!.absoluteString)")
+
+        return (url, additionalheaders)
     }
 
     func tokenAPI(video: VideoStream) -> URLRequest {
@@ -274,12 +318,22 @@ private extension LiveVideoFetcher {
 
     func getVideo(_ video: VideoStream) async throws -> VideoDataResponse {
         let sigToken = try await getTokenAndSignature(video: video)
-        let url = usherAPI(video: video, sigToken: sigToken)
-        let data = try await session.data(from: url).0
+        let (url, additionalHeaders) = await usherAPI(video: video, sigToken: sigToken)
+
+        var request = URLRequest(url: url)
+        additionalHeaders.forEach { header in
+            request.setValue(header.value, forHTTPHeaderField: header.key)
+        }
+
+        let data = try await session.data(for: request).0
+
         do {
             let m3u8 = try M3U8(data: data)
             return .playlist(m3u8)
         } catch {
+            if let string = String(data: data, encoding: .utf8) {
+                print(string)
+            }
             throw AppError(message: "Failed to decode m3u8 data. \(error.localizedDescription)")
         }
     }
