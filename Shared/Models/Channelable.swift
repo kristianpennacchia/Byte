@@ -13,7 +13,7 @@ func equalsChannelable(lhs: any Channelable, rhs: any Channelable) -> Bool {
 }
 
 func compareChannelable(lhs: any Channelable, rhs: any Channelable) -> Bool {
-    return lhs.displayName < rhs.displayName
+    return lhs.displayName.compare(rhs.displayName, options: .caseInsensitive) == .orderedAscending
 }
 
 let channelPreview = Channel(
