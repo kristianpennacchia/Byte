@@ -317,25 +317,27 @@ private extension LiveVideoFetcher {
     }
 
     func getVideo(_ video: VideoStream) async throws -> VideoDataResponse {
-        let sigToken = try await getTokenAndSignature(video: video)
-        let (url, additionalHeaders) = await usherAPI(video: video, sigToken: sigToken)
+        try await Task.retrying { [self] in
+            let sigToken = try await getTokenAndSignature(video: video)
+            let (url, additionalHeaders) = await usherAPI(video: video, sigToken: sigToken)
 
-        var request = URLRequest(url: url)
-        additionalHeaders.forEach { header in
-            request.setValue(header.value, forHTTPHeaderField: header.key)
-        }
-
-        let data = try await session.data(for: request).0
-
-        do {
-            let m3u8 = try M3U8(data: data)
-            return .playlist(m3u8)
-        } catch {
-            if let string = String(data: data, encoding: .utf8) {
-                print(string)
+            var request = URLRequest(url: url)
+            additionalHeaders.forEach { header in
+                request.setValue(header.value, forHTTPHeaderField: header.key)
             }
-            throw AppError(message: "Failed to decode m3u8 data. \(error.localizedDescription)")
-        }
+
+            let data = try await session.data(for: request).0
+
+            do {
+                let m3u8 = try M3U8(data: data)
+                return .playlist(m3u8)
+            } catch {
+                if let string = String(data: data, encoding: .utf8) {
+                    print(string)
+                }
+                throw error
+            }
+        }.value
     }
 }
 
