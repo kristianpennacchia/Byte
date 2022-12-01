@@ -208,38 +208,27 @@ extension LiveVideoFetcher {
 }
 
 private extension LiveVideoFetcher {
-    func usherAPI(video: VideoStream, sigToken: SigToken) async -> (url: URL, additionalHeaders: [String: String]) {
-        let isAdblockProxyAvailable: Bool
-
+    func usherAPI(video: VideoStream, sigToken: SigToken, useAdBlockProxy: Bool) async -> (url: URL, additionalHeaders: [String: String]) {
         var components: URLComponents
         switch video {
         case .live(let channel):
-            let adblockProxyPingCheckResult = try? await session.data(from: URL(string: "https://api.ttv.lol/ping")!)
-            if let data = adblockProxyPingCheckResult?.0, let response = adblockProxyPingCheckResult?.1 as? HTTPURLResponse {
-                let dataContents = String(data: data, encoding: .utf8)
-                isAdblockProxyAvailable = response.statusCode == 200 && dataContents == "1"
-            } else {
-                isAdblockProxyAvailable = false
-            }
-
-            if isAdblockProxyAvailable {
+            if useAdBlockProxy {
                 components = URLComponents(string: "https://api.ttv.lol/playlist/\(channel).m3u8")!
             } else {
                 components = URLComponents(string: "https://usher.ttvnw.net/api/channel/hls/\(channel).m3u8")!
             }
         case .vod(let vodID):
             // Note: Not yet getting ads on VODs so dont use the adblock proxy.
-            isAdblockProxyAvailable = false
-
-            if isAdblockProxyAvailable {
-                components = URLComponents(string: "https://api.ttv.lol/vod/\(vodID)")!
-            } else {
-                components = URLComponents(string: "https://usher.ttvnw.net/vod/\(vodID)")!
-            }
+//            if useAdBlockProxy {
+//                components = URLComponents(string: "https://api.ttv.lol/vod/\(vodID)")!
+//            } else {
+//                components = URLComponents(string: "https://usher.ttvnw.net/vod/\(vodID)")!
+//            }
+            components = URLComponents(string: "https://usher.ttvnw.net/vod/\(vodID)")!
         }
 
         let queryItemsDict: [String: Any]?
-        if isAdblockProxyAvailable {
+        if useAdBlockProxy {
             queryItemsDict = nil
         } else {
             queryItemsDict = [
@@ -259,7 +248,7 @@ private extension LiveVideoFetcher {
         let url: URL
         let additionalheaders: [String: String]
 
-        if isAdblockProxyAvailable {
+        if useAdBlockProxy {
             url = URL(string: components.url!.absoluteString.appending("%3Facmb%3De30%253D%26allow_source%3Dtrue"))!
             additionalheaders = [
                 "X-Donate-To": "https://ttv.lol/donate",
@@ -275,7 +264,6 @@ private extension LiveVideoFetcher {
             additionalheaders = [:]
         }
 
-        print("Twitch isAdblockProxyAvailable = \(isAdblockProxyAvailable)")
         print("Twitch URL = \(components.url!.absoluteString)")
 
         return (url, additionalheaders)
@@ -322,9 +310,9 @@ private extension LiveVideoFetcher {
     }
 
     func getVideo(_ video: VideoStream) async throws -> VideoDataResponse {
-        try await Task.retrying { [self] in
+        try await Task.retrying { [self] isLastRetry in
             let sigToken = try await getTokenAndSignature(video: video)
-            let (url, additionalHeaders) = await usherAPI(video: video, sigToken: sigToken)
+            let (url, additionalHeaders) = await usherAPI(video: video, sigToken: sigToken, useAdBlockProxy: isLastRetry == false)
 
             var request = URLRequest(url: url)
             additionalHeaders.forEach { header in

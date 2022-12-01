@@ -21,12 +21,12 @@ extension Task where Failure == Error {
         priority: TaskPriority? = nil,
         maxRetryCount: Int = 3,
         retryDelay: TimeInterval = 1,
-        operation: @Sendable @escaping () async throws -> Success
+        operation: @Sendable @escaping (_ isLastRetry: Bool) async throws -> Success
     ) -> Task {
         Task(priority: priority) {
             for _ in 0..<maxRetryCount {
                 do {
-                    return try await operation()
+                    return try await operation(false)
                 } catch {
                     let oneSecond = TimeInterval(1_000_000_000)
                     let delay = UInt64(oneSecond * retryDelay)
@@ -37,7 +37,7 @@ extension Task where Failure == Error {
             }
 
             try Task<Never, Never>.checkCancellation()
-            return try await operation()
+            return try await operation(true)
         }
     }
 }
