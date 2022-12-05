@@ -142,7 +142,7 @@ extension LiveVideoFetcher {
 
                 // Fallback to getting the direct video URLs via yt-dlp.
                 do {
-                    var request = URLRequest(url: URL(string: "https://byte-dl.onrender.com/v1/video?url=https://www.youtube.com/watch?v=\(stream.id)&cli=yt-dlp&schema=url")!)
+                    var request = URLRequest(url: URL(string: "https://unity-youtube-dl-server.herokuapp.com/v1/video?url=https://www.youtube.com/watch?v=\(stream.id)&cli=yt-dlp&schema=url")!)
 
                     // Long timeout interval due to OnRender servers taking a long time to start up.
                     request.timeoutInterval = 120
@@ -168,7 +168,7 @@ extension LiveVideoFetcher {
             case .youtube:
                 // First try getting the direct video URLs via yt-dlp.
                 do {
-                    var request = URLRequest(url: URL(string: "https://byte-dl.onrender.com/v1/video?url=https://www.youtube.com/watch?v=\(video.videoId)&cli=yt-dlp&schema=url")!)
+                    var request = URLRequest(url: URL(string: "https://unity-youtube-dl-server.herokuapp.com/v1/video?url=https://www.youtube.com/watch?v=\(video.videoId)&cli=yt-dlp&schema=url")!)
 
                     // Long timeout interval due to OnRender servers taking a long time to start up.
                     request.timeoutInterval = 120
