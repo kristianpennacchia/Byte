@@ -15,14 +15,16 @@ struct StreamList: View {
     }
 
     @EnvironmentObject private var sessionStore: SessionStore
-    @EnvironmentObject private var api: TwitchAPI
+    @EnvironmentObject private var twitchAPI: TwitchAPI
+    @EnvironmentObject private var youtubeAPI: YoutubeAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @StateObject private var streamViewModel = StreamViewModel()
 
     @State private var streams = [StreamStore.UniqueStream]()
     @State private var selectedStreams = [any Streamable]()
-    @State private var showSpoilerMenu = false
+    @State private var showStreamMenu = false
+    @State private var showChannel = false
     @State private var showVideoPlayer = false
     @State private var isRefreshing = false
 
@@ -52,10 +54,8 @@ struct StreamList: View {
                                     streamViewModel.stream = stream
                                     showVideoPlayer = true
                                 } longPress: {
-                                    if stream is Stream {
-                                        streamViewModel.stream = stream
-                                        showSpoilerMenu = true
-                                    }
+                                    streamViewModel.stream = stream
+                                    showStreamMenu = true
                                 }
                                 .onPlayPauseCommand {
                                     // Multi-select streams.
@@ -97,17 +97,28 @@ struct StreamList: View {
                 refresh()
             }
         }
-        .actionSheet(isPresented: $showSpoilerMenu) {
+        .actionSheet(isPresented: $showStreamMenu) {
+            var buttons = [ActionSheet.Button]()
+
             if let stream = streamViewModel.stream as? Stream {
-                return ActionSheet(title: Text("Spoiler Filter"), message: nil, buttons: [
+                buttons.append(
                     .default(Text(spoilerFilter.isSpoiler(gameID: stream.gameId) ? "Show Game Thumbnail" : "Hide Game Thumbnail")) {
                         spoilerFilter.toggle(gameID: stream.gameId)
-                    },
-                    .cancel()
-                ])
-            } else {
-                return ActionSheet(title: Text("None"), message: nil, buttons: [.cancel()])
+                    }
+                )
             }
+
+            if let stream = streamViewModel.stream {
+                buttons.append(
+                    .default(Text("View \(stream.userName)")) {
+                        showChannel = true
+                    }
+                )
+            }
+
+            buttons.append(.cancel())
+
+            return ActionSheet(title: Text(""), message: nil, buttons: buttons)
         }
         .fullScreenCover(
             isPresented: $showVideoPlayer,
@@ -121,6 +132,22 @@ struct StreamList: View {
             },
             content: {
                 MultiStreamVideoPlayer(store: store, streams: streamViewModel.streams, isPresented: $showVideoPlayer)
+            }
+        )
+        .fullScreenCover(
+            isPresented: $showChannel,
+            onDismiss: {
+                streamViewModel.stream = nil
+            },
+            content: {
+                switch type(of: streamViewModel.stream!).platform {
+                case .twitch:
+                    VideoList(store: VideoStore(twitchAPI: twitchAPI, fetch: .user(userID: streamViewModel.stream!.userId)))
+                        .environmentObject(twitchAPI)
+                case .youtube:
+                    VideoList(store: VideoStore(youtubeAPI: youtubeAPI, fetch: .user(userID: streamViewModel.stream!.userId)))
+                        .environmentObject(youtubeAPI)
+                }
             }
         )
     }
