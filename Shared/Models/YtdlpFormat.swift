@@ -15,7 +15,7 @@ struct YtdlpFormat: Decodable {
     let ext: String
     let acodec: String
     let vcodec: String
-    let resolution: String
+    let resolution: String?
     let url: URL
     var hasAudio: Bool { acodec != "none" }
     var hasVideo: Bool { vcodec != "none" }

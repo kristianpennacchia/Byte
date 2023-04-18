@@ -142,18 +142,21 @@ extension LiveVideoFetcher {
 
                 // Fallback to getting the direct video URLs via yt-dlp.
                 do {
-                    var request = URLRequest(url: URL(string: "https://unity-youtube-dl-server.herokuapp.com/v1/video?url=https://www.youtube.com/watch?v=\(stream.id)&cli=yt-dlp&schema=url")!)
+                    var request = URLRequest(url: URL(string: "https://youtube-dl-web.vercel.app/api/info?q=https://www.youtube.com/watch?v=\(stream.id)&f=bestvideo+bestaudio/best")!)
 
                     // Long timeout interval due to OnRender servers taking a long time to start up.
                     request.timeoutInterval = 120
 
                     let data = try await session.data(for: request).0
                     let ytdlpResponse = try JSONDecoder().decode(YtdlpResponse.self, from: data)
-                    guard let url = ytdlpResponse.url else {
-                        throw AppError(message: "Could not get 'best' URL from yt-dlp response.")
-                    }
 
-                    return .urls([url])
+					if let url = ytdlpResponse.url {
+						return .urls([url])
+					} else if let formats = ytdlpResponse.formats {
+						return .ytdlpFormats(formats)
+					} else {
+						throw AppError(message: "Could not get 'best' URL or format from yt-dlp response.")
+					}
                 } catch let error as DecodingError {
                     throw AppError(message: "Fetching direct Youtube video URLs for video ID '\(stream.id)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")
                 } catch {
@@ -168,18 +171,21 @@ extension LiveVideoFetcher {
             case .youtube:
                 // First try getting the direct video URLs via yt-dlp.
                 do {
-                    var request = URLRequest(url: URL(string: "https://unity-youtube-dl-server.herokuapp.com/v1/video?url=https://www.youtube.com/watch?v=\(video.videoId)&cli=yt-dlp&schema=url")!)
+                    var request = URLRequest(url: URL(string: "https://youtube-dl-web.vercel.app/api/info?q=https://www.youtube.com/watch?v=\(video.videoId)&f=bestvideo+bestaudio/best")!)
 
                     // Long timeout interval due to OnRender servers taking a long time to start up.
                     request.timeoutInterval = 120
 
                     let data = try await session.data(for: request).0
                     let ytdlpResponse = try JSONDecoder().decode(YtdlpResponse.self, from: data)
-                    guard let url = ytdlpResponse.url else {
-                        throw AppError(message: "Could not get 'best' URL from yt-dlp response.")
-                    }
 
-                    return .urls([url])
+					if let url = ytdlpResponse.url {
+						return .urls([url])
+					} else if let formats = ytdlpResponse.formats {
+						return .ytdlpFormats(formats)
+					} else {
+						throw AppError(message: "Could not get 'best' URL or format from yt-dlp response.")
+					}
                 } catch let error as DecodingError {
                     print("Fetching direct Youtube video URLs for video ID '\(video.videoId)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")
                 } catch {

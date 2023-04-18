@@ -178,6 +178,17 @@ private extension StreamVideoPlayer {
                     playingItem = .url(format.url)
                     automaticallyWaitsToMinimizeStalling = false
                 case .ytdlpFormats(let formats):
+					if let avFormat = formats
+						.filter({ $0.ext == "mp4" && $0.vcodec.contains("avc1.") && $0.acodec.contains("mp4a.") })
+						.sorted(by: { $0.height ?? 0 > $1.height ?? 0 })
+						.first
+					{
+						playingItem = .url(avFormat.url)
+						automaticallyWaitsToMinimizeStalling = false
+						print(avFormat.url)
+						break
+					}
+
                     let supportedFormats = formats.sorted(by: >).filter { $0.ext == "mp4" || $0.ext == "m4a" }
                     if let audioURL = supportedFormats.first(where: \.isAudioOnly)?.url, let videoURL = supportedFormats.first(where: \.isVideoOnly)?.url {
                         let audioAsset = AVAsset(url: audioURL)
