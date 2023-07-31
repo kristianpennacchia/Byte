@@ -227,7 +227,7 @@ private extension LiveVideoFetcher {
         switch video {
         case .live(let channel):
             if useAdBlockProxy {
-                components = URLComponents(string: "https://api.ttv.lol/playlist/\(channel).m3u8")!
+                components = URLComponents(string: "https://as.luminous.dev/playlist/\(channel).m3u8")!
             } else {
                 components = URLComponents(string: "https://usher.ttvnw.net/api/channel/hls/\(channel).m3u8")!
             }
@@ -264,9 +264,7 @@ private extension LiveVideoFetcher {
 
         if useAdBlockProxy {
             url = URL(string: components.url!.absoluteString.appending("%3Facmb%3De30%253D%26allow_source%3Dtrue"))!
-            additionalheaders = [
-                "X-Donate-To": "https://ttv.lol/donate",
-            ]
+			additionalheaders = [:]
         } else {
             let urlQueryCharacterSet = CharacterSet.alphanumerics.union(.init([".", "_"]))
             let token = sigToken.token
