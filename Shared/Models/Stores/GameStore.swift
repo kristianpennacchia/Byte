@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OSLog
 
 final class GameStore: FetchingObject {
     enum Fetch: FetchingKey {
@@ -48,7 +49,7 @@ final class GameStore: FetchingObject {
                 let twitchGames = try await twitchAPI!.execute(method: .get, endpoint: "games/top", query: query, decoding: [Game].self).data
                 games.append(contentsOf: twitchGames)
             } catch {
-                print("Fetching '\(fetchType)' games failed. \(error.localizedDescription)")
+				Logger.twitch.error("Fetching '\(String(describing: self.fetchType))' games failed. \(error.localizedDescription)")
             }
         case .followed:
             break

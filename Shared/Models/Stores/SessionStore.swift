@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import OSLog
 
 final class SessionStore: ObservableObject {
     private let didChange = PassthroughSubject<Output, Failure>()
@@ -47,7 +48,7 @@ final class SessionStore: ObservableObject {
             do {
                 twitchUser = try await twitchAPI.authenticate().data.first
             } catch {
-                Swift.print("Failed Twitch sign-in. \(error)")
+				Logger.twitch.error("Failed Twitch sign-in. \(error)")
             }
         }
     }
@@ -57,7 +58,7 @@ final class SessionStore: ObservableObject {
             do {
                 youtubeUser = try await youtubeAPI?.getAuthenticatedPerson()
             } catch {
-                Swift.print("Failed Youtube sign-in. \(error)")
+				Logger.youtube.error("Failed Youtube sign-in. \(error)")
             }
         }
     }
@@ -65,7 +66,7 @@ final class SessionStore: ObservableObject {
     func startYoutubeOAuth(oAuthHandler: @escaping (Result<YoutubeOAuth, Error>) -> Void, completion: @escaping (Result<YoutubePerson, Error>) -> Void) {
         youtubeAPI?.authenticate(oAuthHandler: { result in
             if case .failure(let error) = result {
-                Swift.print("Failed to begin Youtube OAuth flow. \(error.localizedDescription)")
+				Logger.youtube.error("Failed to begin Youtube OAuth flow. \(error.localizedDescription)")
             }
 
             oAuthHandler(result)
@@ -76,7 +77,7 @@ final class SessionStore: ObservableObject {
                 self.youtubeUser = data
                 completion(.success(data))
             case .failure(let error):
-                Swift.print("Failed to complete Youtube sign-in. \(error.localizedDescription)")
+				Logger.youtube.error("Failed to complete Youtube sign-in. \(error.localizedDescription)")
                 completion(.failure(error))
             }
         })

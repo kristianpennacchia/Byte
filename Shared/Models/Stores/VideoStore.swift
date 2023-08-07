@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftUI
+import OSLog
 
 final class VideoStore: FetchingObject {
     enum Fetch: FetchingKey {
@@ -70,7 +71,7 @@ final class VideoStore: FetchingObject {
                 ).data ?? []
                 videos.append(contentsOf: twitchVideos)
             } catch {
-                Swift.print("Failed getting Twitch videos. \(error.localizedDescription)")
+				Logger.twitch.error("Failed getting Twitch videos. \(error.localizedDescription)")
             }
 
             do {
@@ -114,7 +115,7 @@ final class VideoStore: FetchingObject {
 
                 videos.append(contentsOf: youtubeVideos)
             } catch {
-                Swift.print("Failed getting Youtube videos. \(error.localizedDescription)")
+				Logger.youtube.error("Failed getting Youtube videos. \(error.localizedDescription)")
             }
         }
 

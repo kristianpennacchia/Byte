@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import OSLog
 
 struct StreamView: View {
     private static let viewCountFormatter: NumberFormatter = {
@@ -30,7 +31,7 @@ struct StreamView: View {
                 do {
                     game = try await stream.game(api: api)
                 } catch {
-                    print("Fetching game (id = \(stream.gameId) failed. \(error.localizedDescription))")
+					Logger.twitch.debug("Fetching game (id = \(stream.gameId) failed. \(error.localizedDescription))")
                 }
             }
         }

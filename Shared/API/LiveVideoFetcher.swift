@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OSLog
 
 class LiveVideoFetcher: NSObject {
     private struct YtdlpResponse: Decodable {
@@ -133,12 +134,12 @@ extension LiveVideoFetcher {
                     let m3u8 = try M3U8(data: m3u8Data)
                     return .playlist(m3u8)
                 } catch let error as DecodingError {
-                    print("Fetching video page for video ID '\(stream.id)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")
+					Logger.streaming.error("Fetching video page for video ID '\(stream.id)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")
                 } catch {
-                    print("Fetching video page for video ID '\(stream.id)' failed. \(error.localizedDescription)")
+					Logger.streaming.error("Fetching video page for video ID '\(stream.id)' failed. \(error.localizedDescription)")
                 }
 
-                print("Falling back to yt-dlp.")
+				Logger.streaming.debug("Falling back to yt-dlp.")
 
                 // Fallback to getting the direct video URLs via yt-dlp.
                 do {
@@ -187,13 +188,13 @@ extension LiveVideoFetcher {
 						throw AppError(message: "Could not get 'best' URL or format from yt-dlp response.")
 					}
                 } catch let error as DecodingError {
-                    print("Fetching direct Youtube video URLs for video ID '\(video.videoId)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")
+					Logger.streaming.error("Fetching direct Youtube video URLs for video ID '\(video.videoId)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")
                 } catch {
                     // Failed getting direct URLs. Fallback to getting them ourselves.
-                    print("Fetching direct Youtube video URLs for video ID '\(video.videoId)' failed. \(error.localizedDescription)")
+					Logger.streaming.error("Fetching direct Youtube video URLs for video ID '\(video.videoId)' failed. \(error.localizedDescription)")
                 }
 
-                print("Falling back to website parsing.")
+				Logger.streaming.debug("Falling back to website parsing.")
 
                 // Fallback to scraping the Youtube website ourselves.
                 do {
@@ -278,7 +279,7 @@ private extension LiveVideoFetcher {
             additionalheaders = [:]
         }
 
-        print("Twitch URL = \(components.url!.absoluteString)")
+		Logger.streaming.debug("Twitch URL = \(components.url!.absoluteString)")
 
         return (url, additionalheaders)
     }
@@ -318,7 +319,7 @@ private extension LiveVideoFetcher {
             return try JSONDecoder().decode(SigToken.self, from: data)
         } catch let error as DecodingError {
             let localizedError = LocalizedDecodingError(decodingError: error)
-            print("Failed to decode Twitch token and signature from JSON. \(error.localizedDescription)")
+			Logger.streaming.error("Failed to decode Twitch token and signature from JSON. \(error.localizedDescription)")
             throw localizedError
         }
     }
@@ -340,7 +341,7 @@ private extension LiveVideoFetcher {
                 return .playlist(m3u8)
             } catch {
                 if let string = String(data: data, encoding: .utf8) {
-                    print(string)
+					Logger.streaming.error("Failed parsing M3U8 data. \(string)")
                 }
                 throw error
             }

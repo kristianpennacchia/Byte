@@ -8,6 +8,7 @@
 
 import Foundation
 import SwiftUI
+import OSLog
 
 final class StreamStore: FetchingObject {
     enum Fetch: FetchingKey {
@@ -103,7 +104,7 @@ final class StreamStore: FetchingObject {
                     streams += twitchStreams
                 }
             } catch {
-                print("Fetching all Twitch followed channels failed. \(error.localizedDescription)")
+				Logger.twitch.error("Fetching all Twitch followed channels failed. \(error.localizedDescription)")
             }
 
             do {
@@ -136,7 +137,7 @@ final class StreamStore: FetchingObject {
                         }
                     }
                 } catch {
-                    print("Failed to check if Youtube channels are live. \(error.localizedDescription)")
+					Logger.youtube.error("Failed to check if Youtube channels are live. \(error.localizedDescription)")
                 }
 
                 // https://developers.google.com/youtube/v3/docs/videos/list
@@ -153,7 +154,7 @@ final class StreamStore: FetchingObject {
                 ).filter(\.isCurrentlyLive) ?? []
                 streams += liveYoutubeChannels
             } catch {
-                print("Fetching all Youtube followed channels failed. \(error.localizedDescription)")
+				Logger.youtube.error("Fetching all Youtube followed channels failed. \(error.localizedDescription)")
             }
         case .top:
             let query: [String: Any] = [

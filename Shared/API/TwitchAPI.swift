@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 import Combine
 import KeychainAccess
+import OSLog
 
 final class TwitchAPI: ObservableObject {
     struct Authentication {
@@ -170,10 +171,10 @@ extension TwitchAPI {
         do {
             return try decoder.decode(TwitchDataItem<T>.self, from: data)
         } catch let decodingError as DecodingError {
-            Swift.print("URL from decoding failure = \(request.url?.absoluteString ?? "N/A"), query = \(query)")
+			Logger.twitch.error("URL from decoding failure = \(request.url?.absoluteString ?? "N/A"), query = \(query)")
 
             if let rawData = String(data: data, encoding: .utf8) {
-                Swift.print("Raw data from decoding failure = \(rawData)")
+				Logger.twitch.error("Raw data from decoding failure = \(rawData)")
             }
 
             do {

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OSLog
 
 final class ChannelStore: FetchingObject {
     enum Fetch: FetchingKey {
@@ -75,7 +76,7 @@ final class ChannelStore: FetchingObject {
                     channels += twitchUsers
                 }
             } catch {
-                print("Fetching all Twitch followed channels failed. \(error.localizedDescription)")
+				Logger.twitch.error("Fetching all Twitch followed channels failed. \(error.localizedDescription)")
             }
 
             do {
@@ -93,7 +94,7 @@ final class ChannelStore: FetchingObject {
                 ) ?? []
                 channels += youtubeChannels
             } catch {
-                print("Fetching all Youtube subscribed channels failed. \(error.localizedDescription)")
+				Logger.youtube.error("Fetching all Youtube subscribed channels failed. \(error.localizedDescription)")
             }
         case .top:
             /// - Todo: Fetch top channels

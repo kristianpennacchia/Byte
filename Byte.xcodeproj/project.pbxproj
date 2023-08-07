@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -192,6 +192,9 @@
 		C19D480C2321426900A53AB3 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19D480B2321426900A53AB3 /* App.swift */; };
 		C19D480D2321426900A53AB3 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19D480B2321426900A53AB3 /* App.swift */; };
 		C19D480E2321426900A53AB3 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19D480B2321426900A53AB3 /* App.swift */; };
+		C19D82A92A80AE8E00AC2379 /* OSLog+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19D82A82A80AE8E00AC2379 /* OSLog+Extensions.swift */; };
+		C19D82AA2A80AE8E00AC2379 /* OSLog+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19D82A82A80AE8E00AC2379 /* OSLog+Extensions.swift */; };
+		C19D82AB2A80AE8E00AC2379 /* OSLog+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19D82A82A80AE8E00AC2379 /* OSLog+Extensions.swift */; };
 		C19FE9AE246E5A7D004EB60C /* Favourite.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19FE9AD246E5A7D004EB60C /* Favourite.swift */; };
 		C19FE9AF246E5A7D004EB60C /* Favourite.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19FE9AD246E5A7D004EB60C /* Favourite.swift */; };
 		C19FE9B0246E5A7D004EB60C /* Favourite.swift in Sources */ = {isa = PBXBuildFile; fileRef = C19FE9AD246E5A7D004EB60C /* Favourite.swift */; };
@@ -432,6 +435,7 @@
 		C193E33828DE84460064639A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C1997027233B803D00FFC27A /* Refresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Refresh.swift; sourceTree = "<group>"; };
 		C19D480B2321426900A53AB3 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
+		C19D82A82A80AE8E00AC2379 /* OSLog+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OSLog+Extensions.swift"; sourceTree = "<group>"; };
 		C19FE9AD246E5A7D004EB60C /* Favourite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favourite.swift; sourceTree = "<group>"; };
 		C1A647C328E7230800699B5B /* Task+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+Extensions.swift"; sourceTree = "<group>"; };
 		C1A647C728E72B3F00699B5B /* YoutubeUserAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeUserAuth.swift; sourceTree = "<group>"; };
@@ -663,6 +667,7 @@
 				C1729BC123268887005D0A99 /* Array+Extensions.swift */,
 				C1605F6D2317DE6300F98BEE /* Color+Extensions.swift */,
 				C1729BC52326889D005D0A99 /* Dictionary+Extensions.swift */,
+				C19D82A82A80AE8E00AC2379 /* OSLog+Extensions.swift */,
 				C1D32D7E232E695600BE3A4C /* Strings+Extensions.swift */,
 				C1A647C328E7230800699B5B /* Task+Extensions.swift */,
 			);
@@ -1236,6 +1241,7 @@
 				C1020D982317E9AE00FBFE16 /* Game.swift in Sources */,
 				C1020D992317E9AE00FBFE16 /* Color+Extensions.swift in Sources */,
 				C1020D962317E9AE00FBFE16 /* BrandColor.swift in Sources */,
+				C19D82AA2A80AE8E00AC2379 /* OSLog+Extensions.swift in Sources */,
 				C12695A328E5CCA900422F43 /* YoutubeSecrets.swift in Sources */,
 				C1B5AC6B232E299F001A502F /* ChannelView.swift in Sources */,
 				C1B5AC6F232E29EF001A502F /* GameView.swift in Sources */,
@@ -1345,6 +1351,7 @@
 				C13F884A233B6B32008649F6 /* Push.swift in Sources */,
 				C16A7E0728E8077F00509FFF /* YoutubePerson.swift in Sources */,
 				C133D58423227626005015C8 /* LocalizedDecodingError.swift in Sources */,
+				C19D82AB2A80AE8E00AC2379 /* OSLog+Extensions.swift in Sources */,
 				C1E9428B231E70D9006B7A71 /* GameStore.swift in Sources */,
 				C11418822319358E0004C813 /* SizeProvider.swift in Sources */,
 				C12695A028E5CC9D00422F43 /* TwitchSecrets.swift in Sources */,
@@ -1459,6 +1466,7 @@
 				C17766ED26C65EA80085E848 /* VideoList.swift in Sources */,
 				C18778FE23195C23008CA61E /* CovertArtSize.swift in Sources */,
 				C133D58223227626005015C8 /* LocalizedDecodingError.swift in Sources */,
+				C19D82A92A80AE8E00AC2379 /* OSLog+Extensions.swift in Sources */,
 				C1E67AB62333A4910024B25C /* ViewControllerHolder.swift in Sources */,
 				C126959E28E5CC9D00422F43 /* TwitchSecrets.swift in Sources */,
 				C1E94289231E70D9006B7A71 /* GameStore.swift in Sources */,

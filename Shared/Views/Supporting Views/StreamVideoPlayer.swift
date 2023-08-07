@@ -9,6 +9,7 @@
 import SwiftUI
 import AVKit
 import SwimplyPlayIndicator
+import OSLog
 
 struct StreamVideoPlayer: View {
     private class PlayerViewModel: ObservableObject {
@@ -185,7 +186,7 @@ private extension StreamVideoPlayer {
 					{
 						playingItem = .url(avFormat.url)
 						automaticallyWaitsToMinimizeStalling = false
-						print(avFormat.url)
+						Logger.streaming.debug("url = \(avFormat.url)")
 						break
 					}
 
@@ -214,7 +215,7 @@ private extension StreamVideoPlayer {
                         throw AppError(message: "Unable to get valid audio and video URLs.")
                     }
                 case .urls(let urls):
-                    print(urls)
+					Logger.streaming.debug("urls = \(urls)")
                     if urls.isEmpty == false {
                         playingItem = .url(urls.first!)
                         automaticallyWaitsToMinimizeStalling = true
@@ -233,7 +234,7 @@ private extension StreamVideoPlayer {
                     playerViewModel.player.isMuted = isFocused == false
                 }
             } catch {
-                print("Failed fetching live video data. \(error.localizedDescription)")
+				Logger.streaming.error("Failed fetching live video data. \(error.localizedDescription)")
                 self.error = error
                 showErrorAlert = true
             }

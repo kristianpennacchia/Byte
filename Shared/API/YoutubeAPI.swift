@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 import Combine
 import KeychainAccess
+import OSLog
 
 final class YoutubeAPI: ObservableObject {
     struct Authentication {
@@ -117,7 +118,7 @@ extension YoutubeAPI {
                         completion(.success(person))
                     }
                 } catch {
-                    Swift.print("Failed getting user info.", error)
+					Logger.youtube.debug("Failed getting user info. \(error.localizedDescription)")
                     DispatchQueue.main.async {
                         completion(.failure(error))
                     }
@@ -135,7 +136,7 @@ extension YoutubeAPI {
 
                     oAuthHandler(.success(data))
 
-                    Swift.print("Polling for user to complete OAuth.")
+					Logger.youtube.debug("Polling for user to complete OAuth.")
 
                     // Continuously poll 'https://oauth2.googleapis.com/token' every `data.interval` seconds until we get a success or failure response.
                     let pollQuery = [
@@ -165,14 +166,14 @@ extension YoutubeAPI {
                             completion(.success(person))
                         } catch let error as YoutubeError {
                             if error.error == "access_denied" {
-                                Swift.print("Failed getting Youtube OAuth response. \(error.localizedDescription)")
+								Logger.youtube.error("Failed getting Youtube OAuth response. \(error.localizedDescription)")
                                 DispatchQueue.main.async {
                                     completion(.failure(error))
                                 }
                                 break
                             }
                         } catch {
-                            Swift.print("Failed getting Youtube OAuth response. \(error.localizedDescription)")
+							Logger.youtube.error("Failed getting Youtube OAuth response. \(error.localizedDescription)")
                             DispatchQueue.main.async {
                                 completion(.failure(error))
                             }
@@ -180,7 +181,7 @@ extension YoutubeAPI {
                         }
                     } while true
                 } catch {
-                    Swift.print("Failed getting Youtube OAuth response. \(error.localizedDescription)")
+					Logger.youtube.error("Failed getting Youtube OAuth response. \(error.localizedDescription)")
                     DispatchQueue.main.async {
                         oAuthHandler(.failure(error))
                     }
@@ -305,10 +306,10 @@ extension YoutubeAPI {
                 throw error
             }
         } catch let error as DecodingError {
-            Swift.print("URL from decoding failure = \(request.url?.absoluteString ?? "N/A"), query = \(query)")
+			Logger.youtube.error("URL from decoding failure = \(request.url?.absoluteString ?? "N/A"), query = \(query)")
 
             if let rawData = String(data: data, encoding: .utf8) {
-                Swift.print("Raw data from decoding failure = \(rawData)")
+				Logger.youtube.error("Raw data from decoding failure = \(rawData)")
             }
 
             throw LocalizedDecodingError(decodingError: error)
