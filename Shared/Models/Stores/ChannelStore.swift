@@ -60,16 +60,16 @@ final class ChannelStore: FetchingObject {
             do {
                 let query: [String: Any] = [
                     "first": 100,
-                    "from_id": twitchUserID ?? "",
+                    "user_id": twitchUserID ?? "",
                 ]
 
-                let twitchFollowedChannelStubs = try await twitchAPI?.executeFetchAll(method: .get, endpoint: "users/follows", query: query, decoding: [Channel.Stub].self).data ?? []
+                let twitchFollowedChannelStubs = try await twitchAPI?.executeFetchAll(method: .get, endpoint: "channels/followed", query: query, decoding: [Channel.Stub].self).data ?? []
 
                 // Now get the channel data for each followed channel.
                 for stubs in twitchFollowedChannelStubs.chunked(into: 100) {
                     let query: [String: Any] = [
                         "first": stubs.count,
-                        "id": stubs.map { $0.toId },
+                        "id": stubs.map { $0.broadcasterId },
                     ]
 
                     let twitchUsers = try await twitchAPI?.executeFetchAll(method: .get, endpoint: "users", query: query, decoding: [Channel].self).data ?? []

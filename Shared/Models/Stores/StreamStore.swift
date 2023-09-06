@@ -82,10 +82,10 @@ final class StreamStore: FetchingObject {
             do {
                 let twitchFollowedChannelStubs = try await twitchAPI?.executeFetchAll(
                     method: .get,
-                    endpoint: "users/follows",
+                    endpoint: "channels/followed",
                     query: [
                         "first": 100,
-                        "from_id": twitchUserID ?? "",
+                        "user_id": twitchUserID ?? "",
                     ],
                     decoding: [Channel.Stub].self
                 ).data ?? []
@@ -97,7 +97,7 @@ final class StreamStore: FetchingObject {
                         endpoint: "streams",
                         query: [
                             "first": stubs.count,
-                            "user_id": stubs.map { $0.toId },
+                            "user_id": stubs.map { $0.broadcasterId },
                         ],
                         decoding: [Stream].self
                     ).data ?? []

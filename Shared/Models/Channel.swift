@@ -21,10 +21,8 @@ struct Channel: Decodable, Channelable {
 
 extension Channel {
     struct Stub: Decodable {
-        let fromId: String
-        let fromName: String
-        let toId: String
-        let toName: String
+        let broadcasterId: String
+        let broadcasterName: String
     }
 }
 
