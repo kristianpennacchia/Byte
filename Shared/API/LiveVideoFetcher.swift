@@ -274,7 +274,7 @@ private extension LiveVideoFetcher {
                 "login": video.channel ?? "",
                 "isVod": video.isLive == false,
                 "vodID": video.vodID ?? "",
-                "playerType": "embed",
+                "playerType": "web",
             ],
         ]
 
