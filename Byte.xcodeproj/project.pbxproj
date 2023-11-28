@@ -276,9 +276,6 @@
 		C1E67AB62333A4910024B25C /* ViewControllerHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E67AB52333A4910024B25C /* ViewControllerHolder.swift */; };
 		C1E67AB72333A4910024B25C /* ViewControllerHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E67AB52333A4910024B25C /* ViewControllerHolder.swift */; };
 		C1E67AB82333A4910024B25C /* ViewControllerHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E67AB52333A4910024B25C /* ViewControllerHolder.swift */; };
-		C1E67ABA2333A5F30024B25C /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E67AB92333A5F30024B25C /* PlayerViewController.swift */; };
-		C1E67ABB2333A5F30024B25C /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E67AB92333A5F30024B25C /* PlayerViewController.swift */; };
-		C1E67ABC2333A5F30024B25C /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E67AB92333A5F30024B25C /* PlayerViewController.swift */; };
 		C1E74B88232E4A940023C4B8 /* Focusable.iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E74B87232E4A940023C4B8 /* Focusable.iOS.swift */; };
 		C1E94281231E70B6006B7A71 /* FetchingObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E94280231E70B6006B7A71 /* FetchingObject.swift */; };
 		C1E94282231E70B6006B7A71 /* FetchingObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E94280231E70B6006B7A71 /* FetchingObject.swift */; };
@@ -465,7 +462,6 @@
 		C1D32D7E232E695600BE3A4C /* Strings+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Strings+Extensions.swift"; sourceTree = "<group>"; };
 		C1D5CA30231E931400663FD8 /* AppFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFactory.swift; sourceTree = "<group>"; };
 		C1E67AB52333A4910024B25C /* ViewControllerHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerHolder.swift; sourceTree = "<group>"; };
-		C1E67AB92333A5F30024B25C /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		C1E74B87232E4A940023C4B8 /* Focusable.iOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Focusable.iOS.swift; sourceTree = "<group>"; };
 		C1E94280231E70B6006B7A71 /* FetchingObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchingObject.swift; sourceTree = "<group>"; };
 		C1E94284231E70CE006B7A71 /* ChannelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelStore.swift; sourceTree = "<group>"; };
@@ -701,7 +697,6 @@
 				C1EF5E0828EC2A1C00F710FA /* MenuItemButton.swift */,
 				C10FECC226949CE600D48F8D /* MultiStreamVideoPlayer.swift */,
 				C1EF0BA4276B19F000E311C8 /* PlayerLayer.swift */,
-				C1E67AB92333A5F30024B25C /* PlayerViewController.swift */,
 				C1FEBCF528E4780C00903D16 /* QRCode.swift */,
 				C1997027233B803D00FFC27A /* Refresh.swift */,
 				C10FECBE26949C9300D48F8D /* StreamVideoPlayer.swift */,
@@ -1236,7 +1231,6 @@
 				C1A647C928E72B3F00699B5B /* YoutubeUserAuth.swift in Sources */,
 				C12695A728E5CF1200422F43 /* YoutubeAPI.swift in Sources */,
 				C1B2993F28E9546B00C0D6A8 /* YoutubeVideo.swift in Sources */,
-				C1E67ABB2333A5F30024B25C /* PlayerViewController.swift in Sources */,
 				C16A7E0E28E8199900509FFF /* YoutubeBroadcast.swift in Sources */,
 				C1020D982317E9AE00FBFE16 /* Game.swift in Sources */,
 				C1020D992317E9AE00FBFE16 /* Color+Extensions.swift in Sources */,
@@ -1423,7 +1417,6 @@
 				C17A83F528EFFD4E00FCD74F /* Videoable.swift in Sources */,
 				C1C79E782696EC1B00E653E7 /* StreamPicker.swift in Sources */,
 				C16A7E0B28E8140800509FFF /* YoutubeSubscription.swift in Sources */,
-				C1E67ABC2333A5F30024B25C /* PlayerViewController.swift in Sources */,
 				C1020DCD2317EB0800FBFE16 /* Game.swift in Sources */,
 				C1A647C628E7230800699B5B /* Task+Extensions.swift in Sources */,
 				C1B2993C28E9526B00C0D6A8 /* YoutubeChannel.swift in Sources */,
@@ -1539,7 +1532,6 @@
 				C1AE3318231E89FD00FE0F99 /* TwitchAPI.swift in Sources */,
 				C17766E526C658E80085E848 /* VideoStore.swift in Sources */,
 				C1FEBCF228E4768600903D16 /* OAuthView.swift in Sources */,
-				C1E67ABA2333A5F30024B25C /* PlayerViewController.swift in Sources */,
 				C16A7E0128E7FE0600509FFF /* HeartbeatActivityIndicator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
