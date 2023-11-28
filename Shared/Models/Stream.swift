@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// https://dev.twitch.tv/docs/api/reference/#get-streams
 struct Stream: Decodable, Streamable {
     enum Live: String, Decodable {
         case live
@@ -24,7 +25,15 @@ struct Stream: Decodable, Streamable {
 
     let id: String
     let userId: String
+	let userLogin: String
     let userName: String
+	var displayName: String {
+		if language == "en" || userLogin.isEmpty || userLogin.compare(userName, options: .caseInsensitive) == .orderedSame {
+			return userName
+		} else {
+			return "\(userName) (\(userLogin))"
+		}
+	}
     let gameId: String
     let type: Live
     let title: String
@@ -37,6 +46,7 @@ struct Stream: Decodable, Streamable {
             .replacingOccurrences(of: "min.", with: "m")
             ?? ""
     }
+	let language: String
 }
 
 extension Stream {

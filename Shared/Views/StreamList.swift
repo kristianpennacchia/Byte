@@ -110,7 +110,7 @@ struct StreamList: View {
 
             if let stream = streamViewModel.stream {
                 buttons.append(
-                    .default(Text("View \(stream.userName)")) {
+                    .default(Text("View \(stream.displayName)")) {
                         showChannel = true
                     }
                 )

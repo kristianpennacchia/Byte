@@ -70,7 +70,7 @@ struct StreamView: View {
             HStack(alignment: .top) {
                 VStack(alignment: .center) {
                     HStack(alignment: .top) {
-                        Text(stream.userName)
+                        Text(stream.displayName)
                             .font(.caption)
                             .bold()
                             .foregroundColor(isFocused ? .brand.primary : .white)

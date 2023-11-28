@@ -19,13 +19,15 @@ func compareStreamable(lhs: any Streamable, rhs: any Streamable) -> Bool {
 let streamablePreview = Stream(
     id: App.previewUsername,
     userId: App.previewUsername,
+	userLogin: "",
     userName: App.previewUsername,
     gameId: "23124",
     type: .live,
     title: "Some stream",
     viewerCount: .random(in: .min ... .max),
     startedAt: Date(),
-    thumbnailUrl: ""
+    thumbnailUrl: "",
+	language: "en"
 )
 
 protocol Streamable: Identifiable, Equatable, Hashable, Comparable {
@@ -34,10 +36,12 @@ protocol Streamable: Identifiable, Equatable, Hashable, Comparable {
     var id: String { get }
     var userId: String { get }
     var userName: String { get }
+	var displayName: String { get }
     var title: String { get }
     var viewerCount: Int? { get }
     var startedAt: Date { get }
     var duration: String { get }
+	var language: String { get }
 
     func thumbnail(width: Int, height: Int) -> String
 }

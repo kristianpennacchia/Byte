@@ -30,6 +30,7 @@ struct YoutubeVideo: Decodable {
         let channelTitle: String
         let tags: [String]?
         let categoryId: String
+        let defaultLanguage: String
         let liveBroadcastContent: String
     }
 
@@ -92,6 +93,7 @@ extension YoutubeVideo: Streamable {
 
     var userId: String { snippet.channelId }
     var userName: String { snippet.channelTitle }
+	var displayName: String { userName }
     var title: String { snippet.title }
     var viewerCount: Int? {
         if let concurrentViewers = liveStreamingDetails?.concurrentViewers {
@@ -107,6 +109,7 @@ extension YoutubeVideo: Streamable {
             .replacingOccurrences(of: "min.", with: "m")
             ?? ""
     }
+	var language: String { snippet.defaultLanguage }
 
     func thumbnail(width: Int, height: Int) -> String {
         // Fallback to medium as it has a better fitting aspect ratio.
