@@ -161,6 +161,7 @@ struct ContentView: View {
                         }
                         .padding([.leading, .trailing], 30)
                         .padding([.top, .bottom], 50)
+						.scrollClipDisabled()
                     }
                     .background(Color.brand.primaryDark)
                     .frame(width: 440)
