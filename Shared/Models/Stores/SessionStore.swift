@@ -10,6 +10,7 @@ import Foundation
 import Combine
 import OSLog
 
+@MainActor
 final class SessionStore: ObservableObject {
     private let didChange = PassthroughSubject<Output, Failure>()
 

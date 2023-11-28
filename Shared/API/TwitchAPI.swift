@@ -12,6 +12,7 @@ import Combine
 import KeychainAccess
 import OSLog
 
+@MainActor
 final class TwitchAPI: ObservableObject {
     struct Authentication {
         let clientID: String

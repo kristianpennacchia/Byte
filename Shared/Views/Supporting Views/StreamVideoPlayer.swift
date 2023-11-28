@@ -12,6 +12,7 @@ import SwimplyPlayIndicator
 import OSLog
 
 struct StreamVideoPlayer: View {
+	@MainActor
     private class PlayerViewModel: ObservableObject {
         @Published var player = AVPlayer()
 

@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 import Combine
 
+@MainActor
 final class SpoilerFilter: ObservableObject {
     @AppStorage("spoilerFilterGameIDs") private var spoilerFilterGameIDs: String?
 

@@ -20,7 +20,7 @@ enum App {
 
     private(set) static var previewUsername: String!
 
-    static func setup() {
+	@MainActor static func setup() {
         let jsonData = try! Data(contentsOf: Bundle.main.url(forResource: "Secrets", withExtension: "json")!)
         let decoder = JSONDecoder()
         let serviceSecrets = try! decoder.decode(ServiceSecrets.self, from: jsonData)

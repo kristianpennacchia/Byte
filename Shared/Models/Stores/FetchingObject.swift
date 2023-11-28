@@ -10,6 +10,7 @@ import Foundation
 
 protocol FetchingKey {}
 
+@MainActor
 protocol FetchingObject: ObservableObject {
     associatedtype Item
     associatedtype Key: FetchingKey

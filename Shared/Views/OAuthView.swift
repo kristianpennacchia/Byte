@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct OAuthView: View {
+	@MainActor
     private class ViewModel: ObservableObject {
         @Published var authError: Error?
     }

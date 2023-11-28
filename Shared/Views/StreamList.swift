@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct StreamList: View {
+	@MainActor
     private class StreamViewModel: ObservableObject {
         @Published var streams = [any Streamable]()
         @Published var stream: (any Streamable)?

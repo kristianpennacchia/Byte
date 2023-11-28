@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct VideoList: View {
+	@MainActor
     private class VideoViewModel: ObservableObject {
         @Published var video: (any Videoable)?
     }

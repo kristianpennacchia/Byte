@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct ChannelList: View {
+	@MainActor
     private class ChannelViewModel: ObservableObject {
         @Published var channel: (any Channelable)?
     }

@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct GameList: View {
+	@MainActor
     private class GameViewModel: ObservableObject {
         @Published var game: Game?
     }

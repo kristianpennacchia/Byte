@@ -9,12 +9,13 @@
 import SwiftUI
 import Combine
 
+@MainActor
 final class AppState: ObservableObject {
     enum State {
         case didBecomeActive, willResignActive, willEnterForeground, didEnterBackground
     }
 
-    private let didChange = PassthroughSubject<Output, Failure>()
+	private let didChange = PassthroughSubject<Output, Failure>()
 
     private var didBecomeActiveToken: NSObjectProtocol?
     private var willResignActiveToken: NSObjectProtocol?
@@ -22,23 +23,31 @@ final class AppState: ObservableObject {
     private var didEnterBackgroundToken: NSObjectProtocol?
 
     init() {
-        didBecomeActiveToken = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
-            self?.didBecomeActive()
+        didBecomeActiveToken = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { _ in
+			DispatchQueue.main.async { [weak self] in
+				self?.didBecomeActive()
+			}
         }
-        willResignActiveToken = NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main) { [weak self] _ in
-            self?.willResignActive()
+        willResignActiveToken = NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: .main) { _ in
+			DispatchQueue.main.async { [weak self] in
+				self?.willResignActive()
+			}
         }
-        willEnterForegroundToken = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main) { [weak self] _ in
-            self?.willEnterForeground()
+        willEnterForegroundToken = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main) { _ in
+			DispatchQueue.main.async { [weak self] in
+				self?.willEnterForeground()
+			}
         }
-        didEnterBackgroundToken = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) { [weak self] _ in
-            self?.didEnterBackground()
+        didEnterBackgroundToken = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main) { _ in
+			DispatchQueue.main.async { [weak self] in
+				self?.didEnterBackground()
+			}
         }
     }
 }
 
 private extension AppState {
-    func didBecomeActive() {
+	func didBecomeActive() {
         didChange.send(.didBecomeActive)
     }
 

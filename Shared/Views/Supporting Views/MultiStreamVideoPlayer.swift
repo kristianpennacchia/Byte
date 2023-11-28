@@ -10,6 +10,7 @@ import SwiftUI
 import AVKit
 
 struct MultiStreamVideoPlayer: View {
+	@MainActor
     private class StreamViewModel: ObservableObject {
         @Published var selectedStream: (any Streamable)?
     }
