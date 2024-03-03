@@ -36,6 +36,13 @@ struct StreamView: View {
             }
         }
 
+		let isSpoiler: Bool
+		if let twitchStream = stream as? Stream {
+			isSpoiler = spoilerFilter.isSpoiler(gameID: twitchStream.gameId)
+		} else {
+			isSpoiler = false
+		}
+
         return VStack(alignment: .leading, spacing: 8) {
             ZStack {
                 ZStack(alignment: .bottomTrailing) {
@@ -91,7 +98,7 @@ struct StreamView: View {
                             }
                         }
                     }
-                    Text(stream.title)
+					Text(isSpoiler ? "" : stream.title)
                         .font(.caption)
                         .foregroundColor(isFocused ? .brand.primary : .white)
                         .lineLimit(2)
