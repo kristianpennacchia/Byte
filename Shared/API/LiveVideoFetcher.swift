@@ -234,8 +234,11 @@ private extension LiveVideoFetcher {
 
 		let queryItemsDict: [String: Any]? = [
 			"player": "twitchweb",
+			"platform": "web",
+			"supported_codecs": "h265,h264",
 			"allow_source": true,
 			"allow_audio_only": true,
+			"playlist_include_framerate": true,
 			"sig": sigToken.signature,
 			"p": Int.random(in: 0 ... .max),
 			"type": "any",
