@@ -1,4 +1,6 @@
-![Byte Logo](https://user-images.githubusercontent.com/767677/194289325-e962390d-10b5-40cc-a006-2002050fa8c2.png)
+<p align="center">
+<img src="https://github.com/kristianpennacchia/Byte/assets/767677/9f2ef64f-83a5-47a6-a3ac-2297d61a5917" />
+</p>
 
 # Byte
 An unofficial Twitch and Youtube app for tvOS built with SwiftUI.
