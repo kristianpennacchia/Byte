@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://github.com/kristianpennacchia/Byte/assets/767677/9f2ef64f-83a5-47a6-a3ac-2297d61a5917" />
+<img src="https://github.com/kristianpennacchia/Byte/assets/767677/546c79ba-25c4-4259-9eb2-c5b22a6a5f75" />
 </p>
 
 # Byte
