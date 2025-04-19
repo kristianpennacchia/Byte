@@ -101,16 +101,16 @@ struct StreamVideoPlayer: View {
             playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: currentPlayingItem))
             playerViewModel.player.playImmediately(atRate: 1.0)
         }
-        .onChange(of: isFocused) { isFocused in
+        .onChange(of: isFocused) { oldValue, newValue in
             if muteNotFocused {
-                playerViewModel.player.isMuted = !isFocused
-                indicatorState = isFocused ? .play : .stop
+                playerViewModel.player.isMuted = !newValue
+                indicatorState = newValue ? .play : .stop
             } else {
                 playerViewModel.player.isMuted = false
                 indicatorState = .stop
             }
 
-            if isFocused {
+            if newValue {
                 onPlayerFocused?(playerViewModel.player)
             }
         }
@@ -154,7 +154,7 @@ private extension StreamVideoPlayer {
         // Continue if this stream has not already been configured, or one of the variables has changed.
         guard playerViewModel.isConfigured == false else { return }
 
-        Task {
+        Task { @MainActor in
             do {
                 let videoResponse = try await fetcher.fetch()
                 let playingItem: PlayingItem

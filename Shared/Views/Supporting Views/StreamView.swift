@@ -27,7 +27,7 @@ struct StreamView: View {
 
     var body: some View {
         if let stream = stream as? Stream, game?.id != stream.gameId {
-            Task {
+            Task { @MainActor in
                 do {
                     game = try await stream.game(api: api)
                 } catch {

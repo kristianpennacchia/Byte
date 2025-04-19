@@ -303,7 +303,7 @@ private extension LiveVideoFetcher {
     }
 
     func getVideo(_ video: VideoStream) async throws -> VideoDataResponse {
-        try await Task.retrying { [self] isLastRetry in
+        try await Task.retrying { @MainActor [self] isLastRetry in
             let sigToken = try await getTokenAndSignature(video: video)
             let (url, additionalHeaders) = await usherAPI(video: video, sigToken: sigToken)
 

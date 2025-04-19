@@ -64,7 +64,7 @@ private extension AppState {
     }
 }
 
-extension AppState: Publisher {
+extension AppState: @preconcurrency Publisher {
     typealias Output = State
     typealias Failure = Never
 

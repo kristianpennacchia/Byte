@@ -53,7 +53,7 @@ extension SpoilerFilter {
     }
 }
 
-extension SpoilerFilter: Publisher {
+extension SpoilerFilter: @preconcurrency Publisher {
     typealias Output = SpoilerFilter
     typealias Failure = Never
 

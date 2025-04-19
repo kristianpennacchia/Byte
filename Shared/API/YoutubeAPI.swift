@@ -134,7 +134,9 @@ extension YoutubeAPI {
                 do {
                     let data = try await execute(method: .post, base: .auth, endpoint: "device/code", query: query, decoding: YoutubeOAuth.self)
 
-                    oAuthHandler(.success(data))
+					DispatchQueue.main.async {
+						oAuthHandler(.success(data))
+					}
 
 					Logger.youtube.debug("Polling for user to complete OAuth.")
 
@@ -150,7 +152,9 @@ extension YoutubeAPI {
 
                     repeat {
                         guard data.isExpired == false else {
-                            oAuthHandler(.failure(APIError.unknown))
+							DispatchQueue.main.async {
+								oAuthHandler(.failure(APIError.unknown))
+							}
                             break
                         }
 
@@ -163,7 +167,9 @@ extension YoutubeAPI {
 
                             // Get user data.
                             let person = try await getAuthenticatedPerson()
-                            completion(.success(person))
+							DispatchQueue.main.async {
+								completion(.success(person))
+							}
                         } catch let error as YoutubeError {
                             if error.error == "access_denied" {
 								Logger.youtube.error("Failed getting Youtube OAuth response. \(error.localizedDescription)")

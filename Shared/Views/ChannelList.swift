@@ -60,7 +60,7 @@ struct ChannelList: View {
                 refresh()
             }
         }
-        .onChange(of: shouldRefresh) { newValue in
+        .onChange(of: shouldRefresh) { oldValue, newValue in
             if newValue {
                 shouldRefresh = false
                 refresh()

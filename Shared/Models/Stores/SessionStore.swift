@@ -90,7 +90,7 @@ final class SessionStore: ObservableObject {
     }
 }
 
-extension SessionStore: Publisher {
+extension SessionStore: @preconcurrency Publisher {
     typealias Output = SessionStore
     typealias Failure = Never
 

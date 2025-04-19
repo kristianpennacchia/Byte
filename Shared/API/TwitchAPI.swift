@@ -224,7 +224,7 @@ extension TwitchAPI {
     }
 }
 
-extension TwitchAPI: Publisher {
+extension TwitchAPI: @preconcurrency Publisher {
     typealias Output = Channel
     typealias Failure = Never
 
