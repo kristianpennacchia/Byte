@@ -34,41 +34,45 @@ struct MultiStreamVideoPlayer: View {
         ZStack {
             if streams.count > 1 {
                 PlayerLayer(player: focusedPlayer, videoGravity: .resizeAspectFill)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+					.frame(maxWidth: .infinity, maxHeight: .infinity)
+				VisualEffectView(effect: UIBlurEffect(style: .dark))
+					.frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            GeometryReader { reader in
-                LazyVGrid(columns: makeColumns(streamCount: streams.count, reader: reader), alignment: .center, spacing: 0) {
-                    ForEach(streams, id: \.id) { stream in
-                        StreamVideoPlayer(
-                            videoMode: .live(stream),
-                            muteNotFocused: shouldMuteWhenNotInFocus(stream: stream),
-                            isAudioOnly: audioOnlyStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }),
-                            isFlipped: flippedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
-                        )
-                        .onPlayToEndTime {
-                            remove(stream: stream)
-                        }
-                        .onPlayerFocused { player in
-                            focusedPlayer = player
-                        }
-                        .onStreamError { _ in
-                            remove(stream: stream)
-                        }
-                        .equatable()
-                        .aspectRatio(contentMode: .fit)
-                        .onTapGesture {
-                            streamViewModel.selectedStream = stream
-                            showMenu = true
-                        }
-                    }
-                }
-                .frame(maxHeight: reader.size.height)
-            }
-            .background(.regularMaterial)
+			let columnCount = streams.count <= 2 ? streams.count : Int(ceil(sqrt(Double(streams.count))))
+			let columns = Array(
+				repeating: GridItem(.flexible(), spacing: 0),
+				count: columnCount
+			)
+
+			LazyVGrid(columns: columns, alignment: .center, spacing: 0) {
+				ForEach(streams, id: \.id) { stream in
+					StreamVideoPlayer(
+						videoMode: .live(stream),
+						muteNotFocused: shouldMuteWhenNotInFocus(stream: stream),
+						isAudioOnly: audioOnlyStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }),
+						isFlipped: flippedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
+					)
+					.onPlayToEndTime {
+						remove(stream: stream)
+					}
+					.onPlayerFocused { player in
+						focusedPlayer = player
+					}
+					.onStreamError { _ in
+						remove(stream: stream)
+					}
+					.equatable()
+					.aspectRatio(contentMode: .fit)
+					.onTapGesture {
+						streamViewModel.selectedStream = stream
+						showMenu = true
+					}
+				}
+			}
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.black)
         .edgesIgnoringSafeArea(.all)
+		.background(Color.black)
         .onAppear {
             UIApplication.shared.isIdleTimerDisabled = true
         }
