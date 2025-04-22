@@ -114,23 +114,6 @@ struct MultiStreamVideoPlayer: View {
 }
 
 private extension MultiStreamVideoPlayer {
-    func makeColumns(streamCount: Int, reader: GeometryProxy) -> [GridItem] {
-        switch streamCount {
-        case 1:
-            return [
-                GridItem(.fixed(reader.size.width), spacing: 0, alignment: .center),
-            ]
-        case 2:
-            return [
-                GridItem(.fixed(reader.size.width / 2), spacing: 0, alignment: .center),
-            ]
-        default:
-            return [
-                GridItem(.adaptive(minimum: reader.size.width / 2, maximum: reader.size.width), spacing: 0, alignment: .center),
-            ]
-        }
-    }
-
     func remove(stream: any Streamable) {
         guard let index = streams.firstIndex(where: {equalsStreamable(lhs: $0, rhs: stream) }) else { return }
 
