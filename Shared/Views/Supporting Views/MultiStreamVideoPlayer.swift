@@ -32,12 +32,9 @@ struct MultiStreamVideoPlayer: View {
 
     var body: some View {
         ZStack {
-            if streams.count > 1 {
-                PlayerLayer(player: focusedPlayer, videoGravity: .resizeAspectFill)
-					.frame(maxWidth: .infinity, maxHeight: .infinity)
-				VisualEffectView(effect: UIBlurEffect(style: .dark))
-					.frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
+			PlayerLayer(player: focusedPlayer, videoGravity: .resizeAspectFill)
+			VisualEffectView(effect: UIBlurEffect(style: .dark))
+
 			let columnCount = Int(ceil(sqrt(Double(streams.count))))
 			let columns = Array(
 				repeating: GridItem(.flexible(), spacing: 0),
@@ -70,8 +67,7 @@ struct MultiStreamVideoPlayer: View {
 				}
 			}
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .edgesIgnoringSafeArea(.all)
+        .ignoresSafeArea()
 		.background(Color.black)
         .onAppear {
             UIApplication.shared.isIdleTimerDisabled = true
