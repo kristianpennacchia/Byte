@@ -38,7 +38,7 @@ struct MultiStreamVideoPlayer: View {
 				VisualEffectView(effect: UIBlurEffect(style: .dark))
 					.frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-			let columnCount = streams.count <= 2 ? streams.count : Int(ceil(sqrt(Double(streams.count))))
+			let columnCount = Int(ceil(sqrt(Double(streams.count))))
 			let columns = Array(
 				repeating: GridItem(.flexible(), spacing: 0),
 				count: columnCount
