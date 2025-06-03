@@ -13,6 +13,7 @@ struct MultiStreamVideoPlayer: View {
 	@MainActor
     private class StreamViewModel: ObservableObject {
         @Published var selectedStream: (any Streamable)?
+		@Published var streamQuality = [String: String]()
     }
 
     @EnvironmentObject private var api: TwitchAPI
@@ -58,6 +59,11 @@ struct MultiStreamVideoPlayer: View {
 					.onStreamError { _ in
 						remove(stream: stream)
 					}
+					.onReceiveVideoQuality { videoMode, quality in
+						if case .live(let streamable) = videoMode {
+							streamViewModel.streamQuality[streamable.id] = quality
+						}
+					}
 					.equatable()
 					.aspectRatio(contentMode: .fit)
 					.onTapGesture {
@@ -83,7 +89,14 @@ struct MultiStreamVideoPlayer: View {
             let isAudioOnly = audioOnlyStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
             let isFlipped = flippedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
 
-            return ActionSheet(title: Text("\(stream.displayName)\n\(stream.duration)"), message: Text(stream.title), buttons: [
+			let title: String
+			if let quality = streamViewModel.streamQuality[stream.id] {
+				title = "\(stream.displayName)\n\(stream.duration)\n\(quality)"
+			} else {
+				title = "\(stream.displayName)\n\(stream.duration)"
+			}
+
+            return ActionSheet(title: Text(title), message: Text(stream.title), buttons: [
                 .default(Text("Add New Stream")) {
                     showStreamPicker = true
                 },

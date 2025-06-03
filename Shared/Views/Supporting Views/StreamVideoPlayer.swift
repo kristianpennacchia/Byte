@@ -39,6 +39,7 @@ struct StreamVideoPlayer: View {
     private var onPlayToEndTime: (() -> Void)?
     private var onPlayerFocused: ((AVPlayer) -> Void)?
     private var onStreamError: ((Error?) -> Void)?
+	private var onReceiveVideoQuality: ((_ videoMode: LiveVideoFetcher.VideoMode, _ quality: String?) -> Void)?
 
     let videoMode: LiveVideoFetcher.VideoMode
     let muteNotFocused: Bool
@@ -159,12 +160,18 @@ private extension StreamVideoPlayer {
                 let videoResponse = try await fetcher.fetch()
                 let playingItem: PlayingItem
                 let automaticallyWaitsToMinimizeStalling: Bool
+				let videoQuality: String?
 
                 switch videoResponse {
                 case .playlist(let playlist):
-                    if let urlString = playlist.meta.isEmpty ? playlist.rawURLs.last : playlist.meta.sorted(by: >).first?.url {
-                        playingItem = .url(URL(string: urlString)!)
+					if playlist.meta.isEmpty, let urlString = playlist.rawURLs.last {
+						playingItem = .url(URL(string: urlString)!)
+						automaticallyWaitsToMinimizeStalling = true
+						videoQuality = nil
+					} else if let meta = playlist.meta.sorted(by: >).first {
+						playingItem = .url(URL(string: meta.url)!)
                         automaticallyWaitsToMinimizeStalling = true
+						videoQuality = meta.resolution
                     } else {
                         throw AppError(message: "Unable to get valid video URL.")
                     }
@@ -179,6 +186,7 @@ private extension StreamVideoPlayer {
 
                     playingItem = .url(format.url)
                     automaticallyWaitsToMinimizeStalling = false
+					videoQuality = format.quality
                 case .ytdlpFormats(let formats):
 					if let avFormat = formats
 						.filter({ $0.ext == "mp4" && $0.vcodec.contains("avc1.") && $0.acodec.contains("mp4a.") })
@@ -187,14 +195,15 @@ private extension StreamVideoPlayer {
 					{
 						playingItem = .url(avFormat.url)
 						automaticallyWaitsToMinimizeStalling = false
+						videoQuality = avFormat.resolution
 						Logger.streaming.debug("url = \(avFormat.url)")
 						break
 					}
 
                     let supportedFormats = formats.sorted(by: >).filter { $0.ext == "mp4" || $0.ext == "m4a" }
-                    if let audioURL = supportedFormats.first(where: \.isAudioOnly)?.url, let videoURL = supportedFormats.first(where: \.isVideoOnly)?.url {
+                    if let audioURL = supportedFormats.first(where: \.isAudioOnly)?.url, let video = supportedFormats.first(where: \.isVideoOnly) {
                         let audioAsset = AVAsset(url: audioURL)
-                        let videoAsset = AVAsset(url: videoURL)
+						let videoAsset = AVAsset(url: video.url)
 
                         let videoDuration = try await videoAsset.load(.duration)
                         let audioDuration = try await audioAsset.load(.duration)
@@ -212,6 +221,7 @@ private extension StreamVideoPlayer {
 
                         playingItem = .asset(mixAsset)
                         automaticallyWaitsToMinimizeStalling = true
+						videoQuality = video.resolution
                     } else {
                         throw AppError(message: "Unable to get valid audio and video URLs.")
                     }
@@ -220,6 +230,7 @@ private extension StreamVideoPlayer {
                     if urls.isEmpty == false {
                         playingItem = .url(urls.first!)
                         automaticallyWaitsToMinimizeStalling = true
+						videoQuality = nil
                     } else {
                         throw AppError(message: "Unable to get valid video URL.")
                     }
@@ -234,6 +245,8 @@ private extension StreamVideoPlayer {
                 if muteNotFocused {
                     playerViewModel.player.isMuted = isFocused == false
                 }
+
+				onReceiveVideoQuality?(videoMode, videoQuality)
             } catch {
 				Logger.streaming.error("Failed fetching live video data. \(error.localizedDescription)")
                 self.error = error
@@ -261,6 +274,12 @@ extension StreamVideoPlayer {
         copy.onStreamError = perform
         return copy
     }
+
+	func onReceiveVideoQuality(perform: @escaping (_ videoMode: LiveVideoFetcher.VideoMode, _ quality: String?) -> Void) -> Self {
+		var copy = self
+		copy.onReceiveVideoQuality = perform
+		return copy
+	}
 }
 
 extension StreamVideoPlayer: Equatable {
