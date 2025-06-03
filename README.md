@@ -7,12 +7,13 @@ An unofficial Twitch and Youtube app for tvOS built with SwiftUI.
 
 ### ⭐️ Highlights
 - Watch live streams and VODs from both Twitch and Youtube.
+- Watch Twitch at 1440p (2K).
 - Seamlessly lists together your follows/subscriptions from both video streaming services.
-- Multistream support - Watch upto four streams simultaneously so you don't miss anybody's POV!
+- Multistream support - Watch as many streams simultaneously as you want so you don't miss anybody's POV!
 - Spoiler filtering - Hide the thumbnails of games you haven't yet finished to avoid seeing spoilers (Twitch only).
 
 ### 🕹 Controls and Tips
-- On the stream listing screen, press the ⏯ button on your Apple TV remote to select multiple streams at once, upto four. Press the clickpad to start watching them all.
+- On the stream listing screen, press the ⏯ button on your Apple TV remote to select multiple streams at once, no limit. Press the clickpad to start watching them all.
 - On the stream or game listing screens, long press the clickpad to bring up the spoiler filter (Twitch only).
 - While watching a stream, press the clickpad to bring up some options.
 - While watching a stream, long press the clickpad to refresh the stream (useful if the stream buffered and is behind live).
@@ -38,6 +39,7 @@ In order for this project to run and work, it requires you to create a `Secrets.
             "byte": "KEY_HERE",
         },
         "oAuthToken": {
+			"webUserAccessToken": "(OPTIONAL) KEY_HERE",
             "byteUserAccessToken": "KEY_HERE",
             "byteUserRefreshToken": "KEY_HERE",
         },
@@ -87,6 +89,13 @@ This comes from the Twitch network response data and does not change. It is `kim
 5. Click the green 'Generate Token!' button.
 6. Follow the prompts.
 7. Once you have been redirected back to https://twitchtokengenerator.com find the newly generated "ACCESS TOKEN" and "REFRESH TOKEN" and copy them. These are your OAuth tokens.
+
+The `webUserAccessToken` is optional, but will allow you to:
+- Skip ads if you are a subscriber to the channel.
+- Watch higher quality streams that Twitch requires you to login to view e.g. 1440p.
+- Receive Twitch drops.
+
+You can get this token by logging into the Twitch website in your web browser on a Mac/PC and get the `auth-token` from your cookies. For more info, see: https://github.com/streamlink/streamlink/blob/master/docs/cli/plugins/twitch.rst#authentication
 
 **Youtube**
 

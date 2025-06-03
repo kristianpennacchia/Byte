@@ -36,6 +36,10 @@ enum App {
         }
         launchCount += 1
 
+		if twitchKeychain[KeychainKey.webAccessToken] == nil {
+			twitchKeychain[KeychainKey.webAccessToken] = serviceSecrets.twitch.oAuthToken.webUserAccessToken
+		}
+
         if twitchKeychain[KeychainKey.accessToken] == nil {
             twitchKeychain[KeychainKey.accessToken] = serviceSecrets.twitch.oAuthToken.byteUserAccessToken
         }
@@ -50,6 +54,7 @@ enum App {
                 privateClientID: serviceSecrets.twitch.clientID.twitch,
                 secret: serviceSecrets.twitch.secret.byte
             ),
+			webAccessToken: twitchKeychain[KeychainKey.webAccessToken]!,
             accessToken: twitchKeychain[KeychainKey.accessToken]!,
             refreshToken: twitchKeychain[KeychainKey.refreshToken]
         )

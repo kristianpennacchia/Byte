@@ -223,7 +223,7 @@ extension LiveVideoFetcher {
 }
 
 private extension LiveVideoFetcher {
-    func usherAPI(video: VideoStream, sigToken: SigToken) async -> (url: URL, additionalHeaders: [String: String]) {
+    func usherAPI(video: VideoStream, sigToken: SigToken) -> (url: URL, additionalHeaders: [String: String]) {
         var components: URLComponents
         switch video {
         case .live(let channel):
@@ -235,6 +235,7 @@ private extension LiveVideoFetcher {
 		let queryItemsDict: [String: Any]? = [
 			"player": "twitchweb",
 			"platform": "web",
+			"player_type": "site",
 			"supported_codecs": "av1,h265,h264",
 			"allow_source": true,
 			"allow_audio_only": true,
@@ -244,20 +245,31 @@ private extension LiveVideoFetcher {
 			"type": "any",
 			"allow_spectre": false,
 			"fast_bread": true,
+//			"maximum_resolution": "ULTRA_HD",
+//			"maximum_video_bitrate_kbps": 12500,
+//			"maximum_resolution_reasons": [],
+//			"maximum_video_bitrate_kbps_reasons": [
+//				"AUTHZ_DISALLOWED_BITRATE"
+//			],
 		]
 
         components.queryItems = queryItemsDict?.map { URLQueryItem(name: $0.key, value: String(describing: $0.value)) }
 
         let url: URL
-        let additionalheaders = [String: String]()
 		let urlQueryCharacterSet = CharacterSet.alphanumerics.union(.init([".", "_"]))
 		let token = sigToken.token
 			.replacingOccurrences(of: "\\", with: "")
 			.addingPercentEncoding(withAllowedCharacters: urlQueryCharacterSet) ?? ""
-		let urlString = components.url!.absoluteString.appending("&token=\(token)")
+		let urlString = components.url!.absoluteString
+			.appending("&token=\(token)")
+			.appending("&transcode_mode=cbr_v1")
 		url = URL(string: urlString)!
 
-		Logger.streaming.debug("Twitch URL = \(components.url!.absoluteString)")
+		Logger.streaming.debug("Twitch URL = \(url.absoluteString)")
+
+		let additionalheaders = [String: String]()
+		
+		Logger.streaming.debug("Additional headers for Twitch URL = \(additionalheaders)")
 
         return (url, additionalheaders)
     }
@@ -290,8 +302,14 @@ private extension LiveVideoFetcher {
     }
 
     func getTokenAndSignature(video: VideoStream) async throws -> SigToken {
-        let request = tokenAPI(video: video)
-        let data = try await session.data(for: request).0
+        var request = tokenAPI(video: video)
+
+		if let webAccessToken = await twitchAPI.webAccessToken {
+			let authorization = TwitchAPI.Base.auth.authorizationHeader(accessToken: webAccessToken)
+			request.setValue(authorization, forHTTPHeaderField: "Authorization")
+		}
+
+		let data = try await session.data(for: request).0
 
         do {
             return try JSONDecoder().decode(SigToken.self, from: data)
@@ -305,14 +323,14 @@ private extension LiveVideoFetcher {
     func getVideo(_ video: VideoStream) async throws -> VideoDataResponse {
         try await Task.retrying { @MainActor [self] isLastRetry in
             let sigToken = try await getTokenAndSignature(video: video)
-            let (url, additionalHeaders) = await usherAPI(video: video, sigToken: sigToken)
+            let (url, additionalHeaders) = usherAPI(video: video, sigToken: sigToken)
 
             var request = URLRequest(url: url)
             additionalHeaders.forEach { header in
                 request.setValue(header.value, forHTTPHeaderField: header.key)
             }
 
-            let data = try await session.data(for: request).0
+			let data = try await session.data(for: request).0
 
             do {
                 let m3u8 = try M3U8(data: data)
