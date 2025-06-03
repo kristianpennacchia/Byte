@@ -77,7 +77,7 @@ struct VideoList: View {
                 }
             },
             content: {
-                StreamVideoPlayer(videoMode: .vod(videoViewModel.video!), muteNotFocused: false, isAudioOnly: false, isFlipped: false)
+                StreamVideoPlayer(videoMode: .vod(videoViewModel.video!), muteNotFocused: false, isAudioOnly: false, isFlipped: false, useLegacyPlayer: false)
                     .onStreamError { _ in
                         showVideoPlayer = false
                     }

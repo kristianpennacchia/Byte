@@ -11,6 +11,25 @@ import AVKit
 import SwimplyPlayIndicator
 import OSLog
 
+private struct AVVideoPlayer: UIViewControllerRepresentable {
+	let player: AVPlayer
+	let disableSeeking: Bool
+
+	func makeUIViewController(context: Context) -> AVPlayerViewController {
+		let controller = AVPlayerViewController()
+		controller.player = player
+		controller.showsPlaybackControls = !disableSeeking
+		controller.requiresLinearPlayback = disableSeeking
+		return controller
+	}
+
+	func updateUIViewController(_ controller: AVPlayerViewController, context: Context) {
+		controller.player = player
+		controller.showsPlaybackControls = !disableSeeking
+		controller.requiresLinearPlayback = disableSeeking
+	}
+}
+
 struct StreamVideoPlayer: View {
 	@MainActor
     private class PlayerViewModel: ObservableObject {
@@ -30,6 +49,7 @@ struct StreamVideoPlayer: View {
     @FocusState private var isFocused: Bool
 
     @State private var showErrorAlert = false
+    @State private var isLoading = false
     @State private var error: Error?
     @State private var currentPlayingItem: PlayingItem?
     @State private var indicatorState: SwimplyPlayIndicator.AudioState = .stop
@@ -44,12 +64,14 @@ struct StreamVideoPlayer: View {
     let muteNotFocused: Bool
     let isAudioOnly: Bool
     let isFlipped: Bool
+	let useLegacyPlayer: Bool
 
-    init(videoMode: LiveVideoFetcher.VideoMode, muteNotFocused: Bool, isAudioOnly: Bool, isFlipped: Bool) {
+    init(videoMode: LiveVideoFetcher.VideoMode, muteNotFocused: Bool, isAudioOnly: Bool, isFlipped: Bool, useLegacyPlayer: Bool) {
         self.videoMode = videoMode
         self.muteNotFocused = muteNotFocused
         self.isAudioOnly = isAudioOnly
         self.isFlipped = isFlipped
+        self.useLegacyPlayer = useLegacyPlayer
     }
 
     var body: some View {
@@ -73,17 +95,28 @@ struct StreamVideoPlayer: View {
         }
 
         return ZStack {
-            VideoPlayer(player: playerViewModel.player)
-                .disabled(disableSeeking)
-                .scaleEffect(CGSize(width: isFlipped ? -1 : 1, height: 1))
-            if isAudioOnly {
+			if useLegacyPlayer {
+				AVVideoPlayer(player: playerViewModel.player, disableSeeking: disableSeeking)
+					.disabled(disableSeeking)
+					.scaleEffect(CGSize(width: isFlipped ? -1 : 1, height: 1))
+			} else {
+				VideoPlayer(player: playerViewModel.player)
+					.disabled(disableSeeking)
+					.scaleEffect(CGSize(width: isFlipped ? -1 : 1, height: 1))
+			}
+
+			if isAudioOnly {
                 Color.clear
                     .background(.regularMaterial)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            SwimplyPlayIndicator(state: $indicatorState, color: .brand.primary.opacity(0.5), style: .legacy)
-                .frame(width: 18, height: 18)
-                .position(x: 30, y: 30)
+			if useLegacyPlayer, isLoading {
+				HeartbeatActivityIndicator()
+					.frame(alignment: .center)
+			}
+			SwimplyPlayIndicator(state: $indicatorState, color: .brand.primary.opacity(0.5), style: .legacy)
+				.frame(width: 18, height: 18)
+				.position(x: 30, y: 30)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .focusable(disableSeeking)
@@ -118,7 +151,11 @@ struct StreamVideoPlayer: View {
             if let item = output.object as? AVPlayerItem, item == playerViewModel.player.currentItem {
                 onPlayToEndTime?()
             }
-        }
+		}
+
+		.onReceive(playerViewModel.player.publisher(for: \.timeControlStatus)) { @MainActor status in
+			isLoading = status != .playing
+		}
         .alert(isPresented: $showErrorAlert) {
             Alert(
                 title: Text("Unable To Play Stream"),

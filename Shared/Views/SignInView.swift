@@ -16,9 +16,8 @@ struct SignInView: View {
     var body: some View {
         VStack {
             if isSigningIn {
-                ActivityIndicator(isAnimating: true) { indicator in
-                    indicator.style = .large
-                }
+                HeartbeatActivityIndicator()
+					.frame(alignment: .center)
             } else {
                 Button(action: signIn) {
                     Text("Sign-In")

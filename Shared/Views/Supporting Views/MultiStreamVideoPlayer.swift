@@ -47,7 +47,8 @@ struct MultiStreamVideoPlayer: View {
 						videoMode: .live(stream),
 						muteNotFocused: shouldMuteWhenNotInFocus(stream: stream),
 						isAudioOnly: audioOnlyStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }),
-						isFlipped: flippedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
+						isFlipped: flippedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }),
+						useLegacyPlayer: streams.count == 1
 					)
 					.onPlayToEndTime {
 						remove(stream: stream)
