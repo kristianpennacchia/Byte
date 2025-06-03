@@ -29,7 +29,12 @@ final class TwitchAPI: ObservableObject {
     let authentication: Authentication
     let decoder = JSONDecoder()
 
-    var accessToken: String? {
+	var webAccessToken: String? {
+		didSet {
+			keychain[KeychainKey.webAccessToken] = webAccessToken
+		}
+    }
+	var accessToken: String? {
         didSet {
             keychain[KeychainKey.accessToken] = accessToken
         }
@@ -40,12 +45,13 @@ final class TwitchAPI: ObservableObject {
         }
     }
 
-    static func setup(authentication: Authentication, accessToken: String, refreshToken: String? = nil) {
-        shared = TwitchAPI(authentication: authentication, accessToken: accessToken, refreshToken: refreshToken)
+	static func setup(authentication: Authentication, webAccessToken: String?, accessToken: String, refreshToken: String? = nil) {
+		shared = TwitchAPI(authentication: authentication, webAccessToken: webAccessToken, accessToken: accessToken, refreshToken: refreshToken)
     }
 
-    private init(authentication: Authentication, accessToken: String, refreshToken: String? = nil) {
+    private init(authentication: Authentication, webAccessToken: String?, accessToken: String, refreshToken: String? = nil) {
         self.authentication = authentication
+        self.webAccessToken = webAccessToken
         self.accessToken = accessToken
         self.refreshToken = refreshToken
 

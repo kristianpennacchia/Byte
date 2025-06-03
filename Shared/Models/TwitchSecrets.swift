@@ -19,6 +19,7 @@ struct TwitchSecrets: Decodable {
     }
 
     struct OAuthToken: Decodable {
+        let webUserAccessToken: String?
         let byteUserAccessToken: String
         let byteUserRefreshToken: String?
     }

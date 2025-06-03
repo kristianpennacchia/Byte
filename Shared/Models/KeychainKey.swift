@@ -9,6 +9,7 @@
 import Foundation
 
 enum KeychainKey {
+    static let webAccessToken = "webAccessToken"
     static let accessToken = "accessToken"
     static let refreshToken = "refreshToken"
 }
