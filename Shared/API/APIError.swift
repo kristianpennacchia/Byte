@@ -12,6 +12,7 @@ enum APIError: LocalizedError {
     case unknown
     case refreshToken
     case invalidData(Any.Type)
+	case noAuth
 
     var errorDescription: String? {
         switch self {
@@ -21,6 +22,8 @@ enum APIError: LocalizedError {
             return "Unable to refresh access token."
         case .invalidData(let type):
             return "Invalid data retrieved for '\(type)'."
-        }
+		case .noAuth:
+			return "No auth data available."
+		}
     }
 }

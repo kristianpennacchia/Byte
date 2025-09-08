@@ -35,9 +35,15 @@ struct StreamList: View {
     var body: some View {
         ZStack {
             Color.brand.primaryDarkDark.ignoresSafeArea()
-            if streams.isEmpty || isRefreshing {
-                HeartbeatActivityIndicator()
-                    .frame(alignment: .center)
+			if isRefreshing {
+				HeartbeatActivityIndicator()
+					.frame(alignment: .center)
+			} else if sessionStore.twitchUser == nil && sessionStore.youtubeUser == nil {
+				// Not signed in, show nothing.
+			} else if streams.isEmpty {
+				Text("No Streams")
+					.font(.largeTitle)
+					.frame(alignment: .center)
             } else {
                 ScrollView {
                     let columns = Array(repeating: GridItem(.flexible()), count: 3)

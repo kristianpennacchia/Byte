@@ -14,18 +14,47 @@ struct OAuthView: View {
         @Published var authError: Error?
     }
 
+	enum Service {
+		case twitch, youtube
+
+		var title: String {
+			switch self {
+			case .twitch:
+				return "Twitch"
+			case .youtube:
+				return "YouTube"
+			}
+		}
+
+		var instructions: String {
+			switch self {
+			case .twitch:
+				return "Sign in to Twitch by scanning the QRCode with your phones camera."
+			case .youtube:
+				return "Sign in to Youtube by scanning the QRCode with your phones camera."
+			}
+		}
+	}
+
     @EnvironmentObject private var sessionStore: SessionStore
 
     @Environment(\.dismiss) private var dismiss
 
     @StateObject private var viewModel = ViewModel()
 
-    @State private var oAuth: YoutubeOAuth?
+    @State private var oAuth: OAuthable?
     @State private var showAuthError = false
+
+	let service: Service
 
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+			switch service {
+			case .twitch:
+				Color.brand.twitch.ignoresSafeArea()
+			case .youtube:
+				Color.brand.youtube.ignoresSafeArea()
+			}
             if let oAuth {
                 HStack(alignment: .top) {
                     Spacer()
@@ -46,10 +75,10 @@ struct OAuthView: View {
                     }
                     Spacer()
                     VStack {
-                        Text("Youtube")
+						Text(service.title)
                             .font(.largeTitle)
                             .padding(.top, 32)
-                        Text("Sign in to Youtube by scanning the QRCode with your phones camera.")
+						Text(service.instructions)
                             .font(.body)
                             .multilineTextAlignment(.center)
                             .frame(width: 500)
@@ -66,23 +95,44 @@ struct OAuthView: View {
             }
         }
         .onAppear {
-            sessionStore.startYoutubeOAuth { result in
-                switch result {
-                case .success(let data):
-                    oAuth = data
-                case .failure(let error):
-                    viewModel.authError = error
-                    showAuthError = true
-                }
-            } completion: { result in
-                switch result {
-                case .success(_):
-                    dismiss()
-                case .failure(let error):
-                    viewModel.authError = error
-                    showAuthError = true
-                }
-            }
+			switch service {
+			case .twitch:
+				sessionStore.startTwitchOAuth { result in
+					switch result {
+					case .success(let data):
+						oAuth = data
+					case .failure(let error):
+						viewModel.authError = error
+						showAuthError = true
+					}
+				} completion: { result in
+					switch result {
+					case .success(_):
+						dismiss()
+					case .failure(let error):
+						viewModel.authError = error
+						showAuthError = true
+					}
+				}
+			case .youtube:
+				sessionStore.startYoutubeOAuth { result in
+					switch result {
+					case .success(let data):
+						oAuth = data
+					case .failure(let error):
+						viewModel.authError = error
+						showAuthError = true
+					}
+				} completion: { result in
+					switch result {
+					case .success(_):
+						dismiss()
+					case .failure(let error):
+						viewModel.authError = error
+						showAuthError = true
+					}
+				}
+			}
         }
         .alert("Unable To Sign In", isPresented: $showAuthError) {
             Button("OK", role: .cancel) {
@@ -96,6 +146,6 @@ struct OAuthView: View {
 
 struct OAuthView_Previews: PreviewProvider {
     static var previews: some View {
-        OAuthView()
+		OAuthView(service: .twitch)
     }
 }

@@ -90,6 +90,18 @@
 		C129B711232B8F5900FDDA99 /* M3U8Meta.swift in Sources */ = {isa = PBXBuildFile; fileRef = C129B710232B8F5900FDDA99 /* M3U8Meta.swift */; };
 		C129B712232B8F5900FDDA99 /* M3U8Meta.swift in Sources */ = {isa = PBXBuildFile; fileRef = C129B710232B8F5900FDDA99 /* M3U8Meta.swift */; };
 		C129B713232B8F5900FDDA99 /* M3U8Meta.swift in Sources */ = {isa = PBXBuildFile; fileRef = C129B710232B8F5900FDDA99 /* M3U8Meta.swift */; };
+		C12CF3E22E6EF0C6008C5DC9 /* TwitchOAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CF3E12E6EF0C6008C5DC9 /* TwitchOAuth.swift */; };
+		C12CF3E32E6EF0C6008C5DC9 /* TwitchOAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CF3E12E6EF0C6008C5DC9 /* TwitchOAuth.swift */; };
+		C12CF3E42E6EF0C6008C5DC9 /* TwitchOAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CF3E12E6EF0C6008C5DC9 /* TwitchOAuth.swift */; };
+		C12CF3E62E6EF11E008C5DC9 /* OAuthable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CF3E52E6EF11B008C5DC9 /* OAuthable.swift */; };
+		C12CF3E72E6EF11E008C5DC9 /* OAuthable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CF3E52E6EF11B008C5DC9 /* OAuthable.swift */; };
+		C12CF3E82E6EF11E008C5DC9 /* OAuthable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CF3E52E6EF11B008C5DC9 /* OAuthable.swift */; };
+		C12CF3EA2E6F0156008C5DC9 /* TwitchAuthError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CF3E92E6F0156008C5DC9 /* TwitchAuthError.swift */; };
+		C12CF3EB2E6F0156008C5DC9 /* TwitchAuthError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CF3E92E6F0156008C5DC9 /* TwitchAuthError.swift */; };
+		C12CF3EC2E6F0156008C5DC9 /* TwitchAuthError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CF3E92E6F0156008C5DC9 /* TwitchAuthError.swift */; };
+		C12CF3EE2E6F066E008C5DC9 /* TwitchUserAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CF3ED2E6F066A008C5DC9 /* TwitchUserAuth.swift */; };
+		C12CF3EF2E6F066E008C5DC9 /* TwitchUserAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CF3ED2E6F066A008C5DC9 /* TwitchUserAuth.swift */; };
+		C12CF3F02E6F066E008C5DC9 /* TwitchUserAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CF3ED2E6F066A008C5DC9 /* TwitchUserAuth.swift */; };
 		C133D57E23227617005015C8 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C133D57D23227617005015C8 /* APIError.swift */; };
 		C133D57F23227617005015C8 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C133D57D23227617005015C8 /* APIError.swift */; };
 		C133D58023227617005015C8 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C133D57D23227617005015C8 /* APIError.swift */; };
@@ -393,6 +405,10 @@
 		C12695AD28E5D22E00422F43 /* YoutubeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeError.swift; sourceTree = "<group>"; };
 		C129B70C232B88C500FDDA99 /* M3U8.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = M3U8.swift; sourceTree = "<group>"; };
 		C129B710232B8F5900FDDA99 /* M3U8Meta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = M3U8Meta.swift; sourceTree = "<group>"; };
+		C12CF3E12E6EF0C6008C5DC9 /* TwitchOAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitchOAuth.swift; sourceTree = "<group>"; };
+		C12CF3E52E6EF11B008C5DC9 /* OAuthable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthable.swift; sourceTree = "<group>"; };
+		C12CF3E92E6F0156008C5DC9 /* TwitchAuthError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitchAuthError.swift; sourceTree = "<group>"; };
+		C12CF3ED2E6F066A008C5DC9 /* TwitchUserAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitchUserAuth.swift; sourceTree = "<group>"; };
 		C133D57D23227617005015C8 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		C133D58123227626005015C8 /* LocalizedDecodingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedDecodingError.swift; sourceTree = "<group>"; };
 		C13F8847233B6B32008649F6 /* Push.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
@@ -677,6 +693,7 @@
 				C1F6C4DA232A776A006EA1D5 /* LiveVideoFetcher.swift */,
 				C133D58123227626005015C8 /* LocalizedDecodingError.swift */,
 				C1AE3317231E89FD00FE0F99 /* TwitchAPI.swift */,
+				C12CF3E92E6F0156008C5DC9 /* TwitchAuthError.swift */,
 				C193E33428DE7C020064639A /* TwitchError.swift */,
 				C12695A528E5CF1200422F43 /* YoutubeAPI.swift */,
 				C12695AD28E5D22E00422F43 /* YoutubeError.swift */,
@@ -856,12 +873,16 @@
 				C180244E28DEC5F900E8AB42 /* KeychainKey.swift */,
 				C129B70C232B88C500FDDA99 /* M3U8.swift */,
 				C129B710232B8F5900FDDA99 /* M3U8Meta.swift */,
+				C12CF3E52E6EF11B008C5DC9 /* OAuthable.swift */,
 				C1D2F9C52322801000657A67 /* Pagination.swift */,
 				C11418812319358E0004C813 /* SizeProvider.swift */,
 				C185E18C2375AE3C008DD09C /* SpoilerFilter.swift */,
+				C1E9427F231E70A6006B7A71 /* Stores */,
 				C14BCD4D2317FC8900F33A48 /* Stream.swift */,
 				C1BF599128E9C3C5003C50C9 /* Streamable.swift */,
 				C11B670E23226C7C004576A6 /* TwitchDataItem.swift */,
+				C12CF3E12E6EF0C6008C5DC9 /* TwitchOAuth.swift */,
+				C12CF3ED2E6F066A008C5DC9 /* TwitchUserAuth.swift */,
 				C126959D28E5CC9D00422F43 /* TwitchSecrets.swift */,
 				C15DD8532329235B00EC8EFB /* Video.swift */,
 				C17A83F228EFFD4E00FCD74F /* Videoable.swift */,
@@ -879,7 +900,6 @@
 				C1A647C728E72B3F00699B5B /* YoutubeUserAuth.swift */,
 				C1B2993D28E9546B00C0D6A8 /* YoutubeVideo.swift */,
 				C147B3A72901F10A0096D2DB /* YtdlpFormat.swift */,
-				C1E9427F231E70A6006B7A71 /* Stores */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1237,6 +1257,7 @@
 				C1020D962317E9AE00FBFE16 /* BrandColor.swift in Sources */,
 				C19D82AA2A80AE8E00AC2379 /* OSLog+Extensions.swift in Sources */,
 				C12695A328E5CCA900422F43 /* YoutubeSecrets.swift in Sources */,
+				C12CF3F02E6F066E008C5DC9 /* TwitchUserAuth.swift in Sources */,
 				C1B5AC6B232E299F001A502F /* ChannelView.swift in Sources */,
 				C1B5AC6F232E29EF001A502F /* GameView.swift in Sources */,
 				C16A7E0628E8077F00509FFF /* YoutubePerson.swift in Sources */,
@@ -1249,6 +1270,7 @@
 				C1141887231936A60004C813 /* AvatarSize.swift in Sources */,
 				C1CEB909231E85A2007C3812 /* OnFirstAppear.swift in Sources */,
 				C16A7E0A28E8140800509FFF /* YoutubeSubscription.swift in Sources */,
+				C12CF3E72E6EF11E008C5DC9 /* OAuthable.swift in Sources */,
 				C17A83F828F0040000FCD74F /* VideoPlatform.swift in Sources */,
 				C1EF5E0A28EC2A1C00F710FA /* MenuItemButton.swift in Sources */,
 				C10FECC426949CE600D48F8D /* MultiStreamVideoPlayer.swift in Sources */,
@@ -1283,6 +1305,7 @@
 				C129B70E232B88C500FDDA99 /* M3U8.swift in Sources */,
 				C18242A3231800F000595E76 /* Thumbnail.swift in Sources */,
 				C129B712232B8F5900FDDA99 /* M3U8Meta.swift in Sources */,
+				C12CF3EA2E6F0156008C5DC9 /* TwitchAuthError.swift in Sources */,
 				C1141884231935A50004C813 /* SizeProvider.swift in Sources */,
 				C1C85AAE2336523F00E8AB19 /* RootViewControllerKey.swift in Sources */,
 				C1AE3319231E89FD00FE0F99 /* TwitchAPI.swift in Sources */,
@@ -1304,6 +1327,7 @@
 				C1020D952317E9AE00FBFE16 /* GameList.swift in Sources */,
 				C17627EC26A336A100D4BB11 /* VisualEffectView.swift in Sources */,
 				C1020D972317E9AE00FBFE16 /* Channel.swift in Sources */,
+				C12CF3E32E6EF0C6008C5DC9 /* TwitchOAuth.swift in Sources */,
 				C1A75362249B8ED1005FB190 /* ActivityIndicator.swift in Sources */,
 				C1020D662317E8E200FBFE16 /* SceneDelegate.swift in Sources */,
 			);
@@ -1356,6 +1380,7 @@
 				C1E9428F231E70E6006B7A71 /* StreamStore.swift in Sources */,
 				C185E18F2375AE3C008DD09C /* SpoilerFilter.swift in Sources */,
 				C1E67AB82333A4910024B25C /* ViewControllerHolder.swift in Sources */,
+				C12CF3EC2E6F0156008C5DC9 /* TwitchAuthError.swift in Sources */,
 				C16A7E0328E7FE0600509FFF /* HeartbeatActivityIndicator.swift in Sources */,
 				C1020DC72317EB0800FBFE16 /* StreamList.swift in Sources */,
 				C1020DCA2317EB0800FBFE16 /* GameList.swift in Sources */,
@@ -1373,9 +1398,11 @@
 				C1EF0BA7276B19F000E311C8 /* PlayerLayer.swift in Sources */,
 				C147B3AA2901F10A0096D2DB /* YtdlpFormat.swift in Sources */,
 				C1D2F9C82322801000657A67 /* Pagination.swift in Sources */,
+				C12CF3E82E6EF11E008C5DC9 /* OAuthable.swift in Sources */,
 				C1BC16C52394EB0B008234EE /* ButtonWrap.swift in Sources */,
 				C1B2993828E92C9700C0D6A8 /* YoutubeError2.swift in Sources */,
 				C193E33728DE7C020064639A /* TwitchError.swift in Sources */,
+				C12CF3E22E6EF0C6008C5DC9 /* TwitchOAuth.swift in Sources */,
 				C1729BC82326889D005D0A99 /* Dictionary+Extensions.swift in Sources */,
 				C1C85AB3233654A600E8AB19 /* PresenterViewControllerKey.swift in Sources */,
 				C1E94283231E70B6006B7A71 /* FetchingObject.swift in Sources */,
@@ -1423,6 +1450,7 @@
 				C14BCD502317FC8900F33A48 /* Stream.swift in Sources */,
 				C1C85AAF2336523F00E8AB19 /* RootViewControllerKey.swift in Sources */,
 				C1B0BCB128EAF2220016089B /* CodableIgnored.swift in Sources */,
+				C12CF3EF2E6F066E008C5DC9 /* TwitchUserAuth.swift in Sources */,
 				C1B2994428E95FD700C0D6A8 /* YoutubePlaylistItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1452,6 +1480,7 @@
 				C1FEBCF628E4780C00903D16 /* QRCode.swift in Sources */,
 				C1FB01DC2317D8A900130981 /* Avatar.swift in Sources */,
 				C1FB01AC2317D1B000130981 /* AppDelegate.swift in Sources */,
+				C12CF3EE2E6F066E008C5DC9 /* TwitchUserAuth.swift in Sources */,
 				C17766F126C66DEA0085E848 /* Functions.swift in Sources */,
 				C180244F28DEC5F900E8AB42 /* KeychainKey.swift in Sources */,
 				C1EF5E0928EC2A1C00F710FA /* MenuItemButton.swift in Sources */,
@@ -1470,6 +1499,7 @@
 				C16A7E0D28E8199900509FFF /* YoutubeBroadcast.swift in Sources */,
 				C1E94285231E70CE006B7A71 /* ChannelStore.swift in Sources */,
 				C15DD8542329235B00EC8EFB /* Video.swift in Sources */,
+				C12CF3E62E6EF11E008C5DC9 /* OAuthable.swift in Sources */,
 				C18242A02318001700595E76 /* ChannelList.swift in Sources */,
 				C1EF0BA5276B19F000E311C8 /* PlayerLayer.swift in Sources */,
 				C1F6C4DB232A776A006EA1D5 /* LiveVideoFetcher.swift in Sources */,
@@ -1507,6 +1537,8 @@
 				C147B3A82901F10A0096D2DB /* YtdlpFormat.swift in Sources */,
 				C1E9428D231E70E6006B7A71 /* StreamStore.swift in Sources */,
 				C1B2992F28E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */,
+				C12CF3EB2E6F0156008C5DC9 /* TwitchAuthError.swift in Sources */,
+				C12CF3E42E6EF0C6008C5DC9 /* TwitchOAuth.swift in Sources */,
 				C12695AE28E5D22E00422F43 /* YoutubeError.swift in Sources */,
 				C1605F762317E5E100F98BEE /* CoverArt.swift in Sources */,
 				C193E33528DE7C020064639A /* TwitchError.swift in Sources */,

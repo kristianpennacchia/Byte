@@ -20,6 +20,9 @@ final class TwitchAPI: ObservableObject {
         let secret: String
     }
 
+	typealias Completion<T> = (_ result: Result<T, Error>) -> Void where T: Decodable
+
+	static var isAvailable: Bool { shared != nil }
     static private(set) var shared: TwitchAPI!
 
     private let didChange = PassthroughSubject<Output, Failure>()
@@ -45,11 +48,11 @@ final class TwitchAPI: ObservableObject {
         }
     }
 
-	static func setup(authentication: Authentication, webAccessToken: String?, accessToken: String, refreshToken: String? = nil) {
+	static func setup(authentication: Authentication, webAccessToken: String?, accessToken: String?, refreshToken: String? = nil) {
 		shared = TwitchAPI(authentication: authentication, webAccessToken: webAccessToken, accessToken: accessToken, refreshToken: refreshToken)
     }
 
-    private init(authentication: Authentication, webAccessToken: String?, accessToken: String, refreshToken: String? = nil) {
+    private init(authentication: Authentication, webAccessToken: String?, accessToken: String?, refreshToken: String? = nil) {
         self.authentication = authentication
         self.webAccessToken = webAccessToken
         self.accessToken = accessToken
@@ -98,21 +101,93 @@ extension TwitchAPI {
 
     // - MARK: Authentication
 
-    func authenticate() async throws -> TwitchDataItem<[Channel]> {
+	func authenticate(oAuthHandler: @escaping Completion<TwitchOAuth>, completion: @escaping Completion<TwitchDataItem<[Channel]>>) {
         if accessToken != nil {
-            // We should be able to get the user info assuming the accessToken is still valid
-            return try await execute(method: .get, endpoint: "users", decoding: [Channel].self)
+			// We should be able to get the user info assuming the accessToken is still valid.
+			Task {
+				do {
+					let person = try await getAuthenticatedPerson()
+
+					DispatchQueue.main.async {
+						completion(.success(person))
+					}
+				} catch {
+					Logger.youtube.debug("Failed getting user info. \(error.localizedDescription)")
+					DispatchQueue.main.async {
+						completion(.failure(error))
+					}
+				}
+			}
         } else {
-            /// - Todo: Authenticate
-//            let query = [
-//                "client_id": authentication.clientID,
-//                "redirect_uri": "byte://auth",
-//                "response_type": "token",
-//                "scope": "",
-//            ].queryParameters()
-//
-//            try await executeRaw(base: .auth, endpoint: "authorize", query: query)
-            throw AppError(message: "Twitch authentication without a pre-supplied access token is not yet implemented.")
+			let query = [
+				"client_id": authentication.clientID,
+				"scopes": "user:read:follows",
+			]
+
+			Task {
+				do {
+					let data = try await executeUnwrapped(method: .post, base: .auth, endpoint: "device", query: query, decoding: TwitchOAuth.self)
+
+					DispatchQueue.main.async {
+						oAuthHandler(.success(data))
+					}
+
+					Logger.twitch.debug("Polling for user to complete OAuth.")
+
+					// Continuously poll 'https://id.twitch.tv/oauth2/token' every `data.interval` seconds until we get a success or failure response.
+					let pollQuery = [
+						"client_id": authentication.clientID,
+						"scopes": "user:read:follows",
+						"device_code": data.deviceCode,
+						"grant_type": "urn:ietf:params:oauth:grant-type:device_code",
+					]
+
+					poll: repeat {
+						guard data.isExpired == false else {
+							DispatchQueue.main.async {
+								oAuthHandler(.failure(APIError.unknown))
+							}
+							break poll
+						}
+
+						try! await Task.sleep(seconds: TimeInterval(data.interval))
+
+						do {
+							let userAuth = try await executeUnwrapped(method: .post, base: .auth, endpoint: "token", query: pollQuery, decoding: TwitchUserAuth.self)
+
+							accessToken = userAuth.accessToken
+							refreshToken = userAuth.refreshToken ?? refreshToken
+
+							// Get user data.
+							let person = try await getAuthenticatedPerson()
+							DispatchQueue.main.async {
+								completion(.success(person))
+							}
+
+							break poll
+						} catch let error as TwitchAuthError {
+							if error.reason != .authorizationPending {
+								Logger.twitch.error("Failed getting Twitch OAuth response. \(error.localizedDescription)")
+								DispatchQueue.main.async {
+									completion(.failure(error))
+								}
+								break poll
+							}
+						} catch {
+							Logger.twitch.error("Failed getting Twitch OAuth response. \(error.localizedDescription)")
+							DispatchQueue.main.async {
+								completion(.failure(error))
+							}
+							break poll
+						}
+					} while true
+				} catch {
+					Logger.twitch.error("Failed getting Twitch OAuth response. \(error.localizedDescription)")
+					DispatchQueue.main.async {
+						oAuthHandler(.failure(error))
+					}
+				}
+			}
         }
     }
 
@@ -129,22 +204,11 @@ extension TwitchAPI {
         ]
 
         do {
-            let data = try await executeRaw(method: .post, base: .auth, endpoint: "token", query: query)
+			let userAuth = try await executeUnwrapped(method: .post, base: .auth, endpoint: "token", query: query, decoding: TwitchUserAuth.self)
+			accessToken = userAuth.accessToken
+			self.refreshToken = userAuth.refreshToken ?? refreshToken
 
-            guard let jsonData = try? JSONSerialization.jsonObject(with: data),
-                  let json = jsonData as? [String:  Any?],
-                  let accessToken = json["access_token"] as? String,
-                  let refreshToken = json["refresh_token"] as? String
-            else {
-                // Refreshing user access token failed, which likely means the refresh token is no longer valid.
-                self.refreshToken = nil
-                throw APIError.refreshToken
-            }
-
-            self.accessToken = accessToken
-            self.refreshToken = refreshToken
-
-            let users = try await authenticate()
+            let users = try await getAuthenticatedPerson()
             if let user = users.data.first {
                 didChange.send(user)
             }
@@ -152,14 +216,57 @@ extension TwitchAPI {
             return users
         } catch {
             // Refreshing user access token failed, which likely means the refresh token is no longer valid.
+			self.accessToken = nil
             self.refreshToken = nil
-
             throw error
         }
     }
+
+	func getAuthenticatedPerson() async throws -> TwitchDataItem<[Channel]> {
+		return try await execute(method: .get, endpoint: "users", decoding: [Channel].self)
+	}
 }
 
 extension TwitchAPI {
+	@discardableResult
+	func executeUnwrapped<T: Decodable>(method: Method, base: Base = .helix, endpoint: String, query: [String: Any?] = [:], decoding: T.Type) async throws -> T {
+		var components = URLComponents(url: base.url.appendingPathComponent(endpoint), resolvingAgainstBaseURL: true)!
+		components.query = query.queryParameters()
+
+		var request = URLRequest(url: components.url!)
+		request.httpMethod = method.rawValue
+
+		if let accessToken = accessToken {
+			let authorization = base.authorizationHeader(accessToken: accessToken)
+			request.setValue(authorization, forHTTPHeaderField: "Authorization")
+		}
+
+		let data = try await session.data(for: request).0
+
+		do {
+			return try decoder.decode(T.self, from: data)
+		} catch let decodingError as DecodingError {
+			Logger.twitch.error("URL from decoding failure = \(request.url?.absoluteString ?? "N/A"), query = \(query)")
+
+			if let rawData = String(data: data, encoding: .utf8) {
+				Logger.twitch.error("Raw data from decoding failure = \(rawData)")
+			}
+
+			do {
+				let twitchError = try self.decoder.decode(TwitchError.self, from: data)
+				if twitchError.status == 401 {
+					// Authentication failure. The access token has become invalid, try to refresh it.
+					_ = try await refreshAccessToken()
+					return try await executeUnwrapped(method: method, base: base, endpoint: endpoint, query: query, decoding: decoding)
+				}
+			} catch {
+				throw try self.decoder.decode(TwitchAuthError.self, from: data)
+			}
+
+			throw LocalizedDecodingError(decodingError: decodingError)
+		}
+	}
+
     @discardableResult
     func execute<T>(method: Method, base: Base = .helix, endpoint: String, query: [String: Any?] = [:], decoding: T.Type) async throws -> TwitchDataItem<T> {
         var components = URLComponents(url: base.url.appendingPathComponent(endpoint), resolvingAgainstBaseURL: true)!

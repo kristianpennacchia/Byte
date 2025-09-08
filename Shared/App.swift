@@ -12,7 +12,7 @@ import SwiftUI
 
 enum App {
     private struct ServiceSecrets: Decodable {
-        let twitch: TwitchSecrets
+        let twitch: TwitchSecrets?
         let youtube: YoutubeSecrets?
     }
 
@@ -25,7 +25,7 @@ enum App {
         let decoder = JSONDecoder()
         let serviceSecrets = try! decoder.decode(ServiceSecrets.self, from: jsonData)
 
-        previewUsername = serviceSecrets.twitch.previewUsername
+        previewUsername = serviceSecrets.twitch?.previewUsername ?? "testuser123"
 
         let twitchKeychain = Keychain(service: "twitch")
         let youtubeKeychain = Keychain(service: "youtube")
@@ -36,28 +36,18 @@ enum App {
         }
         launchCount += 1
 
-		if twitchKeychain[KeychainKey.webAccessToken] == nil {
-			twitchKeychain[KeychainKey.webAccessToken] = serviceSecrets.twitch.oAuthToken.webUserAccessToken
+		if let twitchSecrets = serviceSecrets.twitch {
+			TwitchAPI.setup(
+				authentication: .init(
+					clientID: twitchSecrets.clientID.byte,
+					privateClientID: twitchSecrets.clientID.twitch,
+					secret: twitchSecrets.secret.byte
+				),
+				webAccessToken: twitchSecrets.oAuthToken?.webUserAccessToken ?? twitchKeychain[KeychainKey.webAccessToken],
+				accessToken: twitchSecrets.oAuthToken?.byteUserAccessToken ?? twitchKeychain[KeychainKey.accessToken],
+				refreshToken: twitchSecrets.oAuthToken?.byteUserRefreshToken ?? twitchKeychain[KeychainKey.refreshToken]
+			)
 		}
-
-        if twitchKeychain[KeychainKey.accessToken] == nil {
-            twitchKeychain[KeychainKey.accessToken] = serviceSecrets.twitch.oAuthToken.byteUserAccessToken
-        }
-
-        if twitchKeychain[KeychainKey.refreshToken] == nil {
-            twitchKeychain[KeychainKey.refreshToken] = serviceSecrets.twitch.oAuthToken.byteUserRefreshToken
-        }
-
-        TwitchAPI.setup(
-            authentication: .init(
-                clientID: serviceSecrets.twitch.clientID.byte,
-                privateClientID: serviceSecrets.twitch.clientID.twitch,
-                secret: serviceSecrets.twitch.secret.byte
-            ),
-			webAccessToken: twitchKeychain[KeychainKey.webAccessToken]!,
-            accessToken: twitchKeychain[KeychainKey.accessToken]!,
-            refreshToken: twitchKeychain[KeychainKey.refreshToken]
-        )
 
         if let youtubeSecrets = serviceSecrets.youtube {
             YoutubeAPI.setup(authentication: .init(

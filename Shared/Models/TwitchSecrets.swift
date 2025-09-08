@@ -24,8 +24,8 @@ struct TwitchSecrets: Decodable {
         let byteUserRefreshToken: String?
     }
 
-    let previewUsername: String
+    let previewUsername: String?
     let clientID: ClientID
     let secret: Secret
-    let oAuthToken: OAuthToken
+    let oAuthToken: OAuthToken?
 }

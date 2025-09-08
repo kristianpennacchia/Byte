@@ -150,12 +150,12 @@ extension YoutubeAPI {
                         "prompt": "consent",
                     ]
 
-                    repeat {
+					poll: repeat {
                         guard data.isExpired == false else {
 							DispatchQueue.main.async {
 								oAuthHandler(.failure(APIError.unknown))
 							}
-                            break
+                            break poll
                         }
 
                         try! await Task.sleep(seconds: TimeInterval(data.interval))
@@ -170,20 +170,22 @@ extension YoutubeAPI {
 							DispatchQueue.main.async {
 								completion(.success(person))
 							}
+
+							break poll
                         } catch let error as YoutubeError {
                             if error.error == "access_denied" {
 								Logger.youtube.error("Failed getting Youtube OAuth response. \(error.localizedDescription)")
                                 DispatchQueue.main.async {
                                     completion(.failure(error))
                                 }
-                                break
+								break poll
                             }
                         } catch {
 							Logger.youtube.error("Failed getting Youtube OAuth response. \(error.localizedDescription)")
                             DispatchQueue.main.async {
                                 completion(.failure(error))
                             }
-                            break
+							break poll
                         }
                     } while true
                 } catch {

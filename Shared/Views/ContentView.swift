@@ -106,8 +106,10 @@ struct ContentView: View {
     @EnvironmentObject private var twitchAPI: TwitchAPI
     @EnvironmentObject private var youtubeAPI: YoutubeAPI
 
+	@State private var isAuthenticating = true
     @State private var twitchUser: Channel?
     @State private var youtubeUser: YoutubePerson?
+    @State private var showTwitchAuthScreen = false
     @State private var showYoutubeAuthScreen = false
     @State private var selectedMenuItem = SelectionMenuItem.all(.followedStreams) {
         didSet {
@@ -122,26 +124,36 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             Color.brand.primaryDarkDark.ignoresSafeArea()
-            if twitchUser == nil {
+            if isAuthenticating {
                 HeartbeatActivityIndicator()
                     .frame(alignment: .center)
             } else {
                 HStack(alignment: .top, spacing: 0) {
                     VStack(alignment: .center, spacing: 16) {
                         List {
-                            ForEach(AllMenuItem.allCases) { menuItem in
-                                MenuItemButton(title: menuItem.title, icon: menuItem.icon, isSelected: .all(menuItem) == selectedMenuItem) {
-                                    selectedMenuItem = .all(menuItem)
-                                }
-                            }
-                            Spacer(minLength: 24)
-                            Section("Twitch") {
-                                ForEach(TwitchMenuItem.allCases) { menuItem in
-                                    MenuItemButton(title: menuItem.title, icon: menuItem.icon, isSelected: .twitch(menuItem) == selectedMenuItem) {
-                                        selectedMenuItem = .twitch(menuItem)
-                                    }
-                                }
-                            }
+							if twitchUser != nil || youtubeUser != nil {
+								ForEach(AllMenuItem.allCases) { menuItem in
+									MenuItemButton(title: menuItem.title, icon: menuItem.icon, isSelected: .all(menuItem) == selectedMenuItem) {
+										selectedMenuItem = .all(menuItem)
+									}
+								}
+							}
+							if TwitchAPI.isAvailable {
+								Spacer(minLength: 24)
+								Section("Twitch") {
+									if twitchUser == nil {
+										Button("Sign In") {
+											showTwitchAuthScreen = true
+										}
+									} else {
+										ForEach(TwitchMenuItem.allCases) { menuItem in
+											MenuItemButton(title: menuItem.title, icon: menuItem.icon, isSelected: .twitch(menuItem) == selectedMenuItem) {
+												selectedMenuItem = .twitch(menuItem)
+											}
+										}
+									}
+								}
+							}
                             if YoutubeAPI.isAvailable {
                                 Spacer(minLength: 24)
                                 Section("Youtube") {
@@ -171,7 +183,7 @@ struct ContentView: View {
                         case .all(let menuItem):
                             switch menuItem {
                             case .followedStreams:
-                                StreamList(store: StreamStore(twitchAPI: twitchAPI, youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: twitchUser!.id)), shouldRefresh: $isRefreshing)
+                                StreamList(store: StreamStore(twitchAPI: twitchAPI, youtubeAPI: youtubeAPI, fetch: .followed(twitchUserID: twitchUser?.id)), shouldRefresh: $isRefreshing)
                             }
                         case .twitch(let menuItem):
                             switch menuItem {
@@ -209,12 +221,20 @@ struct ContentView: View {
         .onReceive(sessionStore) { store in
             twitchUser = store.twitchUser
             youtubeUser = store.youtubeUser
+			isAuthenticating = store.hasAttemptedTwitchAuth == false || store.hasAttemptedYoutubeAuth == false
         }
         .fullScreenCover(
+            isPresented: $showTwitchAuthScreen,
+            onDismiss: {},
+            content: {
+				OAuthView(service: .twitch)
+            }
+        )
+		.fullScreenCover(
             isPresented: $showYoutubeAuthScreen,
             onDismiss: {},
             content: {
-                OAuthView()
+				OAuthView(service: .youtube)
             }
         )
     }
