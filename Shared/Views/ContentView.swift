@@ -222,6 +222,14 @@ struct ContentView: View {
             twitchUser = store.twitchUser
             youtubeUser = store.youtubeUser
 			isAuthenticating = store.hasAttemptedTwitchAuth == false || store.hasAttemptedYoutubeAuth == false
+
+			// Workaround for no streams initially showing after successful OAuth login
+			// due to old `store` object not being updated with new twitch/youtube user data.
+			if twitchUser != nil {
+				selectedMenuItem = .twitch(.followedStreams)
+			} else if youtubeUser != nil {
+				selectedMenuItem = .youtube(.followedStreams)
+			}
         }
         .fullScreenCover(
             isPresented: $showTwitchAuthScreen,
