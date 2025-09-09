@@ -164,6 +164,14 @@ private extension StreamList {
 
         Task {
             isRefreshing = true
+
+			// Handle the situation where the user may have just signed in, but the old
+			// follow fetch type has a `nil` twitch user ID, resulting in the refresh not
+			// showin the followed streams.
+			if case .followed(let twitchUserId) = store.fetchType, twitchUserId == nil {
+				store.fetchType = .followed(twitchUserID: sessionStore.twitchUser?.id)
+			}
+
             try? await store.fetch()
             isRefreshing = false
         }

@@ -40,7 +40,7 @@ final class StreamStore: FetchingObject {
 
     let twitchAPI: TwitchAPI?
     let youtubeAPI: YoutubeAPI?
-    let fetchType: Fetch
+    var fetchType: Fetch
     var filter = "" {
         didSet {
             applyFilter()
