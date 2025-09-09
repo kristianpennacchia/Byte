@@ -108,7 +108,9 @@ struct ContentView: View {
     @State private var twitchUser: Channel?
     @State private var youtubeUser: YoutubePerson?
     @State private var showTwitchAuthScreen = false
+	@State private var showTwitchSignOutAlert = false
     @State private var showYoutubeAuthScreen = false
+    @State private var showYoutubeSignOutAlert = false
     @State private var selectedMenuItem = SelectionMenuItem.all(.followedStreams) {
         didSet {
             if selectedMenuItem == oldValue {
@@ -140,7 +142,7 @@ struct ContentView: View {
 								Spacer(minLength: 24)
 								Section("Twitch") {
 									if twitchUser == nil {
-										Button("Sign In") {
+										MenuActionButton(title: "Sign In", subtitle: nil, icon: "arrow.up.and.person.rectangle.portrait") {
 											showTwitchAuthScreen = true
 										}
 									} else {
@@ -149,14 +151,17 @@ struct ContentView: View {
 												selectedMenuItem = .twitch(menuItem)
 											}
 										}
+										MenuActionButton(title: "Sign Out", subtitle: twitchUser!.displayName, icon: "rectangle.portrait.and.arrow.right") {
+											showTwitchSignOutAlert = true
+										}
 									}
 								}
 							}
                             if YoutubeAPI.isAvailable {
                                 Spacer(minLength: 24)
-                                Section("Youtube") {
+                                Section("YouTube") {
                                     if youtubeUser == nil {
-                                        Button("Sign In") {
+										MenuActionButton(title: "Sign In", subtitle: nil, icon: "arrow.up.and.person.rectangle.portrait") {
                                             showYoutubeAuthScreen = true
                                         }
                                     } else {
@@ -165,6 +170,9 @@ struct ContentView: View {
                                                 selectedMenuItem = .youtube(menuItem)
                                             }
                                         }
+										MenuActionButton(title: "Sign Out", subtitle: youtubeUser!.primaryName.displayName, icon: "rectangle.portrait.and.arrow.right") {
+											showYoutubeSignOutAlert = true
+										}
                                     }
                                 }
                             }
@@ -243,6 +251,22 @@ struct ContentView: View {
 				OAuthView(service: .youtube)
             }
         )
+		.alert("Twitch", isPresented: $showTwitchSignOutAlert, actions: {
+			Button("Sign Out", role: .destructive) {
+				sessionStore.signOutTwitch()
+			}
+			Button("Cancel", role: .cancel) {}
+		}, message: {
+			Text("Sign out of Twitch?")
+		})
+		.alert("YouTube", isPresented: $showYoutubeSignOutAlert, actions: {
+			Button("Sign Out", role: .destructive) {
+				sessionStore.signOutYoutube()
+			}
+			Button("Cancel", role: .cancel) {}
+		}, message: {
+			Text("Sign out of YouTube?")
+		})
     }
 }
 

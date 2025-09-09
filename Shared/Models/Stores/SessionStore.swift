@@ -132,9 +132,19 @@ final class SessionStore: ObservableObject {
         })
     }
 
-    func signOut() {
-        twitchUser = nil
-        youtubeUser = nil
+    func signOutTwitch() {
+		twitchAPI?.webAccessToken = nil
+		twitchAPI?.accessToken = nil
+		twitchAPI?.refreshToken = nil
+		twitchUser = nil
+		twitchAuthError = APIError.noAuth
+    }
+
+	func signOutYoutube() {
+		youtubeAPI?.accessToken = nil
+		youtubeAPI?.refreshToken = nil
+		youtubeUser = nil
+		youtubeAuthError = APIError.noAuth
     }
 }
 
