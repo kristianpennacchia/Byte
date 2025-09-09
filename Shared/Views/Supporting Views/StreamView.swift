@@ -16,7 +16,7 @@ struct StreamView: View {
         return formatter
     }()
 
-    @EnvironmentObject private var api: TwitchAPI
+	@EnvironmentObject private var sessionStore: SessionStore
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @State private var isFocused = false
@@ -26,10 +26,10 @@ struct StreamView: View {
     let isSelected: Bool
 
     var body: some View {
-        if let stream = stream as? Stream, game?.id != stream.gameId {
+		if sessionStore.twitchAPI != nil, let stream = stream as? Stream, game?.id != stream.gameId {
             Task { @MainActor in
                 do {
-                    game = try await stream.game(api: api)
+					game = try await stream.game(api: sessionStore.twitchAPI!)
                 } catch {
 					Logger.twitch.debug("Fetching game (id = \(stream.gameId) failed. \(error.localizedDescription))")
                 }

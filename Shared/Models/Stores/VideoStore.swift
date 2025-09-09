@@ -46,7 +46,7 @@ final class VideoStore: FetchingObject {
         self.fetchType = fetch
     }
 
-    init(twitchAPI: TwitchAPI, youtubeAPI: YoutubeAPI, fetch: Fetch) {
+    init(twitchAPI: TwitchAPI?, youtubeAPI: YoutubeAPI?, fetch: Fetch) {
         self.twitchAPI = twitchAPI
         self.youtubeAPI = youtubeAPI
         self.fetchType = fetch

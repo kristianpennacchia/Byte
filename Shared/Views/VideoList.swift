@@ -14,7 +14,6 @@ struct VideoList: View {
         @Published var video: (any Videoable)?
     }
 
-    @EnvironmentObject private var api: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @StateObject var store: VideoStore

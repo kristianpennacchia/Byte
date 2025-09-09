@@ -16,8 +16,6 @@ struct StreamList: View {
     }
 
     @EnvironmentObject private var sessionStore: SessionStore
-    @EnvironmentObject private var twitchAPI: TwitchAPI
-    @EnvironmentObject private var youtubeAPI: YoutubeAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @StateObject private var streamViewModel = StreamViewModel()
@@ -149,11 +147,11 @@ struct StreamList: View {
             content: {
                 switch type(of: streamViewModel.stream!).platform {
                 case .twitch:
-                    VideoList(store: VideoStore(twitchAPI: twitchAPI, fetch: .user(userID: streamViewModel.stream!.userId)))
-                        .environmentObject(twitchAPI)
+					VideoList(store: VideoStore(twitchAPI: sessionStore.twitchAPI!, fetch: .user(userID: streamViewModel.stream!.userId)))
+						.environmentObject(sessionStore)
                 case .youtube:
-                    VideoList(store: VideoStore(youtubeAPI: youtubeAPI, fetch: .user(userID: streamViewModel.stream!.userId)))
-                        .environmentObject(youtubeAPI)
+					VideoList(store: VideoStore(youtubeAPI: sessionStore.youtubeAPI!, fetch: .user(userID: streamViewModel.stream!.userId)))
+						.environmentObject(sessionStore)
                 }
             }
         )

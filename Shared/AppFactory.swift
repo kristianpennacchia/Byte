@@ -12,8 +12,6 @@ enum AppFactory {
 	@MainActor static func makeContent() -> some View {
         return ContentView()
             .environmentObject(SessionStore(twitchAPI: .shared, youtubeAPI: .shared))
-            .environmentObject(TwitchAPI.shared)
-            .environmentObject(YoutubeAPI.shared)
             .environmentObject(SpoilerFilter())
     }
 }

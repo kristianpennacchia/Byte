@@ -15,8 +15,6 @@ struct ChannelList: View {
     }
 
     @EnvironmentObject private var sessionStore: SessionStore
-    @EnvironmentObject private var twitchAPI: TwitchAPI
-    @EnvironmentObject private var youtubeAPI: YoutubeAPI
 
     @StateObject private var channelViewModel = ChannelViewModel()
 
@@ -83,11 +81,11 @@ struct ChannelList: View {
             content: {
                 switch type(of: channelViewModel.channel!).platform {
                 case .twitch:
-                    VideoList(store: VideoStore(twitchAPI: twitchAPI, fetch: .user(userID: channelViewModel.channel!.channelId)))
-                        .environmentObject(twitchAPI)
+					VideoList(store: VideoStore(twitchAPI: sessionStore.twitchAPI!, fetch: .user(userID: channelViewModel.channel!.channelId)))
+						.environmentObject(sessionStore)
                 case .youtube:
-                    VideoList(store: VideoStore(youtubeAPI: youtubeAPI, fetch: .user(userID: channelViewModel.channel!.channelId)))
-                        .environmentObject(youtubeAPI)
+					VideoList(store: VideoStore(youtubeAPI: sessionStore.youtubeAPI!, fetch: .user(userID: channelViewModel.channel!.channelId)))
+						.environmentObject(sessionStore)
                 }
             }
         )

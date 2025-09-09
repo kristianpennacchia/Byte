@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct StreamPicker: View {
-    @EnvironmentObject private var api: TwitchAPI
+	@EnvironmentObject private var sessionStore: SessionStore
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @StateObject var store: StreamStore

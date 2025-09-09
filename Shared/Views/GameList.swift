@@ -15,7 +15,6 @@ struct GameList: View {
     }
 
     @EnvironmentObject private var sessionStore: SessionStore
-    @EnvironmentObject private var api: TwitchAPI
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @StateObject private var gameViewModel = GameViewModel()
@@ -94,8 +93,8 @@ struct GameList: View {
                 }
             },
             content: {
-                StreamList(store: StreamStore(twitchAPI: self.api, fetch: .game(gameViewModel.game!)), shouldRefresh: .constant(false))
-                    .environmentObject(self.api)
+				StreamList(store: StreamStore(twitchAPI: sessionStore.twitchAPI!, fetch: .game(gameViewModel.game!)), shouldRefresh: .constant(false))
+					.environmentObject(sessionStore)
             }
         )
     }

@@ -24,7 +24,7 @@ struct StreamVideoPlayer: View {
         case asset(AVAsset)
     }
 
-    @EnvironmentObject private var twitchAPI: TwitchAPI
+	@EnvironmentObject private var sessionStore: SessionStore
     @EnvironmentObject private var spoilerFilter: SpoilerFilter
 
     @FocusState private var isFocused: Bool
@@ -58,7 +58,7 @@ struct StreamVideoPlayer: View {
             playerViewModel.player.isMuted = muteNotFocused
         }
 
-        let fetcher = LiveVideoFetcher(twitchAPI: twitchAPI, videoMode: videoMode)
+		let fetcher = LiveVideoFetcher(twitchAPI: sessionStore.twitchAPI, videoMode: videoMode)
 
         // If this was already been configured but a variable has been changed, let us immediately re-initiate the stream so that we can apply the new variables.
         if playerViewModel.isConfigured {

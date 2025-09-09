@@ -90,13 +90,13 @@ class LiveVideoFetcher: NSObject {
         return URLSession(configuration: .default, delegate: self, delegateQueue: .main)
     }()
 
-    let twitchAPI: TwitchAPI
-    let clientID: String
+    let twitchAPI: TwitchAPI?
+    let clientID: String?
     let videoMode: VideoMode
 
-    init(twitchAPI: TwitchAPI, videoMode: VideoMode) {
+    init(twitchAPI: TwitchAPI?, videoMode: VideoMode) {
         self.twitchAPI = twitchAPI
-        self.clientID = twitchAPI.authentication.privateClientID
+        self.clientID = twitchAPI?.authentication.privateClientID
         self.videoMode = videoMode
     }
 }
@@ -107,7 +107,7 @@ extension LiveVideoFetcher {
         case .live(let stream):
             switch type(of: stream).platform {
             case .twitch:
-                let data = try await twitchAPI.execute(method: .get, endpoint: "users", query: ["id": stream.userId], decoding: [Channel].self)
+                let data = try await twitchAPI!.execute(method: .get, endpoint: "users", query: ["id": stream.userId], decoding: [Channel].self)
                 if let channel = data.data.first {
                     return try await getVideo(.live(channel: channel.login))
                 } else {
@@ -304,7 +304,7 @@ private extension LiveVideoFetcher {
     func getTokenAndSignature(video: VideoStream) async throws -> SigToken {
         var request = tokenAPI(video: video)
 
-		if let webAccessToken = await twitchAPI.webAccessToken {
+		if let webAccessToken = await twitchAPI!.webAccessToken {
 			let authorization = TwitchAPI.Base.auth.authorizationHeader(accessToken: webAccessToken)
 			request.setValue(authorization, forHTTPHeaderField: "Authorization")
 		}
