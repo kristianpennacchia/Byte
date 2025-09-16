@@ -31,7 +31,7 @@ struct StreamPicker: View {
                     LazyVGrid(columns: columns) {
                         ForEach(streams) { uniqueItem in
                             let stream = uniqueItem.stream
-                            StreamView(stream: stream, isSelected: false)
+                            StreamView(stream: stream, multiSelectIndex: nil)
                                 .buttonWrap {
                                     onSelectedStream(stream)
                                 }

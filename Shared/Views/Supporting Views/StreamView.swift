@@ -23,7 +23,7 @@ struct StreamView: View {
     @State private var game: Game?
 
     let stream: any Streamable
-    let isSelected: Bool
+    let multiSelectIndex: Int?
 
     var body: some View {
 		if sessionStore.twitchAPI != nil, let stream = stream as? Stream, game?.id != stream.gameId {
@@ -61,13 +61,14 @@ struct StreamView: View {
                     }
                 }
 
-                if isSelected {
+                if let multiSelectIndex {
                     ZStack {
                         Circle()
                             .foregroundColor(Color.brand.primary)
                             .padding(4)
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.white)
+						Text("\(multiSelectIndex + 1)")
+							.font(.caption)
+							.foregroundColor(.white)
                     }
                     .frame(width: 44, height: 44, alignment: .center)
                     .position(x: 24, y: 24)
@@ -116,6 +117,6 @@ struct StreamView: View {
 
 struct StreamView_Previews: PreviewProvider {
     static var previews: some View {
-        StreamView(stream: streamablePreview, isSelected: false)
+        StreamView(stream: streamablePreview, multiSelectIndex: nil)
     }
 }
