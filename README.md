@@ -27,10 +27,28 @@ This project must be built from source, I do not currently provide a compiled ap
 
 In order for this project to run and work, it requires you to create a `Secrets.json` file in the 'Shared' directory. This JSON file holds all of the sensitive keys required to enable user authorization within the app, get followed channels and watch streams. You will have to provide all of this information yourself. The contents of the JSON file should look as follows:
 
+##### Minimal JSON
+
 ```json
 {
 	"twitch": {
-		"previewUsername": "(OPTIONAL) TWITCH_USERNAME_FOR_SWIFTUI_PREVIEWS",
+		"clientID": {
+			"twitch": "KEY_HERE",
+			"byte": "KEY_HERE"
+		},
+		"secret": {
+			"byte": "KEY_HERE"
+		}
+	}
+}
+```
+
+#### Full JSON
+
+```json
+{
+	"(OPTIONAL) twitch": {
+		"(OPTIONAL) previewUsername": "TWITCH_USERNAME_FOR_SWIFTUI_PREVIEWS",
 		"clientID": {
 			"twitch": "KEY_HERE",
 			"byte": "KEY_HERE"
@@ -39,12 +57,12 @@ In order for this project to run and work, it requires you to create a `Secrets.
 			"byte": "KEY_HERE"
 		},
 		"(OPTIONAL) oAuthToken": {
-			"webUserAccessToken": "(OPTIONAL) KEY_HERE",
+			"(OPTIONAL) webUserAccessToken": "KEY_HERE",
 			"byteUserAccessToken": "KEY_HERE",
 			"byteUserRefreshToken": "KEY_HERE"
 		}
 	},
-	"youtube": {
+	"(OPTIONAL) youtube": {
 		"clientID": {
 			"byte": "KEY_HERE"
 		},
@@ -57,11 +75,14 @@ In order for this project to run and work, it requires you to create a `Secrets.
 
 Providing `oAuthToken` for Twitch allows you to skip manual sign-in. If you do not provide one, you will instead be able to sign in using the OAuth flow within the app.
 
-YouTube support is **optional**. If you do not want to support YouTube, change the JSON to look like this:
+Both Twitch and YouTube support is **optional**. If you do not want to support YouTube, change the JSON to look like this:
 
 ```
-"youtube": null,
+"twitch": null,
+"youtube": null
 ```
+
+Obviously, excluding support for both means the app will be useless.
 
 ### How To Get The Above Information
 
