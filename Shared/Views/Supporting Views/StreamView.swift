@@ -97,7 +97,7 @@ struct StreamView: View {
 								Text(stream.displayName)
 									.font(.caption)
 									.bold()
-									.foregroundColor(isFocused ? .brand.primary : .white)
+									.foregroundColor(.white)
 									.lineLimit(1)
 								if let viewerCount = stream.viewerCount,
 								   let number = Self.viewCountFormatter.string(from: NSNumber(integerLiteral: viewerCount)) {
@@ -117,7 +117,7 @@ struct StreamView: View {
 							}
 							Text(isSpoiler ? "" : stream.title)
 								.font(.caption)
-								.foregroundColor(isFocused ? .brand.primary : .white)
+								.foregroundColor(.white)
 								.lineLimit(2)
 								.multilineTextAlignment(.center)
 								.frame(height: 70, alignment: .top)
