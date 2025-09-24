@@ -19,7 +19,7 @@ An unofficial Twitch and YouTube app for tvOS built with SwiftUI.
 - While watching a stream, long press the clickpad to refresh the stream (useful if the stream buffered and is behind live).
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/d8ef1692-5705-4b44-88bd-540ae3521745" width=30% height=30%> <img src="https://github.com/user-attachments/assets/b896e4b1-a008-449d-a11f-e0a60fc7d620" width=30% height=30%> <img src="https://github.com/user-attachments/assets/6f74258d-6bfe-493d-9463-eb89aeb967da" width=30% height=30%>
+<img src="https://github.com/user-attachments/assets/a6a1072a-d3a7-48bf-8d78-6f204cb09864" width=30% height=30%> <img src="https://github.com/user-attachments/assets/a808c3e8-0463-4c62-852d-90b865a441a5" width=30% height=30%> <img src="https://github.com/user-attachments/assets/82dd15cc-5e1d-49e4-9d1c-85881b729fe3" width=30% height=30%>
 </p>
 
 ### 🛠 Project setup
