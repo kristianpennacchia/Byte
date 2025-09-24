@@ -32,7 +32,7 @@ struct StreamPicker: View {
                         ForEach(streams) { uniqueItem in
                             let stream = uniqueItem.stream
                             StreamView(stream: stream, multiSelectIndex: nil)
-                                .buttonWrap {
+                                .onTapGesture {
                                     onSelectedStream(stream)
                                 }
                         }
