@@ -20,31 +20,22 @@ struct StreamPicker: View {
     let onSelectedStream: (any Streamable) -> Void
 
     var body: some View {
-        ZStack {
-            ZStack {
-                ScrollView {
-                    let columns = Array(repeating: GridItem(.flexible()), count: 4)
-                    LazyVGrid(columns: columns) {
-                        ForEach(streams) { uniqueItem in
-                            let stream = uniqueItem.stream
-                            StreamView(stream: stream, multiSelectIndex: nil)
-                                .onTapGesture {
-                                    onSelectedStream(stream)
-                                }
-                        }
-                        .padding(14)
-                    }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            .padding(25)
-            .background(
-                ZStack {
-                    Color.brand.primary
-                    Color.black.opacity(0.7)
-                }
-            )
-        }
+		ZStack {
+			ScrollView {
+				let columns = Array(repeating: GridItem(.flexible()), count: 4)
+				LazyVGrid(columns: columns) {
+					ForEach(streams) { uniqueItem in
+						let stream = uniqueItem.stream
+						StreamView(stream: stream, multiSelectIndex: nil)
+							.onTapGesture {
+								onSelectedStream(stream)
+							}
+					}
+					.padding([.leading, .trailing], 14)
+				}
+			}
+			.frame(maxWidth: .infinity, maxHeight: .infinity)
+		}
         .onReceive(store.$uniquedItems) { items in
             streams = items
         }
@@ -58,8 +49,7 @@ struct StreamPicker: View {
                 refresh()
             }
         }
-        .padding([.leading, .trailing], 50)
-        .padding([.top, .bottom], 50)
+        .padding(30)
         .background(VisualEffectView(effect: UIBlurEffect(style: .dark)))
         .edgesIgnoringSafeArea(.all)
     }
