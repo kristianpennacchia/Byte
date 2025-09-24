@@ -41,7 +41,7 @@ struct VideoList: View {
                     LazyVGrid(columns: columns) {
                         ForEach(items, id: \.videoId) { video in
                             VideoView(video: video)
-                                .buttonWrap {
+                                .onTapGesture {
                                     videoViewModel.video = video
                                     showVideoPlayer = true
                                 }

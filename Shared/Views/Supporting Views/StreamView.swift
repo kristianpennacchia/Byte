@@ -43,75 +43,98 @@ struct StreamView: View {
 			isSpoiler = false
 		}
 
-        return VStack(alignment: .leading, spacing: 8) {
-            ZStack {
-                ZStack(alignment: .bottomTrailing) {
-                    Thumbnail(videoStream: .stream(stream))
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                        .cornerRadius(8)
-                    if stream is Stream {
-                        Group {
-                            if self.game != nil {
-                                CoverArt(game: self.game!, artSize: CovertArtSize.small)
-                            } else {
-                                CoverArt.Placeholder(artSize: CovertArtSize.small)
-                            }
-                        }
-                        .border(Color.black)
-                    }
-                }
+		return ZStack {
+			Color.brand.primaryDark.cornerRadius(22)
+			VStack(alignment: .leading, spacing: 8) {
+				ZStack {
+					ZStack(alignment: .bottomTrailing) {
+						Thumbnail(videoStream: .stream(stream))
+							.frame(minWidth: 0, maxWidth: .infinity)
+							.cornerRadius(18)
+						if stream is Stream {
+							Group {
+								if self.game != nil {
+									CoverArt(game: self.game!, artSize: CovertArtSize.small)
+								} else {
+									CoverArt.Placeholder(artSize: CovertArtSize.small)
+								}
+							}
+							.border(Color.black)
+							.clipShape(UnevenRoundedRectangle(
+								cornerRadii: .init(
+									topLeading: 0,
+									bottomLeading: 0,
+									bottomTrailing: 18,
+									topTrailing: 0
+								)
+							))
+						}
+					}
 
-                if let multiSelectIndex {
-                    ZStack {
-                        Circle()
-                            .foregroundColor(Color.brand.primary)
-                            .padding(4)
-						Text("\(multiSelectIndex + 1)")
-							.font(.caption)
-							.foregroundColor(.white)
-                    }
-                    .frame(width: 44, height: 44, alignment: .center)
-                    .position(x: 24, y: 24)
-                }
-            }
+					if let multiSelectIndex {
+						ZStack {
+							Circle()
+								.foregroundColor(Color.brand.primary)
+								.padding(4)
+							Text("\(multiSelectIndex + 1)")
+								.font(.caption)
+								.foregroundColor(.white)
+						}
+						.frame(width: 44, height: 44, alignment: .center)
+						.position(x: 24, y: 24)
+					}
+				}
 
-            HStack(alignment: .top) {
-                VStack(alignment: .center) {
-                    HStack(alignment: .top) {
-                        Text(stream.displayName)
-                            .font(.caption)
-                            .bold()
-                            .foregroundColor(isFocused ? .brand.primary : .white)
-                            .lineLimit(1)
-                        if let viewerCount = stream.viewerCount,
-                           let number = Self.viewCountFormatter.string(from: NSNumber(integerLiteral: viewerCount)) {
-                            Spacer(minLength: 4)
-                            HStack(alignment: .center, spacing: 4) {
-                                Text(number)
-                                    .font(.caption)
-                                    .bold()
-                                    .foregroundColor(.brand.live)
-                                Image(systemName: "person.fill")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(height: 18)
-                                    .foregroundColor(.brand.live)
-                            }
-                        }
-                    }
-					Text(isSpoiler ? "" : stream.title)
-                        .font(.caption)
-                        .foregroundColor(isFocused ? .brand.primary : .white)
-                        .lineLimit(2)
-                        .multilineTextAlignment(.center)
-                        .frame(height: 70, alignment: .top)
-                }
-            }
-        }
-        .focusable(true) {
-            self.isFocused = $0
-        }
-        .ignoresSafeArea()
+				ZStack {
+					if isFocused {
+						Color.brand.primaryDarkDark.cornerRadius(18)
+					} else {
+						Color.brand.primaryDark.cornerRadius(18)
+					}
+					HStack(alignment: .top) {
+						VStack(alignment: .center) {
+							HStack(alignment: .top) {
+								Text(stream.displayName)
+									.font(.caption)
+									.bold()
+									.foregroundColor(isFocused ? .brand.primary : .white)
+									.lineLimit(1)
+								if let viewerCount = stream.viewerCount,
+								   let number = Self.viewCountFormatter.string(from: NSNumber(integerLiteral: viewerCount)) {
+									Spacer(minLength: 4)
+									HStack(alignment: .center, spacing: 4) {
+										Text(number)
+											.font(.caption)
+											.bold()
+											.foregroundColor(.brand.live)
+										Image(systemName: "person.fill")
+											.resizable()
+											.aspectRatio(contentMode: .fit)
+											.frame(height: 18)
+											.foregroundColor(.brand.live)
+									}
+								}
+							}
+							Text(isSpoiler ? "" : stream.title)
+								.font(.caption)
+								.foregroundColor(isFocused ? .brand.primary : .white)
+								.lineLimit(2)
+								.multilineTextAlignment(.center)
+								.frame(height: 70, alignment: .top)
+						}
+					}
+					.padding()
+				}
+			}
+			.padding()
+		}
+		.focusable(true) {
+			self.isFocused = $0
+		}
+		.ignoresSafeArea()
+		.animation(Animation.bouncy) { contentView in
+			contentView.scaleEffect(isFocused ? 1.05 : 1.0)
+		}
     }
 }
 

@@ -22,7 +22,6 @@ struct GameList: View {
 
     @StateObject var store: GameStore
     @State private var items = [Game]()
-    @State private var showSpoilerMenu = false
     @State private var showGame = false
     @Binding var shouldRefresh: Bool
 
@@ -38,13 +37,15 @@ struct GameList: View {
                     LazyVGrid(columns: columns) {
                         ForEach(items) { game in
                             GameView(game: game)
-                                .buttonWrap {
+                                .onTapGesture {
                                     gameViewModel.game = game
                                     showGame = true
-                                } longPress: {
-                                    gameViewModel.game = game
-                                    showSpoilerMenu = true
                                 }
+								.contextMenu {
+									Button(spoilerFilter.isSpoiler(gameID: game.id) ? "Show Game Thumbnail" : "Hide Game Thumbnail") {
+										spoilerFilter.toggle(gameID: game.id)
+									}
+								}
                         }
                     }
                     .padding([.leading, .trailing], 14)
@@ -74,14 +75,6 @@ struct GameList: View {
             if store.isStale {
                 refresh()
             }
-        }
-        .actionSheet(isPresented: $showSpoilerMenu) {
-            return ActionSheet(title: Text("Spoiler Filter"), message: nil, buttons: [
-                .default(Text(spoilerFilter.isSpoiler(gameID: gameViewModel.game!.id) ? "Show Game Thumbnail" : "Hide Game Thumbnail")) {
-                    spoilerFilter.toggle(gameID: gameViewModel.game!.id)
-                },
-                .cancel()
-            ])
         }
         .fullScreenCover(
             isPresented: $showGame,

@@ -14,12 +14,12 @@ struct Avatar: View {
 
     var body: some View {
         KFImage(URL(string: channel.profileImageUrl))
-            .resizing(referenceSize: AvatarSize.medium, mode: .aspectFill)
+			.resizing(referenceSize: AvatarSize.large, mode: .aspectFill)
             .placeholder {
                 Placeholder(channel: channel)
             }
             .background(Color.brand.primary)
-            .frame(width: AvatarSize.medium.width, height: AvatarSize.medium.height)
+			.frame(width: AvatarSize.large.width, height: AvatarSize.large.height)
             .clipShape(Circle())
     }
 }
@@ -31,7 +31,7 @@ extension Avatar {
         var body: some View {
             Circle()
                 .fill(Color.brand.primary)
-                .frame(width: AvatarSize.medium.width, height: AvatarSize.medium.height)
+				.frame(width: AvatarSize.large.width, height: AvatarSize.large.height)
                 .overlay(
                     Text(String(channel.displayName.first!.uppercased()))
                         .font(.callout)

@@ -23,37 +23,52 @@ struct VideoView: View {
     let video: any Videoable
 
     var body: some View {
-        return VStack(alignment: .center, spacing: 8) {
-            ZStack(alignment: .bottomTrailing) {
-                Thumbnail(videoStream: .vod(video))
-                    .frame(minWidth: 0, maxWidth: .infinity)
-                    .cornerRadius(8)
-            }
+		return ZStack {
+			Color.brand.primaryDark.cornerRadius(22)
+			VStack(alignment: .center, spacing: 8) {
+				ZStack(alignment: .bottomTrailing) {
+					Thumbnail(videoStream: .vod(video))
+						.frame(minWidth: 0, maxWidth: .infinity)
+						.cornerRadius(18)
+				}
 
-            HStack(alignment: .top) {
-                VStack(alignment: .center) {
-                    HStack(alignment: .center, spacing: 4) {
-                        Text(Self.dateFormatter.string(from: video.createdAt))
-                            .font(.caption)
-                            .bold()
-                            .foregroundColor(.brand.live)
-                        Image(systemName: "calendar")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: 18)
-                            .foregroundColor(.brand.live)
-                    }
-                    Text(video.title)
-                        .font(.caption)
-                        .foregroundColor(isFocused ? .brand.primary : .white)
-                        .lineLimit(2)
-                        .frame(height: 70, alignment: .top)
-                }
-            }
-        }
+				ZStack {
+					if isFocused {
+						Color.brand.primaryDarkDark.cornerRadius(18)
+					} else {
+						Color.brand.primaryDark.cornerRadius(18)
+					}
+					HStack(alignment: .top) {
+						VStack(alignment: .center) {
+							HStack(alignment: .center, spacing: 4) {
+								Text(Self.dateFormatter.string(from: video.createdAt))
+									.font(.caption)
+									.bold()
+									.foregroundColor(.brand.live)
+								Image(systemName: "calendar")
+									.resizable()
+									.aspectRatio(contentMode: .fit)
+									.frame(height: 18)
+									.foregroundColor(.brand.live)
+							}
+							Text(video.title)
+								.font(.caption)
+								.foregroundColor(isFocused ? .brand.primary : .white)
+								.lineLimit(2)
+								.frame(height: 70, alignment: .top)
+						}
+					}
+					.padding()
+				}
+			}
+			.padding()
+		}
         .focusable(true) {
             self.isFocused = $0
         }
+		.animation(Animation.bouncy) { contentView in
+			contentView.scaleEffect(isFocused ? 1.05 : 1.0)
+		}
     }
 }
 

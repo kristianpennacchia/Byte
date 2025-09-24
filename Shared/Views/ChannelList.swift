@@ -37,7 +37,7 @@ struct ChannelList: View {
                     LazyVGrid(columns: columns) {
                         ForEach(items, id: \.channelId) { channel in
                             ChannelView(channel: channel)
-                                .buttonWrap {
+                                .onTapGesture {
                                     channelViewModel.channel = channel
                                     showChannel = true
                                 }

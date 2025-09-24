@@ -22,7 +22,6 @@ struct StreamList: View {
 
     @State private var streams = [StreamStore.UniqueStream]()
     @State private var selectedStreams = [any Streamable]()
-    @State private var showStreamMenu = false
     @State private var showChannel = false
     @State private var showVideoPlayer = false
     @State private var isRefreshing = false
@@ -51,18 +50,26 @@ struct StreamList: View {
 							let multiSelectIndex = selectedStreams.firstIndex(where: { equalsStreamable(lhs: $0, rhs: stream) })
                             StreamView(stream: stream, multiSelectIndex: multiSelectIndex)
                                 .navigationBarTitle(store.fetchType.navBarTitle)
-                                .buttonWrap {
-                                    if selectedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }) == false {
-                                        selectedStreams.append(stream)
-                                    }
+								.onTapGesture {
+									if selectedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }) == false {
+										selectedStreams.append(stream)
+									}
 
-                                    streamViewModel.streams = selectedStreams
-                                    streamViewModel.stream = stream
-                                    showVideoPlayer = true
-                                } longPress: {
-                                    streamViewModel.stream = stream
-                                    showStreamMenu = true
-                                }
+									streamViewModel.streams = selectedStreams
+									streamViewModel.stream = stream
+									showVideoPlayer = true
+								}
+								.contextMenu {
+									if let s = stream as? Stream {
+										Button(spoilerFilter.isSpoiler(gameID: s.gameId) ? "Show Game Thumbnail" : "Hide Game Thumbnail") {
+											spoilerFilter.toggle(gameID: s.gameId)
+										}
+									}
+
+									Button("View \(stream.displayName)") {
+										showChannel = true
+									}
+								}
                                 .onPlayPauseCommand {
                                     // Multi-select streams.
                                     if let index = selectedStreams.firstIndex(where: { equalsStreamable(lhs: $0, rhs: stream) }) {
@@ -102,29 +109,6 @@ struct StreamList: View {
             if store.isStale {
                 refresh()
             }
-        }
-        .actionSheet(isPresented: $showStreamMenu) {
-            var buttons = [ActionSheet.Button]()
-
-            if let stream = streamViewModel.stream as? Stream {
-                buttons.append(
-                    .default(Text(spoilerFilter.isSpoiler(gameID: stream.gameId) ? "Show Game Thumbnail" : "Hide Game Thumbnail")) {
-                        spoilerFilter.toggle(gameID: stream.gameId)
-                    }
-                )
-            }
-
-            if let stream = streamViewModel.stream {
-                buttons.append(
-                    .default(Text("View \(stream.displayName)")) {
-                        showChannel = true
-                    }
-                )
-            }
-
-            buttons.append(.cancel())
-
-            return ActionSheet(title: Text(""), message: nil, buttons: buttons)
         }
         .fullScreenCover(
             isPresented: $showVideoPlayer,
