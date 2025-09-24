@@ -67,6 +67,7 @@ struct StreamList: View {
 									}
 
 									Button("View \(stream.displayName)") {
+										streamViewModel.stream = stream
 										showChannel = true
 									}
 								}
