@@ -32,11 +32,6 @@ struct VideoList: View {
                     .frame(alignment: .center)
             } else {
                 ScrollView {
-                    if items.isEmpty == false {
-                        Refresh(isAnimating: $isRefreshing, action: refresh)
-                            .padding(.bottom, 8)
-                    }
-
                     let columns = Array(repeating: GridItem(.flexible()), count: 4)
                     LazyVGrid(columns: columns) {
                         ForEach(items, id: \.videoId) { video in

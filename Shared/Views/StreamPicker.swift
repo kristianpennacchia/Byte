@@ -23,10 +23,6 @@ struct StreamPicker: View {
         ZStack {
             ZStack {
                 ScrollView {
-                    if streams.isEmpty == false {
-                        Refresh(isAnimating: $isRefreshing, action: refresh)
-                    }
-
                     let columns = Array(repeating: GridItem(.flexible()), count: 4)
                     LazyVGrid(columns: columns) {
                         ForEach(streams) { uniqueItem in
