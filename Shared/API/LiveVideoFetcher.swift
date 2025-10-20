@@ -307,6 +307,14 @@ private extension LiveVideoFetcher {
 		if let webAccessToken = await twitchAPI!.webAccessToken {
 			let authorization = TwitchAPI.Base.auth.authorizationHeader(accessToken: webAccessToken)
 			request.setValue(authorization, forHTTPHeaderField: "Authorization")
+		} else if let accessToken = await twitchAPI!.accessToken {
+			let authorization: String
+			if let tokenType = await twitchAPI!.tokenType {
+				authorization = "\(tokenType) \(accessToken)"
+			} else {
+				authorization = TwitchAPI.Base.helix.authorizationHeader(accessToken: accessToken)
+			}
+			request.setValue(authorization, forHTTPHeaderField: "Authorization")
 		}
 
 		let data = try await session.data(for: request).0

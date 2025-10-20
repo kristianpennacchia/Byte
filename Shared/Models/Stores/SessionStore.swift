@@ -136,6 +136,7 @@ final class SessionStore: ObservableObject {
 		twitchAPI?.webAccessToken = nil
 		twitchAPI?.accessToken = nil
 		twitchAPI?.refreshToken = nil
+		twitchAPI?.tokenType = nil
 		twitchUser = nil
 		twitchAuthError = APIError.noAuth
     }

@@ -47,6 +47,11 @@ final class TwitchAPI: ObservableObject {
             keychain[KeychainKey.refreshToken] = refreshToken
         }
     }
+	var tokenType: String? {
+        didSet {
+            keychain[KeychainKey.tokenType] = tokenType
+        }
+    }
 
 	static func setup(authentication: Authentication, webAccessToken: String?, accessToken: String?, refreshToken: String? = nil) {
 		shared = TwitchAPI(authentication: authentication, webAccessToken: webAccessToken, accessToken: accessToken, refreshToken: refreshToken)
@@ -157,6 +162,7 @@ extension TwitchAPI {
 
 							accessToken = userAuth.accessToken
 							refreshToken = userAuth.refreshToken ?? refreshToken
+							tokenType = userAuth.tokenType
 
 							// Get user data.
 							let person = try await getAuthenticatedPerson()
@@ -207,6 +213,7 @@ extension TwitchAPI {
 			let userAuth = try await executeUnwrapped(method: .post, base: .auth, endpoint: "token", query: query, decoding: TwitchUserAuth.self)
 			accessToken = userAuth.accessToken
 			self.refreshToken = userAuth.refreshToken ?? refreshToken
+			tokenType = userAuth.tokenType
 
             let users = try await getAuthenticatedPerson()
             if let user = users.data.first {
@@ -218,6 +225,7 @@ extension TwitchAPI {
             // Refreshing user access token failed, which likely means the refresh token is no longer valid.
 			self.accessToken = nil
             self.refreshToken = nil
+            self.tokenType = nil
             throw error
         }
     }
