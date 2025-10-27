@@ -45,9 +45,8 @@ struct StreamPicker: View {
             }
         }
         .onAppear {
-            if store.isStale {
-                refresh()
-            }
+			// Always refresh here.
+			refresh()
         }
         .padding(30)
         .background(VisualEffectView(effect: UIBlurEffect(style: .dark)))
