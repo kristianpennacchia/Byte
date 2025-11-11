@@ -276,25 +276,37 @@ private extension LiveVideoFetcher {
 
     func tokenAPI(video: VideoStream) -> URLRequest {
         let url = URL(string: "https://gql.twitch.tv/gql")!
+		let gqlQuery = """
+		query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!, $platform: String!) {
+		  streamPlaybackAccessToken(channelName: $login, params: {platform: $platform, playerBackend: "mediaplayer", playerType: $playerType}) @include(if: $isLive) {
+			value
+			signature
+			authorization { isForbidden forbiddenReasonCode }
+			__typename
+		  }
+		  videoPlaybackAccessToken(id: $vodID, params: {platform: $platform, playerBackend: "mediaplayer", playerType: $playerType}) @include(if: $isVod) {
+			value
+			signature
+			__typename
+		  }
+		}
+		"""
         let body: [String: Any] = [
-            "operationName": "PlaybackAccessToken",
-            "extensions": [
-                "persistedQuery": [
-                    "version": 1,
-                    "sha256Hash": "0828119ded1c13477966434e15800ff57ddacf13ba1911c129dc2200705b0712",
-                ],
-            ],
+			"operationName": "PlaybackAccessToken_Template",
+			"query": gqlQuery,
             "variables": [
                 "isLive": video.isLive,
                 "login": video.channel ?? "",
                 "isVod": video.isLive == false,
                 "vodID": video.vodID ?? "",
-                "playerType": "web",
+				"playerType": "site",
+				"platform": "web",
             ],
         ]
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
+		request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue(clientID, forHTTPHeaderField: "Client-ID")
         request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
 
