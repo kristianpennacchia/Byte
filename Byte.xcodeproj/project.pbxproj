@@ -93,6 +93,9 @@
 		C129B711232B8F5900FDDA99 /* M3U8Meta.swift in Sources */ = {isa = PBXBuildFile; fileRef = C129B710232B8F5900FDDA99 /* M3U8Meta.swift */; };
 		C129B712232B8F5900FDDA99 /* M3U8Meta.swift in Sources */ = {isa = PBXBuildFile; fileRef = C129B710232B8F5900FDDA99 /* M3U8Meta.swift */; };
 		C129B713232B8F5900FDDA99 /* M3U8Meta.swift in Sources */ = {isa = PBXBuildFile; fileRef = C129B710232B8F5900FDDA99 /* M3U8Meta.swift */; };
+		C129CDE92FBF27DF0037853F /* StreamControlsOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C129CDE82FBF27DD0037853F /* StreamControlsOverlay.swift */; };
+		C129CDEA2FBF27DF0037853F /* StreamControlsOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C129CDE82FBF27DD0037853F /* StreamControlsOverlay.swift */; };
+		C129CDEB2FBF27DF0037853F /* StreamControlsOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C129CDE82FBF27DD0037853F /* StreamControlsOverlay.swift */; };
 		C12CF3E22E6EF0C6008C5DC9 /* TwitchOAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CF3E12E6EF0C6008C5DC9 /* TwitchOAuth.swift */; };
 		C12CF3E32E6EF0C6008C5DC9 /* TwitchOAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CF3E12E6EF0C6008C5DC9 /* TwitchOAuth.swift */; };
 		C12CF3E42E6EF0C6008C5DC9 /* TwitchOAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C12CF3E12E6EF0C6008C5DC9 /* TwitchOAuth.swift */; };
@@ -409,6 +412,7 @@
 		C12695AD28E5D22E00422F43 /* YoutubeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeError.swift; sourceTree = "<group>"; };
 		C129B70C232B88C500FDDA99 /* M3U8.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = M3U8.swift; sourceTree = "<group>"; };
 		C129B710232B8F5900FDDA99 /* M3U8Meta.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = M3U8Meta.swift; sourceTree = "<group>"; };
+		C129CDE82FBF27DD0037853F /* StreamControlsOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamControlsOverlay.swift; sourceTree = "<group>"; };
 		C12CF3E12E6EF0C6008C5DC9 /* TwitchOAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitchOAuth.swift; sourceTree = "<group>"; };
 		C12CF3E52E6EF11B008C5DC9 /* OAuthable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthable.swift; sourceTree = "<group>"; };
 		C12CF3E92E6F0156008C5DC9 /* TwitchAuthError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitchAuthError.swift; sourceTree = "<group>"; };
@@ -709,6 +713,7 @@
 		C1AE331B231E8A6600FE0F99 /* Supporting Views */ = {
 			isa = PBXGroup;
 			children = (
+				C129CDE82FBF27DD0037853F /* StreamControlsOverlay.swift */,
 				C1A75360249B8ED1005FB190 /* ActivityIndicator.swift */,
 				C1FB01DB2317D8A900130981 /* Avatar.swift */,
 				C1B5AC69232E299F001A502F /* ChannelView.swift */,
@@ -1269,6 +1274,7 @@
 				C1B2993B28E9526B00C0D6A8 /* YoutubeChannel.swift in Sources */,
 				C17766F226C66DEA0085E848 /* Functions.swift in Sources */,
 				C16A7E0228E7FE0600509FFF /* HeartbeatActivityIndicator.swift in Sources */,
+				C129CDEB2FBF27DF0037853F /* StreamControlsOverlay.swift in Sources */,
 				C1C103EB232DCD8000267736 /* OnSelect.iOS.swift in Sources */,
 				C1FEBCF728E4780C00903D16 /* QRCode.swift in Sources */,
 				C17766EE26C65EA80085E848 /* VideoList.swift in Sources */,
@@ -1368,6 +1374,7 @@
 				C1FEBCF828E4780C00903D16 /* QRCode.swift in Sources */,
 				C17A83F128EFF5AC00FCD74F /* Channelable.swift in Sources */,
 				C17766EB26C65A610085E848 /* VideoView.swift in Sources */,
+				C129CDE92FBF27DF0037853F /* StreamControlsOverlay.swift in Sources */,
 				C16A7E0F28E8199900509FFF /* YoutubeBroadcast.swift in Sources */,
 				C187790023195C23008CA61E /* CovertArtSize.swift in Sources */,
 				C1020DC62317EB0800FBFE16 /* Avatar.swift in Sources */,
@@ -1474,6 +1481,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C129CDEA2FBF27DF0037853F /* StreamControlsOverlay.swift in Sources */,
 				C1B5AC6A232E299F001A502F /* ChannelView.swift in Sources */,
 				C129B70D232B88C500FDDA99 /* M3U8.swift in Sources */,
 				C14BCD4E2317FC8900F33A48 /* Stream.swift in Sources */,

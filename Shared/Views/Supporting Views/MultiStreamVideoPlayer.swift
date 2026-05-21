@@ -20,8 +20,9 @@ struct MultiStreamVideoPlayer: View {
 
     @StateObject private var streamViewModel = StreamViewModel()
 
-    @State private var showMenu = false
+    @State private var showControlsOverlay = false
     @State private var showStreamPicker = false
+	@State private var didDismissControlsOverlayWithExit = false
 
     @ObservedObject var store: StreamStore
     @State var streams: [any Streamable]
@@ -43,36 +44,75 @@ struct MultiStreamVideoPlayer: View {
 
 			LazyVGrid(columns: columns, alignment: .center, spacing: 0) {
 				ForEach(streams, id: \.id) { stream in
-					StreamVideoPlayer(
-						videoMode: .live(stream),
-						muteNotFocused: shouldMuteWhenNotInFocus(stream: stream),
-						isAudioOnly: audioOnlyStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) }),
-						isFlipped: flippedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
-					)
-					.onPlayToEndTime {
-						remove(stream: stream)
-					}
-					.onPlayerFocused { player in
-						focusedPlayer = player
-					}
-					.onStreamError { _ in
-						remove(stream: stream)
-					}
-					.onReceiveVideoQuality { videoMode, quality in
-						if case .live(let streamable) = videoMode {
-							streamViewModel.streamQuality[streamable.id] = quality
+					ZStack {
+						let isAudioOnly = audioOnlyStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
+						let isFlipped = flippedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
+
+						StreamVideoPlayer(
+							videoMode: .live(stream),
+							muteNotFocused: shouldMuteWhenNotInFocus(stream: stream),
+							isAudioOnly: isAudioOnly,
+							isFlipped: isFlipped
+						)
+						.onPlayToEndTime {
+							remove(stream: stream)
 						}
-					}
-					.equatable()
-					.aspectRatio(contentMode: .fit)
-					.onTapGesture {
-						streamViewModel.selectedStream = stream
-						showMenu = true
+						.onPlayerFocused { player in
+							focusedPlayer = player
+							if showControlsOverlay == false {
+								streamViewModel.selectedStream = stream
+							}
+						}
+						.onStreamError { _ in
+							remove(stream: stream)
+						}
+						.onReceiveVideoQuality { videoMode, quality in
+							if case .live(let streamable) = videoMode {
+								streamViewModel.streamQuality[streamable.id] = quality
+							}
+						}
+						.equatable()
+						.aspectRatio(contentMode: .fit)
+						.onTapGesture {
+							showControls(for: stream)
+						}
+
+						if showControlsOverlay, isSelected(stream) {
+							StreamControlsOverlay(
+								stream: stream,
+								quality: streamViewModel.streamQuality[stream.id],
+								isAudioOnly: isAudioOnly,
+								isFlipped: isFlipped,
+								addStream: {
+									hideControlsOverlay()
+									showStreamPicker = true
+								},
+								toggleVideo: {
+									toggleShowingVideo(for: stream)
+								},
+								toggleFlip: {
+									toggleFlippingVideo(for: stream)
+								},
+								removeStream: {
+									hideControlsOverlay()
+									remove(stream: stream)
+								},
+								dismiss: hideControlsOverlayFromExit
+							)
+							.transition(.opacity.combined(with: .scale(scale: 0.98)))
+						}
 					}
 				}
 			}
-        }
+
+			ExitCommandInterceptor(
+				isActive: showControlsOverlay,
+				onExit: hideControlsOverlayFromExit
+			)
+			.frame(width: 1, height: 1)
+		}
         .ignoresSafeArea()
+		.interactiveDismissDisabled(true)
 		.background(Color.black)
         .onAppear {
             UIApplication.shared.isIdleTimerDisabled = true
@@ -81,35 +121,13 @@ struct MultiStreamVideoPlayer: View {
             UIApplication.shared.isIdleTimerDisabled = false
         }
         .onExitCommand {
-            isPresented = false
-        }
-        .actionSheet(isPresented: $showMenu) {
-            let stream = streamViewModel.selectedStream!
-            let isAudioOnly = audioOnlyStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
-            let isFlipped = flippedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
-
-			let title: String
-			if let quality = streamViewModel.streamQuality[stream.id] {
-				title = "\(stream.displayName)\n\(stream.duration)\n\(quality)"
+			if showControlsOverlay {
+				hideControlsOverlay()
+			} else if didDismissControlsOverlayWithExit {
+				didDismissControlsOverlayWithExit = false
 			} else {
-				title = "\(stream.displayName)\n\(stream.duration)"
+				isPresented = false
 			}
-
-            return ActionSheet(title: Text(title), message: Text(stream.title), buttons: [
-                .default(Text("Add New Stream")) {
-                    showStreamPicker = true
-                },
-                .default(Text(isAudioOnly ? "Show Video" : "Hide Video")) {
-                    toggleShowingVideo(for: stream)
-                },
-                .default(Text(isFlipped ? "Unflip" : "Flip")) {
-                    toggleFlippingVideo(for: stream)
-                },
-                .destructive(Text("Remove Stream")) {
-                    remove(stream: stream)
-                },
-                .cancel()
-            ])
         }
         .fullScreenCover(
             isPresented: $showStreamPicker,
@@ -126,10 +144,36 @@ struct MultiStreamVideoPlayer: View {
 }
 
 private extension MultiStreamVideoPlayer {
+	func showControls(for stream: any Streamable) {
+		streamViewModel.selectedStream = stream
+		showControlsOverlay = true
+	}
+
+	func hideControlsOverlay() {
+		showControlsOverlay = false
+	}
+
+	func hideControlsOverlayFromExit() {
+		showControlsOverlay = false
+		didDismissControlsOverlayWithExit = true
+
+		DispatchQueue.main.async {
+			didDismissControlsOverlayWithExit = false
+		}
+	}
+
+	func isSelected(_ stream: any Streamable) -> Bool {
+		guard let selectedStream = streamViewModel.selectedStream else { return false }
+		return equalsStreamable(lhs: selectedStream, rhs: stream)
+	}
+
     func remove(stream: any Streamable) {
         guard let index = streams.firstIndex(where: {equalsStreamable(lhs: $0, rhs: stream) }) else { return }
 
         streams.remove(at: index)
+		if isSelected(stream) {
+			streamViewModel.selectedStream = nil
+		}
 
         if streams.isEmpty {
             // Dismiss
@@ -154,10 +198,79 @@ private extension MultiStreamVideoPlayer {
     }
 
     func shouldMuteWhenNotInFocus(stream: any Streamable) -> Bool {
-        if showMenu || showStreamPicker {
+        if showControlsOverlay || showStreamPicker {
             return streamViewModel.selectedStream != nil && equalsStreamable(lhs: streamViewModel.selectedStream!, rhs: stream) == false
         } else {
             return streams.count > 1
         }
     }
+}
+
+private struct ExitCommandInterceptor: UIViewControllerRepresentable {
+	let isActive: Bool
+	let onExit: () -> Void
+
+	func makeUIViewController(context: Context) -> ExitCommandInterceptorViewController {
+		let viewController = ExitCommandInterceptorViewController()
+		viewController.onExit = onExit
+		return viewController
+	}
+
+	func updateUIViewController(_ viewController: ExitCommandInterceptorViewController, context: Context) {
+		viewController.isActive = isActive
+		viewController.onExit = onExit
+		viewController.updateResponderState()
+	}
+}
+
+private final class ExitCommandInterceptorViewController: UIViewController {
+	var isActive = false
+	var onExit: (() -> Void)?
+
+	override var canBecomeFirstResponder: Bool {
+		isActive
+	}
+
+	override var keyCommands: [UIKeyCommand]? {
+		guard isActive else { return nil }
+
+		return [
+			UIKeyCommand(
+				input: UIKeyCommand.inputEscape,
+				modifierFlags: [],
+				action: #selector(handleExitCommand)
+			)
+		]
+	}
+
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		updateResponderState()
+	}
+
+	func updateResponderState() {
+		DispatchQueue.main.async { [weak self] in
+			guard let self else { return }
+
+			if isActive {
+				becomeFirstResponder()
+			} else {
+				resignFirstResponder()
+			}
+		}
+	}
+
+	override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+		if isActive, presses.contains(where: { $0.type == .menu }) {
+			onExit?()
+			return
+		}
+
+		super.pressesBegan(presses, with: event)
+	}
+
+	@objc private func handleExitCommand() {
+		guard isActive else { return }
+		onExit?()
+	}
 }
