@@ -11,28 +11,31 @@ import AVKit
 
 struct MultiStreamVideoPlayer: View {
 	@MainActor
-    private class StreamViewModel: ObservableObject {
-        @Published var selectedStream: (any Streamable)?
+	private class StreamViewModel: ObservableObject {
+		@Published var selectedStream: (any Streamable)?
 		@Published var streamQuality = [String: String]()
-    }
+	}
 
-    @EnvironmentObject private var spoilerFilter: SpoilerFilter
+	@EnvironmentObject private var spoilerFilter: SpoilerFilter
+	@Environment(\.resetFocus) private var resetFocus
 
-    @StateObject private var streamViewModel = StreamViewModel()
+	@StateObject private var streamViewModel = StreamViewModel()
 
-    @State private var showControlsOverlay = false
-    @State private var showStreamPicker = false
+	@State private var showControlsOverlay = false
+	@State private var showStreamPicker = false
 	@State private var didDismissControlsOverlayWithExit = false
+	@State private var restoringSelectedStreamID: String?
 
-    @ObservedObject var store: StreamStore
-    @State var streams: [any Streamable]
-    @State var audioOnlyStreams = [any Streamable]()
-    @State var flippedStreams = [any Streamable]()
-    @State var focusedPlayer: AVPlayer?
-    @Binding var isPresented: Bool
+	@ObservedObject var store: StreamStore
+	@State var streams: [any Streamable]
+	@State var audioOnlyStreams = [any Streamable]()
+	@State var flippedStreams = [any Streamable]()
+	@State var focusedPlayer: AVPlayer?
+	@Binding var isPresented: Bool
+	@Namespace private var streamFocusNamespace
 
-    var body: some View {
-        ZStack {
+	var body: some View {
+		ZStack {
 			PlayerLayer(player: focusedPlayer, videoGravity: .resizeAspectFill)
 			VisualEffectView(effect: UIBlurEffect(style: .dark))
 
@@ -43,26 +46,37 @@ struct MultiStreamVideoPlayer: View {
 			)
 
 			LazyVGrid(columns: columns, alignment: .center, spacing: 0) {
-				ForEach(streams, id: \.id) { stream in
-					ZStack {
-						let isAudioOnly = audioOnlyStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
-						let isFlipped = flippedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
+					ForEach(streams, id: \.id) { stream in
+						ZStack {
+							let isAudioOnly = audioOnlyStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
+							let isFlipped = flippedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
+							let isRestoreTarget = restoringSelectedStreamID == stream.id
 
-						StreamVideoPlayer(
-							videoMode: .live(stream),
+							StreamVideoPlayer(
+								videoMode: .live(stream),
 							muteNotFocused: shouldMuteWhenNotInFocus(stream: stream),
+							hasSelectedAudioStream: streamViewModel.selectedStream != nil,
+							isSelectedForAudio: isSelected(stream),
 							isAudioOnly: isAudioOnly,
 							isFlipped: isFlipped
 						)
 						.onPlayToEndTime {
 							remove(stream: stream)
 						}
-						.onPlayerFocused { player in
-							focusedPlayer = player
-							if showControlsOverlay == false {
-								streamViewModel.selectedStream = stream
+							.onPlayerFocused { player in
+								focusedPlayer = player
+								if showControlsOverlay == false {
+									if let restoringSelectedStreamID {
+										if restoringSelectedStreamID == stream.id {
+											streamViewModel.selectedStream = stream
+											self.restoringSelectedStreamID = nil
+										}
+										return
+									}
+
+									streamViewModel.selectedStream = stream
+								}
 							}
-						}
 						.onStreamError { _ in
 							remove(stream: stream)
 						}
@@ -73,6 +87,7 @@ struct MultiStreamVideoPlayer: View {
 						}
 						.equatable()
 						.aspectRatio(contentMode: .fit)
+						.prefersDefaultFocus(isRestoreTarget || isSelected(stream), in: streamFocusNamespace)
 						.onTapGesture {
 							showControls(for: stream)
 						}
@@ -104,6 +119,7 @@ struct MultiStreamVideoPlayer: View {
 					}
 				}
 			}
+			.focusScope(streamFocusNamespace)
 
 			ExitCommandInterceptor(
 				isActive: showControlsOverlay,
@@ -111,16 +127,16 @@ struct MultiStreamVideoPlayer: View {
 			)
 			.frame(width: 1, height: 1)
 		}
-        .ignoresSafeArea()
+		.ignoresSafeArea()
 		.interactiveDismissDisabled(true)
 		.background(Color.black)
-        .onAppear {
-            UIApplication.shared.isIdleTimerDisabled = true
-        }
-        .onDisappear {
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
-        .onExitCommand {
+		.onAppear {
+			UIApplication.shared.isIdleTimerDisabled = true
+		}
+		.onDisappear {
+			UIApplication.shared.isIdleTimerDisabled = false
+		}
+		.onExitCommand {
 			if showControlsOverlay {
 				hideControlsOverlay()
 			} else if didDismissControlsOverlayWithExit {
@@ -128,37 +144,53 @@ struct MultiStreamVideoPlayer: View {
 			} else {
 				isPresented = false
 			}
-        }
-        .fullScreenCover(
-            isPresented: $showStreamPicker,
-            onDismiss: {
-            },
-            content: {
-                StreamPicker(store: store) { stream in
-                    showStreamPicker = false
-                    streams.append(stream)
-                }
-            }
-        )
-    }
+		}
+		.fullScreenCover(
+			isPresented: $showStreamPicker,
+			onDismiss: {
+			},
+			content: {
+				StreamPicker(store: store) { stream in
+					showStreamPicker = false
+					streams.append(stream)
+				}
+			}
+		)
+	}
 }
-
 private extension MultiStreamVideoPlayer {
 	func showControls(for stream: any Streamable) {
+		restoringSelectedStreamID = nil
 		streamViewModel.selectedStream = stream
 		showControlsOverlay = true
 	}
 
 	func hideControlsOverlay() {
 		showControlsOverlay = false
+		restoreSelectedStreamFocus()
 	}
 
 	func hideControlsOverlayFromExit() {
 		showControlsOverlay = false
 		didDismissControlsOverlayWithExit = true
+		restoreSelectedStreamFocus()
 
 		DispatchQueue.main.async {
 			didDismissControlsOverlayWithExit = false
+		}
+	}
+
+	func restoreSelectedStreamFocus() {
+		restoringSelectedStreamID = streamViewModel.selectedStream?.id
+
+		DispatchQueue.main.async {
+			resetFocus(in: streamFocusNamespace)
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+				resetFocus(in: streamFocusNamespace)
+				DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+					restoringSelectedStreamID = nil
+				}
+			}
 		}
 	}
 
@@ -167,43 +199,39 @@ private extension MultiStreamVideoPlayer {
 		return equalsStreamable(lhs: selectedStream, rhs: stream)
 	}
 
-    func remove(stream: any Streamable) {
-        guard let index = streams.firstIndex(where: {equalsStreamable(lhs: $0, rhs: stream) }) else { return }
+	func remove(stream: any Streamable) {
+		guard let index = streams.firstIndex(where: {equalsStreamable(lhs: $0, rhs: stream) }) else { return }
 
-        streams.remove(at: index)
+		streams.remove(at: index)
 		if isSelected(stream) {
 			streamViewModel.selectedStream = nil
 		}
 
-        if streams.isEmpty {
-            // Dismiss
-            isPresented = false
-        }
-    }
+		if streams.isEmpty {
+			// Dismiss
+			isPresented = false
+		}
+	}
 
-    func toggleShowingVideo(for stream: any Streamable) {
-        if let index = audioOnlyStreams.firstIndex(where: { equalsStreamable(lhs: $0, rhs: stream) }) {
-            audioOnlyStreams.remove(at: index)
-        } else {
-            audioOnlyStreams.append(stream)
-        }
-    }
+	func toggleShowingVideo(for stream: any Streamable) {
+		if let index = audioOnlyStreams.firstIndex(where: { equalsStreamable(lhs: $0, rhs: stream) }) {
+			audioOnlyStreams.remove(at: index)
+		} else {
+			audioOnlyStreams.append(stream)
+		}
+	}
 
-    func toggleFlippingVideo(for stream: any Streamable) {
-        if let index = flippedStreams.firstIndex(where: { equalsStreamable(lhs: $0, rhs: stream) }) {
-            flippedStreams.remove(at: index)
-        } else {
-            flippedStreams.append(stream)
-        }
-    }
+	func toggleFlippingVideo(for stream: any Streamable) {
+		if let index = flippedStreams.firstIndex(where: { equalsStreamable(lhs: $0, rhs: stream) }) {
+			flippedStreams.remove(at: index)
+		} else {
+			flippedStreams.append(stream)
+		}
+	}
 
-    func shouldMuteWhenNotInFocus(stream: any Streamable) -> Bool {
-        if showControlsOverlay || showStreamPicker {
-            return streamViewModel.selectedStream != nil && equalsStreamable(lhs: streamViewModel.selectedStream!, rhs: stream) == false
-        } else {
-            return streams.count > 1
-        }
-    }
+	func shouldMuteWhenNotInFocus(stream: any Streamable) -> Bool {
+		return streams.count > 1
+	}
 }
 
 private struct ExitCommandInterceptor: UIViewControllerRepresentable {
