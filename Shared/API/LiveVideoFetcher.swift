@@ -80,7 +80,7 @@ class LiveVideoFetcher: NSObject {
     }
 
     enum VideoDataResponse {
-        case playlist(M3U8)
+		case playlist(M3U8, manifestUrl: URL)
         case formats([YoutubePlayerResponse.StreamingData.Format])
         case ytdlpFormats([YtdlpFormat])
         case urls([URL])
@@ -130,9 +130,10 @@ extension LiveVideoFetcher {
 
                     let playerResponse = try JSONDecoder().decode(YoutubePlayerResponse.self, from: playerResponseJSONData)
 
-                    let m3u8Data = try await session.data(from: URL(string: playerResponse.streamingData.hlsManifestUrl!)!).0
+					let manifestUrl = URL(string: playerResponse.streamingData.hlsManifestUrl!)!
+                    let m3u8Data = try await session.data(from: manifestUrl).0
                     let m3u8 = try M3U8(data: m3u8Data)
-                    return .playlist(m3u8)
+                    return .playlist(m3u8, manifestUrl: manifestUrl)
                 } catch let error as DecodingError {
 					Logger.streaming.error("Fetching video page for video ID '\(stream.id)' failed. \(LocalizedDecodingError(decodingError: error).localizedDescription)")
                 } catch {
@@ -354,7 +355,7 @@ private extension LiveVideoFetcher {
 
             do {
                 let m3u8 = try M3U8(data: data)
-                return .playlist(m3u8)
+				return .playlist(m3u8, manifestUrl: url)
             } catch {
                 if let string = String(data: data, encoding: .utf8) {
 					Logger.streaming.error("Failed parsing M3U8 data. \(string)")

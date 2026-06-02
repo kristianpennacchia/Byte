@@ -39,7 +39,7 @@ struct StreamVideoPlayer: View {
 	private var onPlayToEndTime: (() -> Void)?
 	private var onPlayerFocused: ((AVPlayer) -> Void)?
 	private var onStreamError: ((Error?) -> Void)?
-	private var onReceiveVideoQuality: ((_ videoMode: LiveVideoFetcher.VideoMode, _ quality: String?) -> Void)?
+	private var onReceiveVideoQuality: ((_ videoMode: LiveVideoFetcher.VideoMode, _ qualities: [StreamQuality]) -> Void)?
 
 	let videoMode: LiveVideoFetcher.VideoMode
 	let muteNotFocused: Bool
@@ -47,14 +47,16 @@ struct StreamVideoPlayer: View {
 	let isSelectedForAudio: Bool
 	let isAudioOnly: Bool
 	let isFlipped: Bool
+	let streamQuality: StreamQuality?
 
-	init(videoMode: LiveVideoFetcher.VideoMode, muteNotFocused: Bool, hasSelectedAudioStream: Bool = false, isSelectedForAudio: Bool = false, isAudioOnly: Bool, isFlipped: Bool) {
+	init(videoMode: LiveVideoFetcher.VideoMode, muteNotFocused: Bool, hasSelectedAudioStream: Bool = false, isSelectedForAudio: Bool = false, isAudioOnly: Bool, isFlipped: Bool, streamQuality: StreamQuality?) {
 		self.videoMode = videoMode
 		self.muteNotFocused = muteNotFocused
 		self.hasSelectedAudioStream = hasSelectedAudioStream
 		self.isSelectedForAudio = isSelectedForAudio
 		self.isAudioOnly = isAudioOnly
 		self.isFlipped = isFlipped
+		self.streamQuality = streamQuality
 	}
 
 	var body: some View {
@@ -63,11 +65,6 @@ struct StreamVideoPlayer: View {
 		}
 
 		let fetcher = LiveVideoFetcher(twitchAPI: sessionStore.twitchAPI, videoMode: videoMode)
-
-		// If this was already been configured but a variable has been changed, let us immediately re-initiate the stream so that we can apply the new variables.
-		if playerViewModel.isConfigured {
-			initiateStream(fetcher: fetcher)
-		}
 
 		let disableSeeking: Bool
 		switch videoMode {
@@ -94,7 +91,7 @@ struct StreamVideoPlayer: View {
 		.focusable(disableSeeking)
 		.focused($isFocused)
 		.onAppear {
-			initiateStream(fetcher: fetcher)
+			initiateStream(fetcher: fetcher, force: false)
 		}
 		.onDisappear {
 			playerViewModel.player.pause()
@@ -121,6 +118,15 @@ struct StreamVideoPlayer: View {
 		}
 		.onChange(of: isSelectedForAudio) { _, _ in
 			updateMutedState()
+		}
+		.onChange(of: streamQuality) { _, newQuality in
+			guard let newQuality else { return }
+
+			let playingItem = PlayingItem.url(newQuality.url)
+			currentPlayingItem = playingItem
+
+			playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: playingItem))
+			playerViewModel.player.playImmediately(atRate: 1.0)
 		}
 		.onReceive(NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)) { output in
 			if let item = output.object as? AVPlayerItem, item == playerViewModel.player.currentItem {
@@ -168,27 +174,31 @@ private extension StreamVideoPlayer {
 		return item
 	}
 
-	func initiateStream(fetcher: LiveVideoFetcher) {
+	func initiateStream(fetcher: LiveVideoFetcher, force: Bool) {
 		// Continue if this stream has not already been configured, or one of the variables has changed.
-		guard playerViewModel.isConfigured == false else { return }
+		guard playerViewModel.isConfigured == false || force else { return }
 
 		Task { @MainActor in
 			do {
 				let videoResponse = try await fetcher.fetch()
 				let playingItem: PlayingItem
 				let automaticallyWaitsToMinimizeStalling: Bool
-				let videoQuality: String?
+				let streamQualities: [StreamQuality]
+				var selectedStreamQuality: StreamQuality?
 
 				switch videoResponse {
-				case .playlist(let playlist):
+				case .playlist(let playlist, let manifestUrl):
 					if playlist.meta.isEmpty, let urlString = playlist.rawURLs.last {
 						playingItem = .url(URL(string: urlString)!)
 						automaticallyWaitsToMinimizeStalling = true
-						videoQuality = nil
-					} else if let meta = playlist.meta.sorted(by: >).first {
-						playingItem = .url(URL(string: meta.url)!)
+						streamQualities = []
+					} else if playlist.meta.isEmpty == false {
+						streamQualities = playlist.meta.sorted(by: >).map { meta in
+							return StreamQuality(label: meta.name ?? meta.resolution ?? "Unknown (\(meta.bandwidth)", url: URL(string: meta.url)!, bandwidth: meta.bandwidth)
+						}
+						selectedStreamQuality = streamQualities.first { $0.id == streamQuality?.id } ?? streamQualities.first!
+						playingItem = .url(selectedStreamQuality!.url)
 						automaticallyWaitsToMinimizeStalling = true
-						videoQuality = meta.resolution
 					} else {
 						throw AppError(message: "Unable to get valid video URL.")
 					}
@@ -203,7 +213,8 @@ private extension StreamVideoPlayer {
 
 					playingItem = .url(format.url)
 					automaticallyWaitsToMinimizeStalling = false
-					videoQuality = format.quality
+					selectedStreamQuality = StreamQuality(label: format.quality, url: format.url, bandwidth: format.bitrate)
+					streamQualities = [selectedStreamQuality!]
 				case .ytdlpFormats(let formats):
 					if let avFormat = formats
 						.filter({ $0.ext == "mp4" && $0.vcodec.contains("avc1.") && $0.acodec.contains("mp4a.") })
@@ -212,7 +223,8 @@ private extension StreamVideoPlayer {
 					{
 						playingItem = .url(avFormat.url)
 						automaticallyWaitsToMinimizeStalling = false
-						videoQuality = avFormat.resolution
+						selectedStreamQuality = StreamQuality(label: avFormat.resolution ?? "Unknown (\(avFormat.filesize ?? 0))", url: avFormat.url, bandwidth: Int(avFormat.filesize ?? 0))
+						streamQualities = [selectedStreamQuality!]
 						Logger.streaming.debug("url = \(avFormat.url)")
 						break
 					}
@@ -238,7 +250,8 @@ private extension StreamVideoPlayer {
 
 						playingItem = .asset(mixAsset)
 						automaticallyWaitsToMinimizeStalling = true
-						videoQuality = video.resolution
+						selectedStreamQuality = StreamQuality(label: video.resolution ?? "Unknown (\(video.filesize ?? 0))", url: video.url, bandwidth: Int(video.filesize ?? 0))
+						streamQualities = [selectedStreamQuality!]
 					} else {
 						throw AppError(message: "Unable to get valid audio and video URLs.")
 					}
@@ -247,7 +260,8 @@ private extension StreamVideoPlayer {
 					if urls.isEmpty == false {
 						playingItem = .url(urls.first!)
 						automaticallyWaitsToMinimizeStalling = true
-						videoQuality = nil
+						selectedStreamQuality = nil
+						streamQualities = []
 					} else {
 						throw AppError(message: "Unable to get valid video URL.")
 					}
@@ -261,7 +275,7 @@ private extension StreamVideoPlayer {
 
 				updateMutedState()
 
-				onReceiveVideoQuality?(videoMode, videoQuality)
+				onReceiveVideoQuality?(videoMode, streamQualities)
 			} catch {
 				Logger.streaming.error("Failed fetching live video data. \(error.localizedDescription)")
 				self.error = error
@@ -290,7 +304,7 @@ extension StreamVideoPlayer {
 		return copy
 	}
 
-	func onReceiveVideoQuality(perform: @escaping (_ videoMode: LiveVideoFetcher.VideoMode, _ quality: String?) -> Void) -> Self {
+	func onReceiveVideoQuality(perform: @escaping (_ videoMode: LiveVideoFetcher.VideoMode, _ qualities: [StreamQuality]) -> Void) -> Self {
 		var copy = self
 		copy.onReceiveVideoQuality = perform
 		return copy
@@ -305,5 +319,6 @@ extension StreamVideoPlayer: Equatable {
 		&& lhs.isSelectedForAudio == rhs.isSelectedForAudio
 		&& lhs.isAudioOnly == rhs.isAudioOnly
 		&& lhs.isFlipped == rhs.isFlipped
+		&& lhs.streamQuality == rhs.streamQuality
 	}
 }

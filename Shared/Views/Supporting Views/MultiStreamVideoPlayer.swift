@@ -13,7 +13,8 @@ struct MultiStreamVideoPlayer: View {
 	@MainActor
 	private class StreamViewModel: ObservableObject {
 		@Published var selectedStream: (any Streamable)?
-		@Published var streamQuality = [String: String]()
+		@Published var selectedStreamQuality = [String: StreamQuality]()
+		@Published var streamQuality = [String: [StreamQuality]]()
 	}
 
 	@EnvironmentObject private var spoilerFilter: SpoilerFilter
@@ -46,43 +47,51 @@ struct MultiStreamVideoPlayer: View {
 			)
 
 			LazyVGrid(columns: columns, alignment: .center, spacing: 0) {
-					ForEach(streams, id: \.id) { stream in
-						ZStack {
-							let isAudioOnly = audioOnlyStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
-							let isFlipped = flippedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
-							let isRestoreTarget = restoringSelectedStreamID == stream.id
+				ForEach(streams, id: \.id) { stream in
+					ZStack {
+						let isAudioOnly = audioOnlyStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
+						let isFlipped = flippedStreams.contains(where: { equalsStreamable(lhs: $0, rhs: stream) })
+						let isRestoreTarget = restoringSelectedStreamID == stream.id
 
-							StreamVideoPlayer(
-								videoMode: .live(stream),
+						StreamVideoPlayer(
+							videoMode: .live(stream),
 							muteNotFocused: shouldMuteWhenNotInFocus(stream: stream),
 							hasSelectedAudioStream: streamViewModel.selectedStream != nil,
 							isSelectedForAudio: isSelected(stream),
 							isAudioOnly: isAudioOnly,
-							isFlipped: isFlipped
+							isFlipped: isFlipped,
+							streamQuality: streamViewModel.selectedStreamQuality[stream.id]
 						)
 						.onPlayToEndTime {
 							remove(stream: stream)
 						}
-							.onPlayerFocused { player in
-								focusedPlayer = player
-								if showControlsOverlay == false {
-									if let restoringSelectedStreamID {
-										if restoringSelectedStreamID == stream.id {
-											streamViewModel.selectedStream = stream
-											self.restoringSelectedStreamID = nil
-										}
-										return
+						.onPlayerFocused { player in
+							focusedPlayer = player
+							if showControlsOverlay == false {
+								if let restoringSelectedStreamID {
+									if restoringSelectedStreamID == stream.id {
+										streamViewModel.selectedStream = stream
+										self.restoringSelectedStreamID = nil
 									}
-
-									streamViewModel.selectedStream = stream
+									return
 								}
+
+								streamViewModel.selectedStream = stream
 							}
+						}
 						.onStreamError { _ in
 							remove(stream: stream)
 						}
-						.onReceiveVideoQuality { videoMode, quality in
+						.onReceiveVideoQuality { videoMode, qualities in
 							if case .live(let streamable) = videoMode {
-								streamViewModel.streamQuality[streamable.id] = quality
+								if streamViewModel.streamQuality[streamable.id] != qualities {
+									streamViewModel.streamQuality[streamable.id] = qualities
+								}
+
+								// Set default selected quality if current quality does not exist in the qualities array.
+								if (qualities.contains(where: { $0.id == streamViewModel.selectedStreamQuality[stream.id]?.id }) == false) {
+									streamViewModel.selectedStreamQuality[stream.id] = qualities.first
+								}
 							}
 						}
 						.equatable()
@@ -95,7 +104,8 @@ struct MultiStreamVideoPlayer: View {
 						if showControlsOverlay, isSelected(stream) {
 							StreamControlsOverlay(
 								stream: stream,
-								quality: streamViewModel.streamQuality[stream.id],
+								selectedQuality: streamViewModel.selectedStreamQuality[stream.id],
+								streamQualities: streamViewModel.streamQuality[stream.id] ?? [],
 								isAudioOnly: isAudioOnly,
 								isFlipped: isFlipped,
 								addStream: {
@@ -111,6 +121,9 @@ struct MultiStreamVideoPlayer: View {
 								removeStream: {
 									hideControlsOverlay()
 									remove(stream: stream)
+								},
+								changeQuality: { newQuality in
+									streamViewModel.selectedStreamQuality[stream.id] = newQuality
 								},
 								dismiss: hideControlsOverlayFromExit
 							)

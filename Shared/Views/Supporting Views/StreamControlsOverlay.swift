@@ -14,16 +14,19 @@ struct StreamControlsOverlay: View {
 		case toggleVideo
 		case toggleFlip
 		case removeStream
+		case changeQuality
 	}
 
 	let stream: any Streamable
-	let quality: String?
+	let selectedQuality: StreamQuality?
+	let streamQualities: [StreamQuality]
 	let isAudioOnly: Bool
 	let isFlipped: Bool
 	let addStream: () -> Void
 	let toggleVideo: () -> Void
 	let toggleFlip: () -> Void
 	let removeStream: () -> Void
+	let changeQuality: (_ newQuality: StreamQuality) -> Void
 	let dismiss: () -> Void
 
 	@Environment(\.resetFocus) private var resetFocus
@@ -70,8 +73,15 @@ struct StreamControlsOverlay: View {
 
 			HStack(alignment: .center, spacing: 16) {
 				metadataLabel(stream.duration, systemImage: "dot.radiowaves.left.and.right")
-				if let quality {
-					metadataLabel(quality, systemImage: "display")
+				if streamQualities.isEmpty == false {
+					let quality = selectedQuality ?? streamQualities.first!
+					contextButton(quality.label, systemImage: "display", control: .changeQuality) {
+						ForEach(streamQualities, id: \.id) { quality in
+							Button(quality.label) {
+								changeQuality(quality)
+							}
+						}
+					}
 				}
 
 				Spacer(minLength: 24)
@@ -118,6 +128,18 @@ struct StreamControlsOverlay: View {
 			.foregroundStyle(.white.opacity(0.74))
 	}
 
+	private func contextButton<MenuItems>(_ title: String, systemImage: String, control: Control, @ViewBuilder menuItems: () -> MenuItems) -> some View where MenuItems : View {
+		Menu {
+			menuItems()
+		} label: {
+			Label(title, systemImage: systemImage)
+				.font(.system(size: 18, weight: .semibold))
+				.foregroundStyle(focusedControl == control ? .black : .white)
+		}
+		.focused($focusedControl, equals: control)
+		.prefersDefaultFocus(control == .addStream, in: controlsFocusNamespace)
+	}
+
 	private func pillButton(title: String, control: Control, action: @escaping () -> Void) -> some View {
 		Text(title)
 			.font(.system(size: 18, weight: .semibold))
@@ -133,10 +155,6 @@ struct StreamControlsOverlay: View {
 			.background {
 				Capsule()
 					.fill(focusedControl == control ? .white : .white.opacity(0.14))
-			}
-			.overlay {
-				Capsule()
-					.strokeBorder(.white.opacity(focusedControl == control ? 0.72 : 0.08), lineWidth: 1)
 			}
 			.scaleEffect(focusedControl == control ? 1.06 : 1)
 			.shadow(color: .black.opacity(focusedControl == control ? 0.34 : 0), radius: 18, y: 8)
@@ -219,5 +237,3 @@ private extension View {
 			.accessibilityAddTraits(.isButton)
 	}
 }
-
-

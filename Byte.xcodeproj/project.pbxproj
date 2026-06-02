@@ -126,6 +126,9 @@
 		C14D5B9728EA723E00351AC5 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D5B9628EA723E00351AC5 /* AppError.swift */; };
 		C14D5B9828EA723E00351AC5 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D5B9628EA723E00351AC5 /* AppError.swift */; };
 		C14D5B9928EA723E00351AC5 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C14D5B9628EA723E00351AC5 /* AppError.swift */; };
+		C1591B7E2FCE8D2200A738B0 /* StreamQuality.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1591B7D2FCE8D1C00A738B0 /* StreamQuality.swift */; };
+		C1591B7F2FCE8D2200A738B0 /* StreamQuality.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1591B7D2FCE8D1C00A738B0 /* StreamQuality.swift */; };
+		C1591B802FCE8D2200A738B0 /* StreamQuality.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1591B7D2FCE8D1C00A738B0 /* StreamQuality.swift */; };
 		C15DD8542329235B00EC8EFB /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15DD8532329235B00EC8EFB /* Video.swift */; };
 		C15DD8552329235B00EC8EFB /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15DD8532329235B00EC8EFB /* Video.swift */; };
 		C15DD8562329235B00EC8EFB /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = C15DD8532329235B00EC8EFB /* Video.swift */; };
@@ -423,6 +426,7 @@
 		C147B3A72901F10A0096D2DB /* YtdlpFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YtdlpFormat.swift; sourceTree = "<group>"; };
 		C14BCD4D2317FC8900F33A48 /* Stream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
 		C14D5B9628EA723E00351AC5 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		C1591B7D2FCE8D1C00A738B0 /* StreamQuality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamQuality.swift; sourceTree = "<group>"; };
 		C15DD8532329235B00EC8EFB /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
 		C15ECCF128EB875A00234CAF /* YoutubePlayerResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubePlayerResponse.swift; sourceTree = "<group>"; };
 		C1605F6D2317DE6300F98BEE /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
@@ -870,6 +874,7 @@
 		C1FB01DF2317DAAD00130981 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				C1591B7D2FCE8D1C00A738B0 /* StreamQuality.swift */,
 				C14D5B9628EA723E00351AC5 /* AppError.swift */,
 				C117E4FE233F672D0056811D /* AppState.swift */,
 				C1141885231936A60004C813 /* AvatarSize.swift */,
@@ -1245,6 +1250,7 @@
 				C109CFB4231D1D0600C35AD8 /* SessionStore.swift in Sources */,
 				C14D5B9828EA723E00351AC5 /* AppError.swift in Sources */,
 				C1E9428E231E70E6006B7A71 /* StreamStore.swift in Sources */,
+				C1591B802FCE8D2200A738B0 /* StreamQuality.swift in Sources */,
 				C1B2993028E91ACD00C0D6A8 /* YoutubeSearchResult.swift in Sources */,
 				C187790323195C3F008CA61E /* CovertArtSize.iOS.swift in Sources */,
 				C133D57F23227617005015C8 /* APIError.swift in Sources */,
@@ -1390,6 +1396,7 @@
 				C18242A22318007A00595E76 /* Thumbnail.swift in Sources */,
 				C15DD8562329235B00EC8EFB /* Video.swift in Sources */,
 				C1FEBCF428E4768600903D16 /* OAuthView.swift in Sources */,
+				C1591B7F2FCE8D2200A738B0 /* StreamQuality.swift in Sources */,
 				C10FECC126949C9300D48F8D /* StreamVideoPlayer.swift in Sources */,
 				C1E9428F231E70E6006B7A71 /* StreamStore.swift in Sources */,
 				C185E18F2375AE3C008DD09C /* SpoilerFilter.swift in Sources */,
@@ -1516,6 +1523,7 @@
 				C15DD8542329235B00EC8EFB /* Video.swift in Sources */,
 				C12CF3E62E6EF11E008C5DC9 /* OAuthable.swift in Sources */,
 				C18242A02318001700595E76 /* ChannelList.swift in Sources */,
+				C1591B7E2FCE8D2200A738B0 /* StreamQuality.swift in Sources */,
 				C1EF0BA5276B19F000E311C8 /* PlayerLayer.swift in Sources */,
 				C1F6C4DB232A776A006EA1D5 /* LiveVideoFetcher.swift in Sources */,
 				C1B5AC6E232E29EF001A502F /* GameView.swift in Sources */,
