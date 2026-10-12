@@ -270,18 +270,14 @@
 		C1C103F1232DCE8400267736 /* OnSelect.tvOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C103EF232DCE8400267736 /* OnSelect.tvOS.swift */; };
 		C1C1D29023363DC7006E9165 /* Push.iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C1D28F23363DC7006E9165 /* Push.iOS.swift */; };
 		C1C1D29223363E87006E9165 /* Push.tvOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C1D29123363E87006E9165 /* Push.tvOS.swift */; };
+		C1C6DB7E307D9AC80058CB6B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1020D652317E8E200FBFE16 /* SceneDelegate.swift */; };
+		C1C6DB7F307D9AC80058CB6B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1020D632317E8E200FBFE16 /* AppDelegate.swift */; };
 		C1C79E762696EC1B00E653E7 /* StreamPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C79E752696EC1B00E653E7 /* StreamPicker.swift */; };
 		C1C79E772696EC1B00E653E7 /* StreamPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C79E752696EC1B00E653E7 /* StreamPicker.swift */; };
 		C1C79E782696EC1B00E653E7 /* StreamPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C79E752696EC1B00E653E7 /* StreamPicker.swift */; };
 		C1C824F527688D9C00A228CA /* Secrets.json in Resources */ = {isa = PBXBuildFile; fileRef = C1C824F427688D9C00A228CA /* Secrets.json */; };
 		C1C824F627688D9C00A228CA /* Secrets.json in Resources */ = {isa = PBXBuildFile; fileRef = C1C824F427688D9C00A228CA /* Secrets.json */; };
 		C1C824F727688D9C00A228CA /* Secrets.json in Resources */ = {isa = PBXBuildFile; fileRef = C1C824F427688D9C00A228CA /* Secrets.json */; };
-		C1C85AAD2336523F00E8AB19 /* RootViewControllerKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C85AAC2336523F00E8AB19 /* RootViewControllerKey.swift */; };
-		C1C85AAE2336523F00E8AB19 /* RootViewControllerKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C85AAC2336523F00E8AB19 /* RootViewControllerKey.swift */; };
-		C1C85AAF2336523F00E8AB19 /* RootViewControllerKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C85AAC2336523F00E8AB19 /* RootViewControllerKey.swift */; };
-		C1C85AB1233654A600E8AB19 /* PresenterViewControllerKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C85AB0233654A600E8AB19 /* PresenterViewControllerKey.swift */; };
-		C1C85AB2233654A600E8AB19 /* PresenterViewControllerKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C85AB0233654A600E8AB19 /* PresenterViewControllerKey.swift */; };
-		C1C85AB3233654A600E8AB19 /* PresenterViewControllerKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C85AB0233654A600E8AB19 /* PresenterViewControllerKey.swift */; };
 		C1CEB908231E85A2007C3812 /* OnFirstAppear.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CEB907231E85A2007C3812 /* OnFirstAppear.swift */; };
 		C1CEB909231E85A2007C3812 /* OnFirstAppear.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CEB907231E85A2007C3812 /* OnFirstAppear.swift */; };
 		C1CEB90A231E85A2007C3812 /* OnFirstAppear.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1CEB907231E85A2007C3812 /* OnFirstAppear.swift */; };
@@ -319,7 +315,6 @@
 		C1F6C4DB232A776A006EA1D5 /* LiveVideoFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F6C4DA232A776A006EA1D5 /* LiveVideoFetcher.swift */; };
 		C1F6C4DC232A776A006EA1D5 /* LiveVideoFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F6C4DA232A776A006EA1D5 /* LiveVideoFetcher.swift */; };
 		C1F6C4DD232A776A006EA1D5 /* LiveVideoFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1F6C4DA232A776A006EA1D5 /* LiveVideoFetcher.swift */; };
-		C1FB01AC2317D1B000130981 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB01AB2317D1B000130981 /* AppDelegate.swift */; };
 		C1FB01AE2317D1B000130981 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FB01AD2317D1B000130981 /* ContentView.swift */; };
 		C1FB01B02317D1B200130981 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1FB01AF2317D1B200130981 /* Assets.xcassets */; };
 		C1FB01B32317D1B200130981 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C1FB01B22317D1B200130981 /* Preview Assets.xcassets */; };
@@ -483,8 +478,6 @@
 		C1C1D29123363E87006E9165 /* Push.tvOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.tvOS.swift; sourceTree = "<group>"; };
 		C1C79E752696EC1B00E653E7 /* StreamPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamPicker.swift; sourceTree = "<group>"; };
 		C1C824F427688D9C00A228CA /* Secrets.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Secrets.json; sourceTree = "<group>"; };
-		C1C85AAC2336523F00E8AB19 /* RootViewControllerKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewControllerKey.swift; sourceTree = "<group>"; };
-		C1C85AB0233654A600E8AB19 /* PresenterViewControllerKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenterViewControllerKey.swift; sourceTree = "<group>"; };
 		C1CEB907231E85A2007C3812 /* OnFirstAppear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnFirstAppear.swift; sourceTree = "<group>"; };
 		C1D2F9C52322801000657A67 /* Pagination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pagination.swift; sourceTree = "<group>"; };
 		C1D32D7E232E695600BE3A4C /* Strings+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Strings+Extensions.swift"; sourceTree = "<group>"; };
@@ -499,7 +492,6 @@
 		C1EF5E0828EC2A1C00F710FA /* MenuItemButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemButton.swift; sourceTree = "<group>"; };
 		C1F6C4DA232A776A006EA1D5 /* LiveVideoFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveVideoFetcher.swift; sourceTree = "<group>"; };
 		C1FB01A82317D1B000130981 /* Byte.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Byte.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C1FB01AB2317D1B000130981 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C1FB01AD2317D1B000130981 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C1FB01AF2317D1B200130981 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C1FB01B22317D1B200130981 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -586,8 +578,6 @@
 			isa = PBXGroup;
 			children = (
 				C1020D712317E8E300FBFE16 /* Info.plist */,
-				C1020D632317E8E200FBFE16 /* AppDelegate.swift */,
-				C1020D652317E8E200FBFE16 /* SceneDelegate.swift */,
 				C1020D692317E8E300FBFE16 /* Assets.xcassets */,
 				C1020D6E2317E8E300FBFE16 /* LaunchScreen.storyboard */,
 				C1278A3123190FFD00400D35 /* Models */,
@@ -630,11 +620,12 @@
 				C1020DB22317EAC300FBFE16 /* Info.plist */,
 				C19D480B2321426900A53AB3 /* App.swift */,
 				C1D5CA30231E931400663FD8 /* AppFactory.swift */,
+				C1020D632317E8E200FBFE16 /* AppDelegate.swift */,
+				C1020D652317E8E200FBFE16 /* SceneDelegate.swift */,
 				C17766F026C66DEA0085E848 /* Functions.swift */,
 				C12541072317F24D005A9F03 /* Assets.xcassets */,
 				C1C824F427688D9C00A228CA /* Secrets.json */,
 				C1AE3316231E89F100FE0F99 /* API */,
-				C1C85AAB2336521C00E8AB19 /* Environment */,
 				C1605F6C2317DE4E00F98BEE /* Extensions */,
 				C1FB01DF2317DAAD00130981 /* Models */,
 				C1FB01E02317DAB200130981 /* Views */,
@@ -759,15 +750,6 @@
 			path = Modifiers;
 			sourceTree = "<group>";
 		};
-		C1C85AAB2336521C00E8AB19 /* Environment */ = {
-			isa = PBXGroup;
-			children = (
-				C1C85AB0233654A600E8AB19 /* PresenterViewControllerKey.swift */,
-				C1C85AAC2336523F00E8AB19 /* RootViewControllerKey.swift */,
-			);
-			path = Environment;
-			sourceTree = "<group>";
-		};
 		C1CEB906231E858F007C3812 /* Modifiers */ = {
 			isa = PBXGroup;
 			children = (
@@ -835,7 +817,6 @@
 			isa = PBXGroup;
 			children = (
 				C1FB01B72317D1B200130981 /* Info.plist */,
-				C1FB01AB2317D1B000130981 /* AppDelegate.swift */,
 				C1FB01AF2317D1B200130981 /* Assets.xcassets */,
 				C1FB01B42317D1B200130981 /* LaunchScreen.storyboard */,
 				C1278A3023190FF200400D35 /* Models */,
@@ -1258,7 +1239,6 @@
 				C1C79E772696EC1B00E653E7 /* StreamPicker.swift in Sources */,
 				C13F8849233B6B32008649F6 /* Push.swift in Sources */,
 				C1020D912317E9AE00FBFE16 /* Avatar.swift in Sources */,
-				C1C85AB2233654A600E8AB19 /* PresenterViewControllerKey.swift in Sources */,
 				C17A83F028EFF5AC00FCD74F /* Channelable.swift in Sources */,
 				C1729BC323268887005D0A99 /* Array+Extensions.swift in Sources */,
 				C11B671023226C7C004576A6 /* TwitchDataItem.swift in Sources */,
@@ -1325,7 +1305,6 @@
 				C129B712232B8F5900FDDA99 /* M3U8Meta.swift in Sources */,
 				C12CF3EA2E6F0156008C5DC9 /* TwitchAuthError.swift in Sources */,
 				C1141884231935A50004C813 /* SizeProvider.swift in Sources */,
-				C1C85AAE2336523F00E8AB19 /* RootViewControllerKey.swift in Sources */,
 				C1AE3319231E89FD00FE0F99 /* TwitchAPI.swift in Sources */,
 				C133D58323227626005015C8 /* LocalizedDecodingError.swift in Sources */,
 				C1B5AC67232E2874001A502F /* StreamView.swift in Sources */,
@@ -1425,7 +1404,6 @@
 				C193E33728DE7C020064639A /* TwitchError.swift in Sources */,
 				C12CF3E22E6EF0C6008C5DC9 /* TwitchOAuth.swift in Sources */,
 				C1729BC82326889D005D0A99 /* Dictionary+Extensions.swift in Sources */,
-				C1C85AB3233654A600E8AB19 /* PresenterViewControllerKey.swift in Sources */,
 				C1E94283231E70B6006B7A71 /* FetchingObject.swift in Sources */,
 				C17766EF26C65EA80085E848 /* VideoList.swift in Sources */,
 				C182429E2317FF4900595E76 /* ChannelList.swift in Sources */,
@@ -1469,7 +1447,6 @@
 				C1A647C628E7230800699B5B /* Task+Extensions.swift in Sources */,
 				C1B2993C28E9526B00C0D6A8 /* YoutubeChannel.swift in Sources */,
 				C14BCD502317FC8900F33A48 /* Stream.swift in Sources */,
-				C1C85AAF2336523F00E8AB19 /* RootViewControllerKey.swift in Sources */,
 				C1B0BCB128EAF2220016089B /* CodableIgnored.swift in Sources */,
 				C12CF3EF2E6F066E008C5DC9 /* TwitchUserAuth.swift in Sources */,
 				C1B2994428E95FD700C0D6A8 /* YoutubePlaylistItem.swift in Sources */,
@@ -1501,7 +1478,6 @@
 				C1B0BCAF28EAF2220016089B /* CodableIgnored.swift in Sources */,
 				C1FEBCF628E4780C00903D16 /* QRCode.swift in Sources */,
 				C1FB01DC2317D8A900130981 /* Avatar.swift in Sources */,
-				C1FB01AC2317D1B000130981 /* AppDelegate.swift in Sources */,
 				C12CF3EE2E6F066E008C5DC9 /* TwitchUserAuth.swift in Sources */,
 				C17766F126C66DEA0085E848 /* Functions.swift in Sources */,
 				C180244F28DEC5F900E8AB42 /* KeychainKey.swift in Sources */,
@@ -1537,7 +1513,6 @@
 				C1BC16C32394EB0B008234EE /* ButtonWrap.swift in Sources */,
 				C1141886231936A60004C813 /* AvatarSize.swift in Sources */,
 				C19FE9AE246E5A7D004EB60C /* Favourite.swift in Sources */,
-				C1C85AAD2336523F00E8AB19 /* RootViewControllerKey.swift in Sources */,
 				C109CFB3231D1D0600C35AD8 /* SessionStore.swift in Sources */,
 				C19D480C2321426900A53AB3 /* App.swift in Sources */,
 				C17A83F328EFFD4E00FCD74F /* Videoable.swift in Sources */,
@@ -1569,6 +1544,8 @@
 				C1605F6E2317DE6300F98BEE /* Color+Extensions.swift in Sources */,
 				C1FB01DE2317D8E100130981 /* StreamList.swift in Sources */,
 				C1B2993A28E9526B00C0D6A8 /* YoutubeChannel.swift in Sources */,
+				C1C6DB7E307D9AC80058CB6B /* SceneDelegate.swift in Sources */,
+				C1C6DB7F307D9AC80058CB6B /* AppDelegate.swift in Sources */,
 				C17627EB26A336A100D4BB11 /* VisualEffectView.swift in Sources */,
 				C1C79E762696EC1B00E653E7 /* StreamPicker.swift in Sources */,
 				C1A647C428E7230800699B5B /* Task+Extensions.swift in Sources */,
@@ -1582,7 +1559,6 @@
 				C1B2994228E95FD700C0D6A8 /* YoutubePlaylistItem.swift in Sources */,
 				C1605F722317E31E00F98BEE /* Game.swift in Sources */,
 				C129B711232B8F5900FDDA99 /* M3U8Meta.swift in Sources */,
-				C1C85AB1233654A600E8AB19 /* PresenterViewControllerKey.swift in Sources */,
 				C10FECC326949CE600D48F8D /* MultiStreamVideoPlayer.swift in Sources */,
 				C1B5AC66232E2874001A502F /* StreamView.swift in Sources */,
 				C1AE3318231E89FD00FE0F99 /* TwitchAPI.swift in Sources */,
