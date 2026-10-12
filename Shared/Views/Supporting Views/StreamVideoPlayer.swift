@@ -33,6 +33,7 @@ struct StreamVideoPlayer: View {
 	@State private var error: Error?
 	@State private var currentPlayingItem: PlayingItem?
 	@State private var indicatorState: SwimplyPlayIndicator.AudioState = .stop
+	@State private var isStreamLoaded = false
 
 	@StateObject private var playerViewModel = PlayerViewModel()
 
@@ -96,6 +97,7 @@ struct StreamVideoPlayer: View {
 		.onDisappear {
 			playerViewModel.player.pause()
 			playerViewModel.player.replaceCurrentItem(with: nil)
+			isStreamLoaded = false
 		}
 		.onLongPressGesture {
 			guard let currentPlayingItem = currentPlayingItem else { return }
@@ -117,6 +119,9 @@ struct StreamVideoPlayer: View {
 			updateMutedState()
 		}
 		.onChange(of: isSelectedForAudio) { _, _ in
+			updateMutedState()
+		}
+		.onChange(of: isStreamLoaded) { _, _ in
 			updateMutedState()
 		}
 		.onChange(of: streamQuality) { _, newQuality in
@@ -273,7 +278,7 @@ private extension StreamVideoPlayer {
 				playerViewModel.player.replaceCurrentItem(with: makePlayerItem(from: playingItem))
 				playerViewModel.player.playImmediately(atRate: 1.0)
 
-				updateMutedState()
+				isStreamLoaded = true
 
 				onReceiveVideoQuality?(videoMode, streamQualities)
 			} catch {

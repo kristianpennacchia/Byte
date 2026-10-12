@@ -109,7 +109,8 @@ struct MultiStreamVideoPlayer: View {
 								isAudioOnly: isAudioOnly,
 								isFlipped: isFlipped,
 								addStream: {
-									hideControlsOverlay()
+									// Focus is restored when the stream picker is dismissed.
+									showControlsOverlay = false
 									showStreamPicker = true
 								},
 								toggleVideo: {
@@ -161,9 +162,12 @@ struct MultiStreamVideoPlayer: View {
 		.fullScreenCover(
 			isPresented: $showStreamPicker,
 			onDismiss: {
+				restoreSelectedStreamFocus()
 			},
 			content: {
 				StreamPicker(store: store) { stream in
+					// Keep the current stream selected even if the new stream grabs focus while the picker dismisses.
+					restoringSelectedStreamID = streamViewModel.selectedStream?.id
 					showStreamPicker = false
 					streams.append(stream)
 				}
